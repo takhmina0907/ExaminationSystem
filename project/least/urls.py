@@ -18,9 +18,11 @@ from django.urls import path
 import things.views as views
 from django.conf import settings
 from django.conf.urls.static import static
+from things.admin_views.views import (
+    RegistrationView, LoginView)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('superuser/', admin.site.urls),
     path('Test/<id>/result/',views.result, name='res'),
     path('Test/<id>',views.Test_view,name='test'),
     path('registration1',views.reg1,name="reg1"),
@@ -34,5 +36,7 @@ urlpatterns = [
     #path('export/csv/', views.export_users_csv, name='export_users_csv'),
 
 #     path('ForDiana',views.Diana,name='Diana'),
+    path('admin/register', RegistrationView.as_view(), name='admin-registration'),
+    path('admin/login', LoginView.as_view(), name='admin-login'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

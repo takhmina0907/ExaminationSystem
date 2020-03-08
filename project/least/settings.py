@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'least',
     'things',
@@ -41,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
 ]
+
+AUTH_USER_MODEL = 'things.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
