@@ -19,7 +19,7 @@ import things.views as views
 from django.conf import settings
 from django.conf.urls.static import static
 from things.admin_views.views import (
-    RegistrationView, LoginView)
+    RegistrationView, LoginView, LogoutView)
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
@@ -38,5 +38,6 @@ urlpatterns = [
 #     path('ForDiana',views.Diana,name='Diana'),
     path('admin/register', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login', LoginView.as_view(), name='admin-login'),
+    path('admin/logout', LogoutView.as_view(), name='admin-logout'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
