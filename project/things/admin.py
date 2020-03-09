@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from .models import User_table, User
 from .models import Test, Country
+from .models import TestInfo, Question, Option, Student, TestResult, Answer
 from things.admin_forms.forms import UserCreateForm, UserChangeForm
 
 
@@ -47,3 +48,8 @@ class NewUserAdmin(DjangoUserAdmin):
         }),
     )
 admin.site.register(User, NewUserAdmin)
+
+
+@admin.register(TestInfo, Question, Option, Student, TestResult, Answer)
+class BasicAdmin(admin.ModelAdmin):
+    pass

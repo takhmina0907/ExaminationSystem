@@ -80,3 +80,59 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+class TestInfo(models.Model):
+    title = models.CharField(max_length=500, null=False, blank=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tests')
+    created_date = models.DateTimeField(auto_now_add=True, blank=True)
+    deadline = models.DateTimeField(blank=False, null=False)
+    is_visible = models.BooleanField(default=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.id, self.author.email)
+
+
+class Question(models.Model):
+    test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='questions')
+    question = models.TextField(blank=False, null=False)
+    is_multiple_choice = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{} - {}'.format(self.test.title, self.question)
+
+
+class Option(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
+    option = models.CharField(max_length=1024, null=False, blank=False)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{} - {}'.format(self.option, self.question.question)
+
+
+class Student(models.Model):
+    id = models.IntegerField(blank=True, primary_key=True)
+    email = models.EmailField(max_length=100)
+    speciality = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.id, self.email)
+
+
+class TestResult(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='results')
+    grade = models.FloatField()
+    submitted_date = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.test.title, self.student.id)
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    answer = models.ForeignKey(Option, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.question.question, self.answer.option)
