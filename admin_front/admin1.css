@@ -1,0 +1,105 @@
+body{
+	font-family: "Montserrat";
+	background-color: #f8f8f8;
+}
+
+ul, li {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+button:active, button:focus {
+  outline: none;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+
+/* --------- Section1 -----------*/
+
+.reg_block {
+	background-color: white;
+	height: 500px;
+	width: 100%;
+	margin-top: 50px;
+	margin-bottom: 100px;
+	border-radius: 5px;
+	box-shadow: 0 0 1px 0px #ecebeb;
+}
+
+.reg_content {
+	height: 100%;
+	padding-top: 150px
+}
+
+.reg_picture {
+	width: 35%;
+	height: 100%;
+}
+
+.reg_title {
+	font-size: 26px;
+	font-weight: bold;
+	color: #392CD1;
+}
+
+.reg_par {
+	color: #4a4a4a;
+	font-size: 18px;
+	width: 80%;
+}
+
+.form_block {
+	/*width: 80%;*/
+	padding-top: 40px;
+}
+
+.form_block input {
+	margin-bottom: 32px;
+	color: #BDBDBD;
+	width: 400px;
+	height: 48px;
+	font-weight: 500;
+	font-size: 16px;
+
+
+}
+.form_block input:hover{
+	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+
+}
+
+.form-next {
+	margin-top: 32px;
+}
+.signup-btn{
+	width: 194px;
+	height: 56px;
+	border-radius: 8px;
+	border: 1px solid #392CD1;
+	background-color: #392CD1;
+	font-size: 18px;
+	text-align: center;
+	color: #ffffff;
+}
+.signup-btn:hover{
+	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+}
+
+.signin-btn{
+	font-size: 18px;
+	text-align: center;
+	color: #4D4D4D;
+	border: none;
+	background: none;
+	margin-left: 29px;
+	text-decoration:underline;
+
+}
+.admin{
+	background-color: #C3BEFF;
+	height: 100vh;
+}
