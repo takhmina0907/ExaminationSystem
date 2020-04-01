@@ -3,7 +3,9 @@ from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField, AuthenticationForm)
 from django.contrib.auth import password_validation
 
-from things.models import User
+from things.models import (
+    User, TestInfo
+)
 
 
 class UserCreateForm(forms.ModelForm):
@@ -94,3 +96,51 @@ class UserChangeForm(forms.ModelForm):
             if commit:
                 user.save()
         return user
+
+
+class TestCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = TestInfo
+        fields = ('title', 'deadline',)# 'description', 'duration')
+        labels = {
+            'title': 'Title',
+            'deadline': 'Deadline of the test',
+            # 'description': 'Description of the test',
+            # 'duration': 'Duration of the test'
+        }
+
+    deadline = forms.DateTimeField(
+        widget=forms.DateInput(format='%d/%m/%Y %H:%M', attrs={
+            'class': 'datetimepicker-input',
+            'data-target': '#datetimepickertarget'
+        }),
+        input_formats=('%d/%m/%Y %H:%M',)
+    )
+
+
+# class QuestionCreateForm(forms.ModelForm):
+#     class Meta:
+#         model = Question
+#         fields = ('question', )
+#         labels = {
+#             'question': 'Question',
+#         }
+
+
+# class QuestionInlineFormSet(forms.BaseInlineFormSet):
+#     pass
+
+
+# SingleChoiceQuestionFormSet = forms.inlineformset_factory(Question, Option,
+#                                                           fields=('option', 'is_correct'),
+#                                                           min_num=2, max_num=6,
+#                                                           validate_min=True,
+#                                                           validate_max=True)
+#
+#
+# MultipleChoiceQuestionFormSet = forms.inlineformset_factory(Question, Option,
+#                                                             fields=('option', 'is_correct'),
+#                                                             min_num=2, max_num=8,
+#                                                             validate_min=True,
+#                                                             validate_max=True)

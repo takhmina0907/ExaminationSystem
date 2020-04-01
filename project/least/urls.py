@@ -19,7 +19,11 @@ import things.views as views
 from django.conf import settings
 from django.conf.urls.static import static
 from things.admin_views.views import (
-    RegistrationView, LoginView, LogoutView)
+    RegistrationView, LoginView, LogoutView,
+    AdminTestListView, AdminTestCreateView,
+    admin_test, admin_question_add, admin_option_add,
+    admin_question_update,
+)
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
@@ -36,8 +40,19 @@ urlpatterns = [
     #path('export/csv/', views.export_users_csv, name='export_users_csv'),
 
 #     path('ForDiana',views.Diana,name='Diana'),
-    path('admin/register', RegistrationView.as_view(), name='admin-registration'),
-    path('admin/login', LoginView.as_view(), name='admin-login'),
-    path('admin/logout', LogoutView.as_view(), name='admin-logout'),
+    path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
+    path('admin/login/', LoginView.as_view(), name='admin-login'),
+    path('admin/logout/', LogoutView.as_view(), name='admin-logout'),
+    path('admin/<int:id>/tests/', AdminTestListView.as_view(), name='admin-tests'),
+    path('admin/<int:id>/tests/create/', AdminTestCreateView.as_view(), name='admin-create-test'),
+    path('admin/<int:user_id>/tests/<int:test_id>/', admin_test, name='admin-test'),
+
+    # ajax
+    path('admin/<int:user_id>/tests/<int:test_id>/questions/create', admin_question_add, name='admin-question-add'),
+    path('admin/<int:user_id>/tests/<int:test_id>/questions/<int:question_id>/update', admin_question_update,
+         name='admin-question-update'),
+    path('admin/<int:user_id>/tests/<int:test_id>/questions/<int:question_id>/options/create', admin_option_add,
+         name='admin-option-add'),
+    # ajax
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

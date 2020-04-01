@@ -84,9 +84,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class TestInfo(models.Model):
     title = models.CharField(max_length=500, null=False, blank=False)
+    # description = models.TextField(blank=False, null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tests')
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
     deadline = models.DateTimeField(blank=False, null=False)
+    # duration = models.DurationField()
     is_visible = models.BooleanField(default=True)
 
     def __str__(self):

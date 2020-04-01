@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load my_tags %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <style>
+            .card{
+                border: 1px black solid;
+                padding: 10px;
+                margin-bottom: 10px;
+                width: 400px;
+            }
+            .question-title{
+                margin-bottom: 10px;
+
+            }
+            .badge{
+                border: 1px grey solid;
+                background-color: grey;
+                color: white;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <p>{{ test.title }}</p>
+            <p>{{ test.deadline }}</p>
+        </div>
+        <div id="question-card-rows">
+            {% for question in questions %}
+                <div class="card">
+                    <div class="question-title">
+                        <label>
+                            Q{{ forloop.counter }}
+                            <input name="question-{{ question.id }}" type="text" value="{{ question.question }}" data-question_id="{{ question.id }}"/>
+                        </label>
+                        {% with correct=question|count_correct %}
+                        <span class="badge-{{ question.id }}"  data-correct-count="{{ question|count_correct }}">
+                            {% if correct > 0 %}
+                            <span class="badge">
+                                {% if correct == 1 %}
+                                    Single-answer
+                                {% elif correct > 1 %}
+                                    Multi-answer
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                        </span>
+                        {% endwith %}
+                    </div>
+                    <div id="question-{{ question.id }}-option">
+                        {% for option in question.options.all %}
+                            <div>
+                                <input type="checkbox" class="is-correct" name="question-{{ question.id }}-option" value="{{ option.id }}" {% if option.is_correct %} checked {% endif %} data-question-id="{{ question.id }}"/>
+                                <input type="text" name="question-{{ question.id }}-option-{{ option.id }}" value="{{ option.option }}" data-option-id="{{ option.id }}"/>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="add-option" data-question-id="{{ question.id }}">+ add new option</button>
+                    <button class="question-save" data-question-id="{{ question.id }}">Save</button>
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            <button id="question-add" data-question-count="{{ questions|length }}">+ Add question</button>
+        </div>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'js/question_create.js' %}"></script>
+</html>
