@@ -62,10 +62,8 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         # noinspection PyAttributeOutsideInit
         self.object = form.save(commit=False)
         self.object.author = self.request.user
-        # self.object.save()
-        # return super().form_valid(form)
-        print("URL", self.get_success_url())
-        return HttpResponseRedirect(self.get_success_url())
+        self.object.save()
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
