@@ -1,5 +1,5 @@
 body{
-	font-family: "Montserrat";
+	font-family: 'Montserrat', sans-serif;
 	background-color: #f8f8f8;
 }
 
@@ -31,8 +31,7 @@ button::-moz-focus-inner {
 }
 
 .reg_content {
-	height: 100%;
-	padding-top: 150px
+	padding-top: 15px
 }
 
 .reg_picture {
@@ -102,4 +101,9 @@ button::-moz-focus-inner {
 .admin{
 	background-color: #C3BEFF;
 	height: 100vh;
+}
+.text{
+	font-weight: 500;
+	font-size: 24px;
+	color: #4D4D4D;
 }
