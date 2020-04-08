@@ -1,14 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% load static %}
     <head>
         <meta charset="UTF-8">
-        <title>Teacher login</title>
+        <title>Sign in</title>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
     </head>
     <body>
-        <form method="post">
-                {% csrf_token %}
-                {{ form }}
-            <input type="submit" value="Submit">
-        </form>
+        <div class="container">
+			<div class="row">
+				<div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 d-flex justify-content-center align-items-center">
+                    <div class="reg_content align-items-center">
+                        <h1 class="reg_title">
+                            Sign in
+                        </h1>
+
+                        <form method="post">
+                            <div class="form_block">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-danger fade show">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% csrf_token %}
+                                {% if form.non_field_errors %}
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+
+                                {% endif %}
+
+                                {% for error in form.username.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                                {{ form.username }}
+                                {% for error in form.password.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                                {{ form.password }}
+                            </div>
+                            <div class="form-next">
+                                <button type="submit" class="signup-btn" value="">Sign in</button>
+                                <a href="{% url 'admin-registration' %}">
+                                    <button type="button" class="signin-btn">or Sign up</button>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 admin"></div>
+			</div>
+		</div>
     </body>
 </html>

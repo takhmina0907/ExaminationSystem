@@ -9,23 +9,27 @@ from things.models import (
 
 
 class UserCreateForm(forms.ModelForm):
-    password = forms.CharField(
-        label='Password',
-        widget=forms.PasswordInput
-    )
-    password_conf = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    fullname = forms.CharField(widget=forms.TextInput)
+    password = forms.CharField(widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
         super(UserCreateForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs['autofocus'] = 'on'
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['email'].widget.attrs['placeholder'] = 'Enter your e-mail'
+        self.fields['fullname'].widget.attrs['autofocus'] = 'on'
+        self.fields['fullname'].widget.attrs['placeholder'] = 'Fullname'
+        self.fields['fullname'].widget.attrs['class'] = 'form-control'
+        self.fields['place_of_work'].widget.attrs['placeholder'] = 'Where do you work?'
+        self.fields['place_of_work'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['placeholder'] = 'Password'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name')
+        fields = ('email', 'place_of_work', )
         labels = {
             'email': 'Email address',
-            'first_name': 'First name',
-            'last_name': 'Last name',
+            'place_of_work': 'Where do you work?',
         }
 
     def clean_email(self):
@@ -45,24 +49,52 @@ class UserCreateForm(forms.ModelForm):
                 self.add_error('password', validation_messages)
         return password
 
-    def clean_password_conf(self):
-        password = self.cleaned_data.get('password')
-        password_conf = self.cleaned_data.get('password_conf')
-        print(password, password_conf)
-        if password and password_conf and password != password_conf:
-            raise forms.ValidationError('Passwords don\'t match')
-        return password_conf
+    def clean_fullname(self):
+        fullname = self.cleaned_data.get('fullname')
+        if fullname:
+            if fullname.find(' ') == -1:
+                self.add_error('fullname', 'Provide fullname(First name and Last name)')
+        return fullname
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
+        fullname = self.cleaned_data['fullname'].split(' ', maxsplit=1)
+        user.first_name = fullname[0]
+        user.last_name = fullname[1]
         if commit:
             user.save()
         return user
 
 
 class UserAuthForm(AuthenticationForm):
-    pass
+
+    username = forms.EmailField(
+        label='',
+        widget=forms.TextInput(
+            attrs={'autofocus': True,
+                   'placeholder': 'Enter your email'
+            }
+        )
+    )
+    password = forms.CharField(
+        label= "",
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Password'}
+        ),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(UserAuthForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
+
+    def confirm_login_allowed(self, user):
+        if not user.is_email_confirmed:
+            raise forms.ValidationError(
+                'Please confirm your email. Check your email for the confirmation link'
+            )
 
 
 class UserChangeForm(forms.ModelForm):
@@ -117,30 +149,3 @@ class TestCreateForm(forms.ModelForm):
         }),
         input_formats=('%d/%m/%Y %H:%M',)
     )
-
-
-# class QuestionCreateForm(forms.ModelForm):
-#     class Meta:
-#         model = Question
-#         fields = ('question', )
-#         labels = {
-#             'question': 'Question',
-#         }
-
-
-# class QuestionInlineFormSet(forms.BaseInlineFormSet):
-#     pass
-
-
-# SingleChoiceQuestionFormSet = forms.inlineformset_factory(Question, Option,
-#                                                           fields=('option', 'is_correct'),
-#                                                           min_num=2, max_num=6,
-#                                                           validate_min=True,
-#                                                           validate_max=True)
-#
-#
-# MultipleChoiceQuestionFormSet = forms.inlineformset_factory(Question, Option,
-#                                                             fields=('option', 'is_correct'),
-#                                                             min_num=2, max_num=8,
-#                                                             validate_min=True,
-#                                                             validate_max=True)

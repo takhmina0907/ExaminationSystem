@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from things.admin_views.views import (
     RegistrationView, LoginView, LogoutView,
     AdminTestListView, AdminTestCreateView,
+    PreActivationView, ActivationView,
     admin_test, admin_question_add, admin_option_add,
     admin_question_update,
 )
@@ -36,13 +37,12 @@ urlpatterns = [
     path('registration4/<id>',views.reg3,name='reg3'),
     path('notAvailable/<id>',views.no,name="notAvailable"),
     path('Cannot/<id>',views.cannot,name="Cannot"),
-    #path('check',views.otchet,name="ot"),
-    #path('export/csv/', views.export_users_csv, name='export_users_csv'),
 
-#     path('ForDiana',views.Diana,name='Diana'),
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),
     path('admin/logout/', LogoutView.as_view(), name='admin-logout'),
+    path('admin/pre-activate/', PreActivationView.as_view(), name='admin-pre-activation'),
+    path('admin/activate/<uidb64>/<token>/', ActivationView.as_view(), name='admin-activation'),
     path('admin/<int:id>/tests/', AdminTestListView.as_view(), name='admin-tests'),
     path('admin/<int:id>/tests/create/', AdminTestCreateView.as_view(), name='admin-create-test'),
     path('admin/<int:user_id>/tests/<int:test_id>/', admin_test, name='admin-test'),

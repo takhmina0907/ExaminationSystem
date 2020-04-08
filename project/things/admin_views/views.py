@@ -1,21 +1,30 @@
 import json
 
+from django.core.exceptions import ValidationError
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.base import TemplateView, RedirectView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import (
     LoginView as BaseLoginView, LogoutView as BaseLogoutView)
 from django.contrib.auth import login
+from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 
 from things.admin_forms.forms import (
     UserCreateForm, UserAuthForm, TestCreateForm,
 )
-from things.models import TestInfo, Question, Option
+from things.models import TestInfo, Question, Option, User
+from things.utils.tasks import send_mail_wrapper
+from things.utils.activation_token import activation_token
 
 
 class RegistrationView(CreateView):
@@ -25,14 +34,49 @@ class RegistrationView(CreateView):
     def form_valid(self, form):
         # noinspection PyAttributeOutsideInit
         self.object = form.save()
-        login(self.request, self.object)
+        context = {
+            'domain': get_current_site(self.request),
+            'uidb64': urlsafe_base64_encode(force_bytes(self.object.pk)),
+            'token': activation_token.make_token(self.object),
+        }
+        html_message = render_to_string('admin/email_activation.html', context)
+        send_mail_wrapper('Welcome to Questionnaire System! Confirm your email', '',
+                          self.object.email, html_message)
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         return super(RegistrationView, self).form_invalid(form)
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
+        return reverse_lazy('admin-pre-activation')
+
+
+class PreActivationView(TemplateView):
+    template_name = 'admin/pre_activation.html'
+
+
+class ActivationView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        user_id = force_text(urlsafe_base64_decode(kwargs['uidb64']))
+        return reverse_lazy('admin-tests', kwargs={'id': user_id})
+
+    def get(self, request, *args, **kwargs):
+        user = None
+        try:
+            user_id = force_text(urlsafe_base64_decode(kwargs['uidb64']))
+            user = User.objects.get(id=user_id)
+            correct = True
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            correct = False
+
+        if correct and activation_token.check_token(user, kwargs['token']):
+            user.is_email_confirmed = True
+            user.save()
+            login(request, user)
+            return super().get(request, *args, **kwargs)
+        else:
+            messages.error(self.request, 'Confirmation link is invalid')
+            return HttpResponseRedirect(reverse_lazy('admin-login'))
 
 
 class LoginView(BaseLoginView):

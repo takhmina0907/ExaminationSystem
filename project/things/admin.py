@@ -32,11 +32,11 @@ class NewUserAdmin(DjangoUserAdmin):
     search_fields = ('id', 'email', 'first_name', 'last_name')
 
     list_display = ('id', 'email', 'first_name', 'last_name')
-    list_filter = ('is_admin',)
+    list_filter = ('is_admin', 'is_email_confirmed')
     ordering = ('email',)
 
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'is_email_confirmed')}),
         ('Change password', {'fields': ('password_new', 'password_conf')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {'fields': ('is_superuser', 'is_admin')}),

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body style="background-color: #f8f8f8; font-family: 'Montserrat', sans-serif;">
+        <div style="width: 100%; margin-right: auto; margin-left: auto;padding: 0.5rem !important;">
+            <div style="position: relative; display: -ms-flexbox; display: flex; -ms-flex-direction: column; flex-direction: column; min-width: 0; word-wrap: break-word; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.25rem; width: 480px;margin-right: auto !important;margin-left: auto !important;">
+                <div style="-ms-flex: 1 1 auto; flex: 1 1 auto; padding: 1.25rem;">
+                    <h1 style="font-size: 26px; font-weight: bold; color: #392CD1; text-align: center !important;">Congratulations!</h1>
+                    <p style="font-weight: 500; font-size: 24px; color: #4D4D4D; text-align: center !important;">
+                        You were successfully registered in our system! To proceed using this service, please click the confirm button below
+                    </p>
+                    <div style="display: -ms-flexbox !important; display: flex !important; -ms-flex-pack: center !important; justify-content: center !important;">
+                        <a href=http://{{ domain }}{% url 'admin-activation' uidb64=uidb64 token=token %}>
+                            <button style="width: 194px; height: 56px; border-radius: 8px; border: 1px solid #392CD1; background-color: #392CD1; font-size: 18px; text-align: center; color: #ffffff;">
+                                Confirm email
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
