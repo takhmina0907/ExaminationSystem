@@ -87,10 +87,9 @@ class LoginView(BaseLoginView):
         return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
 
 
-# TODO test logout
 class LogoutView(BaseLogoutView):
     def get_next_page(self):
-        return reverse_lazy('home')
+        return reverse_lazy('admin-login')
 
 
 class BaseAdminView(LoginRequiredMixin):
