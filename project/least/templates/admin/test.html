@@ -6,12 +6,95 @@
 </head>
 <body>
     <div>
-        <span>{{test.title}}</span>
-        <span>{{test.author.email}}</span>
-        <span>{{test.created_date}}</span>
-        <span>{{test.deadline}}</span>
-        <span>{{test.is_visible}}</span>
+        <span><b>{{test.title}}</b></span> ||
+        <span>
+            {% if test.is_active %}
+                Ongoing
+            {% else %}
+                Finished
+            {% endif %}
+        </span> ||
+        <span>
+            {% if average_points %}
+                <b>{{ average_points }}</b>
+            {% else %}
+                --
+            {% endif %}
+            average point
+        </span>
     </div>
-
+    <div>
+        <span>Edit</span> ||
+        <span>Copy</span> ||
+        <span>Delete</span> ||
+    </div>
+    <br/>
+    <div><b>About the test</b></div>
+    <br/>
+    <div>Test link</div>
+    <div>https://www.makingitdone.kz/testid123456789</div>
+    <br/>
+    <div>Description</div>
+    <div>{{ test.description }}</div>
+    <br/>
+    <div>
+        <span>
+            Date created
+            <b>{{test.created_date|date:"d.m.Y" }}</b>
+        </span> ||
+        <span>
+            Students
+            <b>{{test.students|length}}</b>
+        </span> ||
+        <span>
+            Questions
+            <b>{{test.questions.all|length}}</b>
+        </span> ||
+        <span>
+            Test duration
+            <b>{{test.duration}} min</b>
+        </span> ||
+        <span>
+            Test availability
+            <b>{{test.deadline|date:"d.m.Y H:i"}}</b>
+            <b>{{test.duration}} min</b>
+        </span>
+    </div>
+    <br/>
+    <div><b>Test statistics</b></div>
+    <br/>
+    <div><b>Students and grades</b></div>
+    <div>Sort by: Student name</div>
+    <br/>
+    <table>
+        <tr>
+            <th>Student name</th>
+            <th>Student ID</th>
+            <th>Group</th>
+            <th>Points</th>
+            <th>View answers</th>
+        </tr>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.id }}</td>
+            <td>{{ student.speciality }}</td>
+            <td>
+                {% if student.grade %}
+                    {{ student.grade }}
+                {% else %}
+                    --
+                {% endif %}
+            </td>
+            <td>
+                {% if student.result_id %}
+                    <a href="{% url 'admin-student-result' request.user.id  test.id student.result_id %}">Go to answers</a>
+                {% else %}
+                    --
+                {% endif %}
+            </td>
+        </tr>
+        {%  endfor %}
+    </table>
 </body>
 </html>

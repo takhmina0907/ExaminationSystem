@@ -5,14 +5,30 @@
     <title>Title</title>
 </head>
 <body>
+    Tests <a href="{% url 'admin-create-test' id=request.user.id %}"><button>+ Add new</button></a>
     {% for test in tests %}
         <div>
-            <span>{{test.title}}</span>
-            <span>{{test.author.email}}</span>
-            <span>{{test.created_date}}</span>
-            <span>{{test.deadline|date:"d/F/Y  H:i"}}</span>
-            <span>{{test.is_visible}}</span>
+            <div><a href="{% url 'admin-test-details' user_id=request.user.id test_id=test.id %}"><h1>{{test.title}}</h1></a></div>
+            <div>
+                {% if test.is_active %}
+                    Ongoing
+                {% else %}
+                    Finished
+                {% endif %}
+            </div>
+            <div>Students {{test.students|length}}</div>
+            <div>Questions {{test.questions.all|length}}</div>
+            <div>Date created: {{test.created_date|date:"d.m.Y" }}</div>
+            <div>
+                {% if test.average_points %}
+                    {{ test.average_points }}
+                {% else %}
+                    --
+                {% endif %}
+                average point
+            </div>
         </div>
+        <br/>
     {% endfor %}
 </body>
 </html>

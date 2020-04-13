@@ -1,28 +1,29 @@
 import json
 
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.auth.views import (
+    LoginView as BaseLoginView, LogoutView as BaseLogoutView)
 from django.core.exceptions import ValidationError
+from django.db.models import Avg
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy, reverse
+from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
-from django.urls import reverse_lazy
-from django.contrib.auth.views import (
-    LoginView as BaseLoginView, LogoutView as BaseLogoutView)
-from django.contrib.auth import login
-from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import get_object_or_404, render
-from django.template.loader import render_to_string
 
 from things.admin_forms.forms import (
     UserCreateForm, UserAuthForm, TestCreateForm,
 )
-from things.models import TestInfo, Question, Option, User
+from things.models import TestInfo, Question, Option, User, Student, TestResult
 from things.utils.tasks import send_mail_wrapper
 from things.utils.activation_token import activation_token
 
@@ -109,7 +110,8 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
+        return reverse('admin-test', kwargs={'user_id': self.request.user.id,
+                                             'test_id': self.object.id})
 
 
 class AdminTestListView(BaseAdminView, ListView):
@@ -118,17 +120,46 @@ class AdminTestListView(BaseAdminView, ListView):
     template_name = 'admin/tests.html'
 
     def get_queryset(self):
-        return self.request.user.tests.all()
+        return self.request.user.tests \
+            .annotate(average_points=Avg('results__grade'))
 
 
 class AdminTestDetailView(BaseAdminView, DetailView):
     model = TestInfo
     context_object_name = 'test'
-    pk_url_kwarg = 'tid'
+    pk_url_kwarg = 'test_id'
     template_name = 'admin/test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['average_points'] = self.get_object().results.aggregate(Avg('grade')).get('grade__avg')
+        sql = 'SELECT "things_student"."id", "things_student"."first_name", ' \
+              '"things_student"."last_name", "things_student"."speciality", ' \
+              '"things_testresult"."grade", "things_testresult"."id" AS result_id ' \
+              'FROM "things_student" ' \
+              'INNER JOIN "things_testinfo_students"' \
+              ' ON ("things_student"."id" = "things_testinfo_students"."student_id") ' \
+              'LEFT JOIN "things_testresult" ' \
+              'ON "things_student"."id"="things_testresult"."student_id" ' \
+              'WHERE "things_testinfo_students"."testinfo_id" = %d ' \
+              'ORDER BY "things_student"."first_name", "things_student"."last_name"' % self.object.pk
+        context['students'] = Student.objects.raw(sql)
+        return context
 
     def get_queryset(self):
         return self.request.user.tests.all()
+
+
+class StudentResultDetailView(BaseAdminView, DetailView):
+    model = TestResult
+    context_object_name = 'result'
+    pk_url_kwarg = 'result_id'
+    template_name = 'admin/student_result.html'
+
+    def get_queryset(self):
+        test = get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+        return test.results.all()
 
 
 @login_required
@@ -263,23 +294,23 @@ def admin_question_add(request, user_id, test_id):
         option_1 = Option.objects.create(question=question, option='Option 1', is_correct=False)
         option_2 = Option.objects.create(question=question, option='Option 2', is_correct=False)
         return JsonResponse(json.dumps({
-                                'id': question.id,
-                                'question': question.question,
-                                'options': [
-                                    {
-                                        'id': option_1.id,
-                                        'option': option_1.option,
-                                        'is_correct': option_1.is_correct,
-                                    },
-                                    {
-                                        'id': option_2.id,
-                                        'option': option_2.option,
-                                        'is_correct': option_2.is_correct,
-                                    }
-                                ]
-                            }),
-                            safe=False,
-                            status=200)
+            'id': question.id,
+            'question': question.question,
+            'options': [
+                {
+                    'id': option_1.id,
+                    'option': option_1.option,
+                    'is_correct': option_1.is_correct,
+                },
+                {
+                    'id': option_2.id,
+                    'option': option_2.option,
+                    'is_correct': option_2.is_correct,
+                }
+            ]
+        }),
+            safe=False,
+            status=200)
 
     return JsonResponse({'error': 'ajax request is required'}, status=400)
 
@@ -336,7 +367,7 @@ def admin_option_add(request, user_id, test_id, question_id):
         question = get_object_or_404(Question, id=question_id)
         option = Option.objects.create(
             question=question,
-            option='Option {}'.format(question.options.count()+1),
+            option='Option {}'.format(question.options.count() + 1),
             is_correct=False
         )
         return JsonResponse(json.dumps({'id': option.id,

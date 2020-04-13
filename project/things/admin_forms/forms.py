@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField, AuthenticationForm)
@@ -26,7 +28,7 @@ class UserCreateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'place_of_work', )
+        fields = ('email', 'place_of_work',)
         labels = {
             'email': 'Email address',
             'place_of_work': 'Where do you work?',
@@ -68,17 +70,16 @@ class UserCreateForm(forms.ModelForm):
 
 
 class UserAuthForm(AuthenticationForm):
-
     username = forms.EmailField(
         label='',
         widget=forms.TextInput(
             attrs={'autofocus': True,
                    'placeholder': 'Enter your email'
-            }
+                   }
         )
     )
     password = forms.CharField(
-        label= "",
+        label="",
         strip=False,
         widget=forms.PasswordInput(
             attrs={'placeholder': 'Password'}
@@ -131,21 +132,26 @@ class UserChangeForm(forms.ModelForm):
 
 
 class TestCreateForm(forms.ModelForm):
+    deadline_date = forms.DateField(input_formats=('%d/%m/%Y',))
+    deadline_time = forms.TimeField(input_formats=('%H:%M',))
+
+    def __init__(self, *args, **kwargs):
+        super(TestCreateForm, self).__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs['placeholder'] = 'Test name'
+        self.fields['title'].widget.attrs['autofocus'] = 'on'
+        self.fields['description'].widget.attrs['placeholder'] = 'Description'
+        self.fields['duration'].widget.attrs['placeholder'] = 'Test duration'
+        self.fields['deadline_date'].widget.attrs['placeholder'] = 'Date'
+        self.fields['deadline_time'].widget.attrs['placeholder'] = 'Time'
 
     class Meta:
         model = TestInfo
-        fields = ('title', 'deadline',)# 'description', 'duration')
-        labels = {
-            'title': 'Title',
-            'deadline': 'Deadline of the test',
-            # 'description': 'Description of the test',
-            # 'duration': 'Duration of the test'
-        }
+        fields = ('title', 'description', 'duration')
 
-    deadline = forms.DateTimeField(
-        widget=forms.DateInput(format='%d/%m/%Y %H:%M', attrs={
-            'class': 'datetimepicker-input',
-            'data-target': '#datetimepickertarget'
-        }),
-        input_formats=('%d/%m/%Y %H:%M',)
-    )
+    def save(self, commit=True):
+        test = super().save(commit=False)
+        test.deadline = datetime.datetime.combine(self.cleaned_data['deadline_date'],
+                                                  self.cleaned_data['deadline_time'])
+        if commit:
+            test.save()
+        return test
