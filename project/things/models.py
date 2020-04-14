@@ -1,7 +1,7 @@
-from django.utils import timezone
-from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.db import models
+from django.utils import timezone
 
 from .directionOfFile import images_upload
 
@@ -17,7 +17,7 @@ class User_table(models.Model):
     university=models.CharField(max_length=256,blank=True)
     speciality=models.CharField(max_length=524,blank=True)
     checking=models.BooleanField(default=False)
-    score=models.IntegerField(blank=True,null=True) 
+    score=models.IntegerField(blank=True,null=True)
     string=models.CharField(max_length=1024,blank=True,default='')
     date=models.DateField(auto_now_add=True, blank=True)
     Notcorrect=models.CharField(max_length=1024,blank=True,default='')
@@ -90,6 +90,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     speciality = models.CharField(max_length=200, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.email)

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+</head>
+<body>
+    Students
+    <a href="{% url 'admin-create-student' %}"><button>+ Add new</button></a>
+    <a href=""><button>+ Import CSV</button></a>
+    {% for student in students %}
+        <div>
+            <div><a href="{% url 'admin-student-details' student.pk %}"><h1>{{ student.first_name }} {{ student.last_name }}</h1></a></div>
+            <div>ID {{ student.id }}</div>
+            <div>Group {{ student.speciality }}</div>
+        </div>
+        <br/>
+    {% endfor %}
+</body>
+</html>

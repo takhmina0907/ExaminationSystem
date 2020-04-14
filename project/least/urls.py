@@ -13,16 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 import things.views as views
-from django.conf import settings
-from django.conf.urls.static import static
 from things.admin_views.views import (
     RegistrationView, LoginView, LogoutView,
     AdminTestListView, AdminTestCreateView,
     AdminTestDetailView, StudentResultDetailView,
     PreActivationView, ActivationView,
+    StudentListView, StudentDetailView,
+    StudentCreateView, StudentCreateSuccess,
     admin_test, admin_question_add, admin_option_add,
     admin_question_update,
 )
@@ -51,6 +53,10 @@ urlpatterns = [
     path('admin/<int:user_id>/tests/<int:test_id>/result/<int:result_id>', StudentResultDetailView.as_view(),
          name='admin-student-result'),
     path('admin/<int:user_id>/tests/<int:test_id>/', admin_test, name='admin-test'),
+    path('admin/students/', StudentListView.as_view(), name='admin-students'),
+    path('admin/students/<int:student_id>', StudentDetailView.as_view(), name='admin-student-details'),
+    path('admin/students/create', StudentCreateView.as_view(), name='admin-create-student'),
+    path('admin/students/create/success', StudentCreateSuccess.as_view(), name='admin-create-student-success'),
 
     # ajax
     path('admin/<int:user_id>/tests/<int:test_id>/questions/create', admin_question_add, name='admin-question-add'),

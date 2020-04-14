@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ student.first_name }} {{ student.last_name }}</title>
+</head>
+<body>
+    <div>
+        <b>{{ student.first_name }} {{ student.last_name }}</b>
+    </div>
+    <div>
+        <span>Edit</span> ||
+        <span>Delete</span> ||
+    </div>
+    <br/>
+    <div><b>About student</b></div>
+    <br/>
+    <div>
+        <span>
+            Date created
+            <b>{{ student.created_date|date:"d.m.Y" }}</b>
+        </span> ||
+        <span>
+            Student ID
+            <b>{{ student.id }}</b>
+        </span> ||
+        <span>
+            Tests
+            <b>{{ student.tests.all|length }}</b>
+        </span>
+    </div>
+    <br/>
+    <div><b>Student's tests</b></div>
+    {% for test in tests %}
+    <div>
+        <div><a><h3>{{ test.title }}</h3></a></div>
+        <div>
+            {% if test.is_active %}
+                Ongoing
+            {% else %}
+                Finished
+            {% endif %}
+        </div>
+        {% with all=test.questions.all|length %}
+            <div>Questions {{ all }}</div>
+            <div>Question Rate {{ test.question_rate }} / {{ all }}</div>
+        {% endwith %}
+        <div>Cheating --</div>
+        <div>Date: {{test.created_date|date:"d.m.Y" }}</div>
+        <div>
+            {% if test.point %}
+                {{ test.point }}
+            {% else %}
+                --
+            {% endif %}
+            point{{ test.point|pluralize:'s' }}
+        </div>
+    </div>
+    {%  endfor %}
+</body>
+</html>

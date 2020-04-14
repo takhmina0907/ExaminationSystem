@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.views import (
     LoginView as BaseLoginView, LogoutView as BaseLogoutView)
 from django.core.exceptions import ValidationError
-from django.db.models import Avg
+from django.db.models import Avg, F, Count, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
@@ -21,7 +21,7 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 
 from things.admin_forms.forms import (
-    UserCreateForm, UserAuthForm, TestCreateForm,
+    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm
 )
 from things.models import TestInfo, Question, Option, User, Student, TestResult
 from things.utils.tasks import send_mail_wrapper
@@ -160,6 +160,44 @@ class StudentResultDetailView(BaseAdminView, DetailView):
         test = get_object_or_404(TestInfo, author=self.request.user,
                                  id=self.kwargs['test_id'])
         return test.results.all()
+
+
+class StudentListView(BaseAdminView, ListView):
+    model = Student
+    context_object_name = 'students'
+    template_name = 'admin/students.html'
+
+    def get_queryset(self):
+        return Student.objects.all()
+
+
+class StudentDetailView(BaseAdminView, DetailView):
+    model = Student
+    context_object_name = 'student'
+    pk_url_kwarg = 'student_id'
+    template_name = 'admin/student.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tests'] = self.object.tests.all().annotate(point=F('results__grade')) \
+            .annotate(question_rate=Count('results__answers', filter=Q(results__answers__answer__is_correct=True)))
+        return context
+
+    def get_queryset(self):
+        return Student.objects.all()
+
+
+class StudentCreateView(BaseAdminView, CreateView):
+    model = Student
+    form_class = StudentCreateForm
+    template_name = 'admin/student_create.html'
+
+    def get_success_url(self):
+        return reverse_lazy('admin-create-student-success')
+
+
+class StudentCreateSuccess(BaseAdminView, TemplateView):
+    template_name = 'admin/student_create_success.html'
 
 
 @login_required

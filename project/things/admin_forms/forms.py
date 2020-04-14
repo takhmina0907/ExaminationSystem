@@ -1,12 +1,12 @@
 import datetime
 
 from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField, AuthenticationForm)
-from django.contrib.auth import password_validation
 
 from things.models import (
-    User, TestInfo
+    User, TestInfo, Student
 )
 
 
@@ -155,3 +155,26 @@ class TestCreateForm(forms.ModelForm):
         if commit:
             test.save()
         return test
+
+
+class StudentCreateForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(StudentCreateForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['first_name'].widget.attrs['autofocus'] = 'on'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Surname'
+        self.fields['id'].widget.attrs['placeholder'] = 'ID'
+        self.fields['speciality'].widget.attrs['placeholder'] = 'Group'
+
+    class Meta:
+        model = Student
+        fields = ('first_name', 'last_name', 'id', 'speciality')
+
+    def save(self, commit=True):
+        student = super().save(commit=False)
+        student.email = str(self.cleaned_data['id'])+'@stu.sdu.edu.kz'
+        print(student.email)
+        if commit:
+            student.save()
+        return student
