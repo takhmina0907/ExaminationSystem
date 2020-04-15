@@ -43,7 +43,14 @@
         </div>
         {% with all=test.questions.all|length %}
             <div>Questions {{ all }}</div>
-            <div>Question Rate {{ test.question_rate }} / {{ all }}</div>
+            <div>
+                Question Rate
+                {% if test.point %}
+                    {{ test.question_rate }} / {{ all }}
+                {% else %}
+                    --
+                {% endif %}
+            </div>
         {% endwith %}
         <div>Cheating --</div>
         <div>Date: {{test.created_date|date:"d.m.Y" }}</div>

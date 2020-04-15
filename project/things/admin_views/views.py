@@ -1,4 +1,4 @@
-import json
+import json, io, csv
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login
@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.views import (
     LoginView as BaseLoginView, LogoutView as BaseLogoutView)
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.db.models import Avg, F, Count, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -201,114 +202,38 @@ class StudentCreateSuccess(BaseAdminView, TemplateView):
 
 
 @login_required
-def admin_questions_create(request, user_id, test_id):
-    test = get_object_or_404(TestInfo, id=test_id, author=request.user)
-    if request.is_ajax() and request.method == 'POST':
-        questions = json.loads(request.body.decode('utf-8'))
-        errors = []
-        single_choice_options_min = 2
-        single_choice_options_max = 6
-        single_choice_options_correct_max = 1
-        multiple_choice_options_min = 3
-        multiple_choice_options_max = 8
-        multiple_choice_options_correct_min = 2
+def student_csv_import(request):
+    students = request.FILES['students'].read().decode('UTF-8')
+    students_textual = io.StringIO(students)
+    students_list = list(csv.reader(students_textual, delimiter=','))
+    for index in range(len(students_list)):
+        stud_info = students_list[index]
+        if len(stud_info) == 4:
+            correct = True
 
-        if not len(questions) > 0:
-            errors.append(
-                {
-                    'error': 'Test does not have any questions'
-                }
-            )
+            if not stud_info[0].replace(' ', '').isalpha() or \
+                    not stud_info[1].replace(' ', '').isalpha():
+                correct = False
+                messages.error(request, 'Student name and surname are invalid, line %d' % index)
+            if not stud_info[2].isdigit():
+                correct = False
+                messages.error(request, 'Student id is invalid, line %d' % index)
 
-        for index in range(0, len(questions)):
-            question = questions[index]
-            options_len = len(question['options'])
-
-            if not options_len > 0:
-                errors.append(
-                    {
-                        'error': 'Question does not have any options',
-                        'question': index,
-                    }
-                )
-                continue
-
-            if question['is_multiple_choice']:
-                if options_len < multiple_choice_options_min:
-                    errors.append({
-                        'error': 'Multiple choice question should have at least {} options'.
-                            format(multiple_choice_options_min),
-                        'question': index,
-                    })
-                    continue
-                elif options_len > multiple_choice_options_max:
-                    errors.append({
-                        'error': 'Multiple choice question can\'t have more than {} options'.
-                            format(multiple_choice_options_max),
-                        'question': index,
-                    })
-                    continue
-            else:
-                if options_len < single_choice_options_min:
-                    errors.append({
-                        'error': 'Single choice question should have at least {} options'.
-                            format(single_choice_options_min),
-                        'question': index,
-                    })
-                    continue
-                elif options_len > single_choice_options_max:
-                    errors.append({
-                        'error': 'Single choice question can\'t have more than {} options'.
-                            format(single_choice_options_max),
-                        'question': index,
-                    })
-                    continue
-
-            correct_options = 0
-            for option in question['options']:
-                if option['is_correct']:
-                    correct_options += 1
-
-            if question['is_multiple_choice']:
-                if correct_options < multiple_choice_options_correct_min:
-                    errors.append({
-                        'error': 'Multiple choice question should have at least {} correct options'.
-                            format(multiple_choice_options_correct_min),
-                        'question': index,
-                    })
-                    continue
-            else:
-                if correct_options == 0:
-                    errors.append({
-                        'error': 'Single choice question should have {} correct option'.
-                            format(single_choice_options_correct_max),
-                        'question': index,
-                    })
-                    continue
-                if correct_options > single_choice_options_correct_max:
-                    errors.append({
-                        'error': 'Single choice question can\'t have more than {} correct option'.
-                            format(single_choice_options_correct_max),
-                        'question': index,
-                    })
-                    continue
-
-        if len(errors) > 0:
-            return JsonResponse({'response': json.dumps(errors)}, status=400)
+            if correct:
+                try:
+                    Student.objects.create(
+                        first_name=stud_info[0],
+                        last_name=stud_info[1],
+                        id=int(stud_info[2]),
+                        speciality=stud_info[3],
+                        email=stud_info[2]+'@stu.sdu.edu.kz'
+                    )
+                except IntegrityError:
+                    messages.error(request, 'Student with %s already exists, line %d' % (stud_info[2], index))
         else:
-            for obj in questions:
-                question = Question.objects.create(test=test,
-                                                   question=obj['question'],
-                                                   is_multiple_choice=obj['is_multiple_choice'])
-                question.save()
-                for opt in obj['options']:
-                    option = Option.objects.create(question=question,
-                                                   option=opt['option'],
-                                                   is_correct=opt['is_correct'])
-                    option.save()
-        return JsonResponse({'response': "Questions were successfully created"}, status=200)
+            messages.error(request, 'CSV file structure is incorrect, line %d' % index)
 
-    return render(request, 'admin/question_populate.html', {'test': test})
+    return HttpResponseRedirect(reverse_lazy('admin-students'))
 
 
 @login_required

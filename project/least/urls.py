@@ -25,8 +25,8 @@ from things.admin_views.views import (
     PreActivationView, ActivationView,
     StudentListView, StudentDetailView,
     StudentCreateView, StudentCreateSuccess,
+    student_csv_import, admin_question_update,
     admin_test, admin_question_add, admin_option_add,
-    admin_question_update,
 )
 
 urlpatterns = [
@@ -56,6 +56,7 @@ urlpatterns = [
     path('admin/students/', StudentListView.as_view(), name='admin-students'),
     path('admin/students/<int:student_id>', StudentDetailView.as_view(), name='admin-student-details'),
     path('admin/students/create', StudentCreateView.as_view(), name='admin-create-student'),
+    path('admin/students/create/csv', student_csv_import, name='admin-create-student-csv'),
     path('admin/students/create/success', StudentCreateSuccess.as_view(), name='admin-create-student-success'),
 
     # ajax
