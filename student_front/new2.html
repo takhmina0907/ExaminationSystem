@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="bootstrap-4.4.1-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="new1.css">
+</head>
+<style>
+	body{
+		font-family: 'Geometria', sans-serif;
+    	src: url(Geometria/Geometria.ttf);
+    	background-color: #f8f8f8;
+	}
+	.main{
+		height: 508px;
+		background: #FFFFFF;
+	}
+	.welcome {
+      height: 100vh;
+    }
+    .next{
+    	color: #4505b3;
+		border: none;
+		float: right;
+		text-decoration:none;
+    }
+    .prev{
+    	color: #4a4a4a;
+		border: none;
+		text-decoration:none;
+    }
+    .next_img{
+    	margin-left: 10px;
+    }
+    .prev_img{
+    	margin-right: 10px;
+    }
+    .sign_up {
+      height: 508px;
+    }
+    p{
+    	color: #4a4a4a; 
+    }
+    h2{
+    	color: #4505b3;
+    	font-weight: bold;
+    }
+    .reg_content {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+	.form_block{
+		margin-top: 30px;
+	}
+	.form_block input {
+		margin-bottom: 30px;
+		color: #9b9b9b;
+	}
+	
+	.custom-class {
+	  display: flex;
+	}
+	.img__container {
+	  position: relative;
+	  overflow: hidden;
+	}
+	.img__container img {
+	  position: absolute;
+	  min-height: 100%;
+	  min-width: 100%;
+	  width: 0;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+
+			<div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 welcome d-flex justify-content-center align-items-center ">
+				<div class="container main">
+					<div class="row custom-class">
+						<div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 sign_up d-flex justify-content-center align-items-center">
+							
+								<div class="reg_content">
+									<h2 class="reg_title">
+										About the test
+									</h2>
+									<p class="test_par">
+									You will have 100 minutes to complete your test. All questions will provide the multiple choice options with only one right answer. Please be careful!
+									</p>
+							
+									<p class="test_par">
+										You are strictly forbidden to close ans chance your brower tabs and swipe between the screens, since all your test result will be cancelled and you will fail the test<br>
+										Also, you should be informed that there is a highly anti-cheating option that will check your face.<br>
+										Good luck! 
+									</p>
+									
+										<a href="new1.html">
+											<button type="submit" class="prev">
+											<img src="img/prev.png" alt="" class="prev_img">Back
+											</button>
+										</a>
+									
+										
+										<a href="new_student_section.html">
+											<button type="button" class="next">
+											Start the test<img src="img/3-layers.png" alt="" class="next_img">
+											</button>
+										</a>
+										
+										
+									
+								</div>
+								
+							</div>
+							<div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 justify-content-center img__container d-none d-lg-block">
+								<img src="img/03.svg" alt="">
+								
+							</div>
+					</div>
+				
+		
+				</div>
+				
+			</div>
+			<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+		</div>
+	</div>
+	
+		
+	
+</body>
+</html>
