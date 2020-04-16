@@ -19,6 +19,9 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
+let question_add_button = $('#question-add');
+const test_id = parseInt(question_add_button.data('test-id'));
+
 function request(url, success) {
     $.ajax({
         type: 'POST',
@@ -64,9 +67,8 @@ let question_container = $('#question-card-rows');
 function question_render(response) {
     response = JSON.parse(response);
 
-    let add_button = $('#question-add');
-    const question_no = parseInt(add_button.data('question-count'))+1;
-    add_button.data('question-count', question_no);
+    const question_no = parseInt(question_add_button.data('question-count'))+1;
+    question_add_button.data('question-count', question_no);
 
     question_container.append(
         `<div class="card">
@@ -93,8 +95,8 @@ function question_render(response) {
     );
 }
 
-$('#question-add').click(function () {
-        request('/admin/12/tests/1/questions/create', question_render);
+question_add_button.click(function () {
+        request(`/admin/tests/${test_id}/questions/create`, question_render);
     }
 );
 
@@ -112,7 +114,7 @@ function option_render(response){
 
 $(document).on('click', 'button.add-option', function () {
     const question_id = $(this).data('question-id');
-    request(`/admin/12/tests/1/questions/${question_id}/options/create`, option_render);
+    request(`/admin/tests/${test_id}/questions/${question_id}/options/create`, option_render);
 });
 
 $(document).on('click', '.question-save', function() {
@@ -130,15 +132,15 @@ $(document).on('click', '.question-save', function() {
         });
     });
 
-    console.log(question);
-
     const checkboxes = $(`input[name|="question-${question_id}-option"][type="checkbox"]`);
     checkboxes.each(function () {
         let option = question.options.find(element => element.id === parseInt($(this).val()));
         option.is_correct = $(this).is(':checked');
     });
 
-    request_with_data(`/admin/12/tests/1/questions/${question_id}/update`, question)
+    $(`.question-save button[data-question-id=${question_id}]`).visibility = 'hidden';
+
+    request_with_data(`/admin/tests/${test_id}/questions/${question_id}/update`, question);
 });
 
 $(document).on('change', 'input.is-correct', function () {

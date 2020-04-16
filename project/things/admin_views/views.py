@@ -319,7 +319,7 @@ def admin_test(request, user_id, test_id):
 
 
 @login_required
-def admin_question_add(request, user_id, test_id):
+def admin_question_add(request, test_id):
     test = get_object_or_404(TestInfo, id=test_id, author=request.user)
 
     if request.is_ajax() and request.method == 'POST':
@@ -349,7 +349,18 @@ def admin_question_add(request, user_id, test_id):
 
 
 @login_required
-def admin_question_update(request, user_id, test_id, question_id):
+def admin_question_delete(request, question_id):
+    if request.is_ajax() and request.method == 'POST':
+        question = get_object_or_404(Question, id=question_id)
+        question.delete()
+        return JsonResponse({'response': 'Question was successfully deleted',
+                             'question_id': question_id}, status=200)
+
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
+
+
+@login_required
+def admin_question_update(request, test_id, question_id):
     if request.is_ajax() and request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         question = Question.objects.get(id=data['id'])
@@ -395,7 +406,7 @@ def admin_question_update(request, user_id, test_id, question_id):
 
 
 @login_required
-def admin_option_add(request, user_id, test_id, question_id):
+def admin_option_add(request, test_id, question_id):
     if request.is_ajax() and request.method == 'POST':
         question = get_object_or_404(Question, id=question_id)
         option = Option.objects.create(
