@@ -9,8 +9,12 @@
         <b>{{ student.first_name }} {{ student.last_name }}</b>
     </div>
     <div>
-        <span>Edit</span> ||
-        <span>Delete</span> ||
+        <span><a href="{% url 'admin-edit-student' student.id %}"><button>Edit</button></a></span> ||
+        <span>
+            <form method="POST" action="{% url 'admin-delete-student' student.id %}">
+               {% csrf_token %}<input type="submit" value="Delete">
+            </form>
+        </span>
     </div>
     <br/>
     <div><b>About student</b></div>

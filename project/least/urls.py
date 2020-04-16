@@ -25,6 +25,9 @@ from things.admin_views.views import (
     PreActivationView, ActivationView,
     StudentListView, StudentDetailView,
     StudentCreateView, StudentCreateSuccess,
+    StudentDeleteView, TestDeleteView,
+    StudentEditView, TestEditView,
+    copy_test,
     student_csv_import, admin_question_update,
     admin_test, admin_question_add, admin_option_add,
 )
@@ -48,6 +51,9 @@ urlpatterns = [
     path('admin/activate/<uidb64>/<token>/', ActivationView.as_view(), name='admin-activation'),
     path('admin/<int:id>/tests/', AdminTestListView.as_view(), name='admin-tests'),
     path('admin/<int:id>/tests/create/', AdminTestCreateView.as_view(), name='admin-create-test'),
+    path('admin/<int:user_id>/tests/<int:test_id>/edit', TestEditView.as_view(), name='admin-edit-test'),
+    path('admin/<int:user_id>/tests/<int:test_id>/delete', TestDeleteView.as_view(), name='admin-delete-test'),
+    path('admin/<int:user_id>/tests/<int:test_id>/copy', copy_test, name='admin-copy-test'),
     path('admin/<int:user_id>/tests/<int:test_id>/details', AdminTestDetailView.as_view(),
          name='admin-test-details'),
     path('admin/<int:user_id>/tests/<int:test_id>/result/<int:result_id>', StudentResultDetailView.as_view(),
@@ -58,6 +64,8 @@ urlpatterns = [
     path('admin/students/create', StudentCreateView.as_view(), name='admin-create-student'),
     path('admin/students/create/csv', student_csv_import, name='admin-create-student-csv'),
     path('admin/students/create/success', StudentCreateSuccess.as_view(), name='admin-create-student-success'),
+    path('admin/students/<int:student_id>/delete', StudentDeleteView.as_view(), name='admin-delete-student'),
+    path('admin/students/<int:student_id>/edit', StudentEditView.as_view(), name='admin-edit-student'),
 
     # ajax
     path('admin/<int:user_id>/tests/<int:test_id>/questions/create', admin_question_add, name='admin-question-add'),

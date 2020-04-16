@@ -174,7 +174,21 @@ class StudentCreateForm(forms.ModelForm):
     def save(self, commit=True):
         student = super().save(commit=False)
         student.email = str(self.cleaned_data['id'])+'@stu.sdu.edu.kz'
-        print(student.email)
         if commit:
             student.save()
         return student
+
+
+class StudentEditForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(StudentEditForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['first_name'].widget.attrs['autofocus'] = 'on'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Surname'
+        self.fields['email'].widget.attrs['placeholder'] = 'Email'
+        self.fields['speciality'].widget.attrs['placeholder'] = 'Group'
+
+    class Meta:
+        model = Student
+        fields = ('first_name', 'last_name', 'speciality', 'email')

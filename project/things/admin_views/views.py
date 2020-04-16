@@ -1,4 +1,6 @@
-import json, io, csv
+import json
+import io
+import csv
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login
@@ -16,13 +18,13 @@ from django.urls import reverse_lazy, reverse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 
 from things.admin_forms.forms import (
-    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm
+    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm
 )
 from things.models import TestInfo, Question, Option, User, Student, TestResult
 from things.utils.tasks import send_mail_wrapper
@@ -115,6 +117,49 @@ class AdminTestCreateView(BaseAdminView, CreateView):
                                              'test_id': self.object.id})
 
 
+class TestDeleteView(BaseAdminView, DeleteView):
+    model = TestInfo
+    pk_url_kwarg = 'test_id'
+
+    def get_queryset(self):
+        return self.request.user.tests.all()
+
+    def get_success_url(self):
+        return reverse_lazy('admin-tests', kwargs={'id': self.kwargs['user_id']})
+
+    def delete(self, request, *args, **kwargs):
+        test = self.get_object()
+        messages.success(self.request, 'You have deleted %s test successfully'
+                         % test.title)
+        return super(TestDeleteView, self).delete(request, *args, **kwargs)
+
+
+class TestEditView(BaseAdminView, UpdateView):
+    form_class = TestCreateForm
+    template_name = 'admin/test_edit.html'
+    context_object_name = 'test'
+    pk_url_kwarg = 'test_id'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_success_url(self):
+        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
+                                                          'test_id': self.object.id})
+
+
+@login_required
+def copy_test(request, user_id, test_id):
+    test = get_object_or_404(TestInfo, author=request.user,
+                             id=test_id)
+    test.id = None
+    test.title = test.title + ' - Copy'
+    test.save()
+    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'user_id': request.user.id,
+                                                                           'test_id': test.id}))
+
+
 class AdminTestListView(BaseAdminView, ListView):
     model = TestInfo
     context_object_name = 'tests'
@@ -201,6 +246,31 @@ class StudentCreateSuccess(BaseAdminView, TemplateView):
     template_name = 'admin/student_create_success.html'
 
 
+class StudentDeleteView(BaseAdminView, DeleteView):
+    model = Student
+    pk_url_kwarg = 'student_id'
+    success_url = reverse_lazy('admin-students')
+
+    def delete(self, request, *args, **kwargs):
+        student = self.get_object()
+        messages.success(self.request, 'You have deleted %s %s successfully'
+                         % (student.first_name, student.last_name))
+        return super(StudentDeleteView, self).delete(request, *args, **kwargs)
+
+
+class StudentEditView(BaseAdminView, UpdateView):
+    form_class = StudentEditForm
+    template_name = 'admin/student_edit.html'
+    context_object_name = 'student'
+    pk_url_kwarg = 'student_id'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Student, id=self.kwargs['student_id'])
+
+    def get_success_url(self):
+        return reverse_lazy('admin-student-details', kwargs={'student_id': self.object.id})
+
+
 @login_required
 def student_csv_import(request):
     students = request.FILES['students'].read().decode('UTF-8')
@@ -226,7 +296,7 @@ def student_csv_import(request):
                         last_name=stud_info[1],
                         id=int(stud_info[2]),
                         speciality=stud_info[3],
-                        email=stud_info[2]+'@stu.sdu.edu.kz'
+                        email=stud_info[2] + '@stu.sdu.edu.kz'
                     )
                 except IntegrityError:
                     messages.error(request, 'Student with %s already exists, line %d' % (stud_info[2], index))
