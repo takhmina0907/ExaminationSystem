@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.views import (
     LoginView as BaseLoginView, LogoutView as BaseLogoutView)
 from django.core.exceptions import ValidationError
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Avg, F, Count, Q
 from django.http import HttpResponseRedirect, JsonResponse
@@ -179,21 +180,32 @@ class AdminTestDetailView(BaseAdminView, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['average_points'] = self.get_object().results.aggregate(Avg('grade')).get('grade__avg')
-        sql = 'SELECT "things_student"."id", "things_student"."first_name", ' \
-              '"things_student"."last_name", "things_student"."speciality", ' \
-              '"things_testresult"."grade", "things_testresult"."id" AS result_id ' \
-              'FROM "things_student" ' \
-              'INNER JOIN "things_testinfo_students"' \
-              ' ON ("things_student"."id" = "things_testinfo_students"."student_id") ' \
-              'LEFT JOIN "things_testresult" ' \
-              'ON "things_student"."id"="things_testresult"."student_id" ' \
-              'WHERE "things_testinfo_students"."testinfo_id" = %d ' \
-              'ORDER BY "things_student"."first_name", "things_student"."last_name"' % self.object.pk
-        context['students'] = Student.objects.raw(sql)
         return context
 
     def get_queryset(self):
         return self.request.user.tests.all()
+
+
+@login_required
+def students_results(request, test_id, sort_by):
+    if request.is_ajax() and request.method == 'POST':
+        test = get_object_or_404(TestInfo, author=request.user.id,
+                                 id=test_id)
+        results = test.students.all().annotate(points=F('results__grade')) \
+            .annotate(result_id=F('results__id'))
+        if sort_by == 'student-name':
+            results = results.order_by('first_name', 'last_name')
+        elif sort_by == 'student-group':
+            results = results.order_by('speciality')
+        elif sort_by == 'student-point-ascending':
+            results = results.order_by('points')
+        elif sort_by == 'student-point-descending':
+            results = results.order_by('-points')
+        context = list()
+        for result in results.values():
+            context.append(result)
+        return JsonResponse(json.dumps(context, cls=DjangoJSONEncoder), safe=False, status=200)
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
 class StudentResultDetailView(BaseAdminView, DetailView):

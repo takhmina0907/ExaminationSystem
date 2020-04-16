@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Test</title>
 </head>
 <body>
     <div>
@@ -68,37 +69,41 @@
     <div><b>Test statistics</b></div>
     <br/>
     <div><b>Students and grades</b></div>
-    <div>Sort by: Student name</div>
+    <div>
+        <label>
+            Sort by:
+            <select id="sort-by" data-test-id="{{ test.id }}" data-user-id="{{ request.user.id }}">
+                <option value="student-name">
+                    Student name
+                </option>
+                <option value="student-group">
+                    Student group
+                </option>
+                <option value="student-point-ascending">
+                    Point(ascending)
+                </option>
+                <option value="student-point-descending">
+                    Point(descending)
+                </option>
+            </select>
+        </label>
+    </div>
     <br/>
     <table>
-        <tr>
-            <th>Student name</th>
-            <th>Student ID</th>
-            <th>Group</th>
-            <th>Points</th>
-            <th>View answers</th>
-        </tr>
-        {% for student in students %}
-        <tr>
-            <td>{{ student.first_name }} {{ student.last_name }}</td>
-            <td>{{ student.id }}</td>
-            <td>{{ student.speciality }}</td>
-            <td>
-                {% if student.grade %}
-                    {{ student.grade }}
-                {% else %}
-                    --
-                {% endif %}
-            </td>
-            <td>
-                {% if student.result_id %}
-                    <a href="{% url 'admin-student-result' request.user.id  test.id student.result_id %}">Go to answers</a>
-                {% else %}
-                    --
-                {% endif %}
-            </td>
-        </tr>
-        {%  endfor %}
+        <thead>
+            <tr>
+                <td>Student name</td>
+                <td>Student ID</td>
+                <td>Group</td>
+                <td>Points</td>
+                <td>View answers</td>
+            </tr>
+        </thead>
+        <tbody id="student-result">
+
+        </tbody>
     </table>
 </body>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/test.js' %}"></script>
 </html>

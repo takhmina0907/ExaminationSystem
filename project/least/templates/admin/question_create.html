@@ -66,9 +66,9 @@
             {% endfor %}
         </div>
         <div>
-            <button id="question-add" data-question-count="{{ questions|length }}">+ Add question</button>
+            <button id="question-add" data-question-count="{{ questions|length }}" data-test-id="{{ test.id }}">+ Add question</button>
         </div>
     </body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/question_create.js' %}"></script>
 </html>
