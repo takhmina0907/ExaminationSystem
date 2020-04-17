@@ -71,6 +71,7 @@ class Student(models.Model):
     email = models.EmailField(max_length=100)
     speciality = models.CharField(max_length=200, blank=True)
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
+    photo = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.email)
@@ -111,15 +112,6 @@ class Option(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.option, self.question.question)
 
-
-class Student(models.Model):
-    id = models.IntegerField(blank=True, primary_key=True)
-    email = models.EmailField(max_length=100)
-    speciality = models.CharField(max_length=200, blank=True)
-    photo = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
-
-    def __str__(self):
-        return '{} - {}'.format(self.id, self.email)
 
 
 class TestResult(models.Model):
