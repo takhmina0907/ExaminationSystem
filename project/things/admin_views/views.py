@@ -170,6 +170,11 @@ class AdminTestListView(BaseAdminView, ListView):
         return self.request.user.tests \
             .annotate(average_points=Avg('results__grade'))
 
+    def get_context_data(self, **kwargs):
+        context = super(AdminTestListView, self).get_context_data(**kwargs)
+        context['test_state'] = TestInfo.TestState.__members__
+        return context
+
 
 class AdminTestDetailView(BaseAdminView, DetailView):
     model = TestInfo

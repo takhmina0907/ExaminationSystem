@@ -1,3 +1,6 @@
+import datetime
+import enum
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -84,6 +87,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
 
+class Speciality(models.Model):
+    title = models.CharField(max_length=200)
+
+
 class Student(models.Model):
     id = models.IntegerField(blank=True, primary_key=True)
     first_name = models.CharField(max_length=100)
@@ -102,13 +109,32 @@ class TestInfo(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tests')
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
     deadline = models.DateTimeField(blank=False, null=False)
+    start_date = models.DateField(blank=False, null=False)
+    start_time = models.TimeField(blank=False, null=False)
+    end_time = models.TimeField(blank=False, null=False)
     duration = models.PositiveSmallIntegerField()
     is_visible = models.BooleanField(default=True)
     students = models.ManyToManyField(Student, related_name='tests', blank=True)
 
+    class TestState(enum.Enum):
+        not_started = 'Not Started'
+        ongoing = 'Ongoing'
+        finished = 'Finished'
+
     @property
     def is_active(self):
-        return self.deadline > timezone.now()
+        now = datetime.datetime.now()
+        start = datetime.datetime.combine(self.start_date,
+                                          self.start_time)
+        end = datetime.datetime.combine(self.start_date,
+                                             self.end_time)
+        if now < start:
+            return self.TestState.not_started
+        elif now > end:
+            return self.TestState.finished
+        else:
+            return self.TestState.ongoing
+        # return self.deadline > timezone.now()
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.author.email)

@@ -132,26 +132,39 @@ class UserChangeForm(forms.ModelForm):
 
 
 class TestCreateForm(forms.ModelForm):
-    deadline_date = forms.DateField(input_formats=('%d/%m/%Y',))
-    deadline_time = forms.TimeField(input_formats=('%H:%M',))
-
     def __init__(self, *args, **kwargs):
         super(TestCreateForm, self).__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['placeholder'] = 'Test name'
         self.fields['title'].widget.attrs['autofocus'] = 'on'
         self.fields['description'].widget.attrs['placeholder'] = 'Description'
         self.fields['duration'].widget.attrs['placeholder'] = 'Test duration'
-        self.fields['deadline_date'].widget.attrs['placeholder'] = 'Date'
-        self.fields['deadline_time'].widget.attrs['placeholder'] = 'Time'
+        self.fields['start_date'].widget.attrs['placeholder'] = 'Date'
+        self.fields['start_time'].widget.attrs['placeholder'] = 'Time'
 
     class Meta:
         model = TestInfo
-        fields = ('title', 'description', 'duration')
+        fields = ('title', 'description', 'duration', 'start_date', 'start_time')
+
+    start_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={'type': 'date'}
+        ))
+    start_time = forms.TimeField(
+        widget=forms.DateInput(
+            attrs = {'type': 'time'}
+        ))
 
     def save(self, commit=True):
         test = super().save(commit=False)
-        test.deadline = datetime.datetime.combine(self.cleaned_data['deadline_date'],
-                                                  self.cleaned_data['deadline_time'])
+        test.deadline = datetime.datetime.combine(self.cleaned_data['start_date'],
+                                                  self.cleaned_data['start_time'])
+
+        temp_date = datetime.datetime(1, 1, 1, self.cleaned_data['start_time'].hour,
+                                      self.cleaned_data['start_time'].minute, self.cleaned_data['start_time'].second)
+
+        temp_date = temp_date + datetime.timedelta(minutes=self.cleaned_data['duration'])
+        test.end_time = temp_date.time()
+
         if commit:
             test.save()
         return test

@@ -1,0 +1,67 @@
+.add-btn{
+	width: 119px;
+	height: 41px;
+	font-size: 14px;
+	text-align: center;
+	border: 1px dashed #A4A4A4;
+	color: rgba(55, 55, 55, 0.7);
+	margin-top: 20px;/*найди замену*/
+	background-color: #f8f8f8;
+}
+.title_exam{
+	font-size: 20px;
+	font-weight: 600;
+	color: #373737;
+}
+.status_exam{
+	margin-left: 16px;
+}
+/*input for test*/
+.form_block input{
+	margin-bottom: 20px;
+	width: 400px;
+	height: 48px;
+}
+.fixed-row-bottom { 
+	position: fixed; 
+	bottom: 0;
+	
+	height: 50px;
+}
+.ongoing{
+	background: rgba(255, 208, 88, 0.4);
+	width: 95px;
+	height: 25px;
+	text-align: center;
+	color: #F2AE00;
+	border:none;
+
+}
+.finished{
+	background: rgba(59, 210, 119, 0.4);
+	color: #119A48;
+}
+.info{
+	margin-top: 10px;
+}
+.average{
+	font-weight: 600;
+	font-size: 18px;
+	color: #A4A4A4;
+}
+.total{
+	font-weight: 600;
+	font-size: 30px;
+	color: #392CD1;
+}
+.info-text{
+	font-weight: 500;
+	font-size: 14px;
+}
+
+
+
+
+
+
+
