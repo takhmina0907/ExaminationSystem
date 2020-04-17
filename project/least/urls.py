@@ -35,16 +35,13 @@ from things.admin_views.views import (
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
-    path('Test/<id>/result/', views.result, name='res'),
-    path('Test/<id>', views.Test_view, name='test'),
-    path('registration1', views.reg1, name="reg1"),
-    path('', views.index, name='home'),
-    path('registration2/<id>', views.reg2, name='reg2'),
-    # path('registration3/<id>',views.reg4,name='reg4'),
-    path('registration4/<id>', views.reg3, name='reg3'),
-    path('notAvailable/<id>', views.no, name="notAvailable"),
-    path('Cannot/<id>', views.cannot, name="Cannot"),
-
+    path('Test/<id>/result/',views.result, name='res'),
+    path('Test/<id>',views.Test_view,name='test'),
+    path('',views.reg1,name="reg1"),
+    path('TestInfo/<id>',views.reg3,name='reg3'),
+    path('notAvailable/<id>',views.no,name="notAvailable"),
+    path('Cannot/<id>',views.cannot,name="Cannot"),
+#----------------------------
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),
     path('admin/logout/', LogoutView.as_view(), name='admin-logout'),
