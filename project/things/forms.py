@@ -4,6 +4,7 @@ from .models import Test
 
 class LoginForm(forms.Form):
    id = forms.CharField(max_length = 100,)
+   full_name = forms.CharField(max_length = 100,)
 
 class TestForm (ModelForm):
     class Meta:

@@ -1,6 +1,8 @@
+
 body{
+    font-family: 'Geometria', sans-serif;
+    src: url(Geometria/Geometria.ttf);
 	background-color: #f8f8f8;
-	font-family: 'Montserrat', sans-serif;
 }
 
 ul, li {
@@ -23,24 +25,30 @@ button::-moz-focus-inner {
 .cn {
 	background-color: white;
 	margin-top: 50px;
-	padding-left: 100px;
-	padding-top: 80px;
-	padding-bottom: 100px;
+	padding-left: 70px;
+    padding-right: 70px;
+    padding-top: 80px;
+    padding-bottom: 100px;
 }
 
 .test_title {
-    color: #4505b3;
-    font-size: 24px;
-    font-weight: bold;
+	color: #4505b3;
+	font-size: 24px;
+	font-weight: bold;
 }
 
 .test_par {
 	color: #4a4a4a;
 	font-size: 16px;
 	line-height: 20px;
-	width: 100%;
+	width: 80%;
 	margin-bottom: 60px;
-	padding-right: 60px;
+}
+.reg_par {
+	color: #4a4a4a;
+	font-size: 16px;
+	width: 80%;
+	padding-bottom: 80px;
 }
 
 /* ------- Question block -------*/
@@ -50,17 +58,17 @@ button::-moz-focus-inner {
 }
 
 .numb {
-    color: #4505b3;
-    font-size: 18px;
-    margin-right: 20px;
-    margin-top: 3px;
+	color: #4505b3;
+	font-size: 18px;
+	margin-right: 20px;
+	margin-top: 3px;
 }
 
 .question_title {
 	width: 938px;
 	color: #4a4a4a;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: 500;
 }
 
 .answer {
@@ -85,11 +93,11 @@ label input {
 .Section2 {
 	position: fixed;
 	left: 0; bottom: 0; /* Левый нижний угол */
-	height: 62px;
+	height: 70px;
 	width: 100%;
 	background-color: white;
 	box-shadow: 0px -1px 15px 2px #cbcbcb;
-	padding-top: 18px;
+	padding-top: 20px;
 }
 
 .time_svg {
@@ -106,9 +114,9 @@ label input {
 }
 
 .category {
-    color: #4505b3;
-    font-size: 16px;
-    text-align: center;
+	color: #9b9b9b;
+	font-size: 16px;
+	text-align: center;
 }
 
 .category:hover{
@@ -161,24 +169,76 @@ input[type="radio"]+i:before {
 input:checked+i:before {
     transform: scale(1); 
 }
-
-.under_line {
-	height: 10px;
-	width: 100%;
+.skip-btn{
+	width: 150px;
+	height: 45px;
+	border-radius: 8px;
+	border: 1px solid #9a9a9a;
+	background-color: #9a9a9a;
+	font-size: 16px;
+	text-align: center;
+	color: #ffffff;
+	margin-right: 5px;
+	margin-bottom: 10px;
+}
+.next-btn{
+	width: 150px;
+	height: 45px;
+	border-radius: 8px;
+	border: 1px solid #4505b3;
 	background-color: #4505b3;
+	font-size: 16px;
+	text-align: center;
+	color: #ffffff;
 }
 
-.finance {
-	color: #4a4a4a;
+.next{
+    color: #4505b3;
+	border: none;
+	float: right;
+	text-decoration:none;
+	font-weight: 500;
 }
-.question.d-flex {
-    flex-wrap: wrap;
+.prev{
+   	color: #4a4a4a;
+	border: none;
+	text-decoration:none;
+	font-weight: 500;
 }
-img{
-	width: 30%;
-	height: 20%;
+.next_img{
+    margin-left: 10px;
 }
-#return_statment{
+.prev_img{
+    margin-right: 10px;
+}
+.prev_q{
+	margin-top: 20px;
+}
+.next_q{
+	margin-top: 50px;
+}
+.num_of_q{
+	margin-top: 3px;
+	color: #4505b3;
+	/*
+	text-decoration: underline;
+	text-decoration-style: dashed; */
+}
+#myBtn {
+	width: 150px;
+	height: 45px;
+	border-radius: 8px;
+	border: 1px solid #4505b3;
+	background-color: #4505b3;
+	font-size: 18px;
+	color: #ffffff;
+	margin-top: -7px;
+}
+#myBtn:hover{
+	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+}
+
+#btnEnd {
 	width: 90%;
 	height: 38px;
 	border-radius: 4px;
@@ -187,11 +247,22 @@ img{
 	font-size: 16px;
 	text-align: center;
 	color: #ffffff;
-	margin-left: 30px;
-	margin-top: -3px;
+	margin-left: 14px;
+	
+
 }
 
 .category_block {
- width: 140px;
+	width: 140px;
 }
 
+.category {
+	color: #9b9b9b;
+	font-size: 16px;
+	text-align: center;
+}
+
+.category:hover{
+	text-decoration: none;
+	color: #4a4a4a;
+}
