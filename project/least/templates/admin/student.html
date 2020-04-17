@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ student.first_name }} {{ student.last_name }}</title>
+</head>
+<body>
+    <div>
+        <b>{{ student.first_name }} {{ student.last_name }}</b>
+    </div>
+    <div>
+        <span><a href="{% url 'admin-edit-student' student.id %}"><button>Edit</button></a></span> ||
+        <span>
+            <form method="POST" action="{% url 'admin-delete-student' student.id %}">
+               {% csrf_token %}<input type="submit" value="Delete">
+            </form>
+        </span>
+    </div>
+    <br/>
+    <div><b>About student</b></div>
+    <br/>
+    <div>
+        <span>
+            Date created
+            <b>{{ student.created_date|date:"d.m.Y" }}</b>
+        </span> ||
+        <span>
+            Student ID
+            <b>{{ student.id }}</b>
+        </span> ||
+        <span>
+            Tests
+            <b>{{ student.tests.all|length }}</b>
+        </span>
+    </div>
+    <br/>
+    <div><b>Student's tests</b></div>
+    {% for test in tests %}
+    <div>
+        <div><a><h3>{{ test.title }}</h3></a></div>
+        <div>
+            {% if test.is_active %}
+                Ongoing
+            {% else %}
+                Finished
+            {% endif %}
+        </div>
+        {% with all=test.questions.all|length %}
+            <div>Questions {{ all }}</div>
+            <div>
+                Question Rate
+                {% if test.point %}
+                    {{ test.question_rate }} / {{ all }}
+                {% else %}
+                    --
+                {% endif %}
+            </div>
+        {% endwith %}
+        <div>Cheating --</div>
+        <div>Date: {{test.created_date|date:"d.m.Y" }}</div>
+        <div>
+            {% if test.point %}
+                {{ test.point }}
+            {% else %}
+                --
+            {% endif %}
+            point{{ test.point|pluralize:'s' }}
+        </div>
+    </div>
+    {%  endfor %}
+</body>
+</html>

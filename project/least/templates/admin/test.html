@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+    <div>
+        <span><b>{{test.title}}</b></span> ||
+        <span>
+            {% if test.is_active %}
+                Ongoing
+            {% else %}
+                Finished
+            {% endif %}
+        </span> ||
+        <span>
+            {% if average_points %}
+                <b>{{ average_points }}</b>
+            {% else %}
+                --
+            {% endif %}
+            average point
+        </span>
+    </div>
+    <div>
+        <span><a href="{% url 'admin-edit-test' request.user.id test.id %}"><button>Edit</button></a></span> ||
+        <span><a href="{% url 'admin-copy-test' request.user.id test.id %}"><button>Copy</button></a></span> ||
+        <span>
+            <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}">
+               {% csrf_token %}<input type="submit" value="Delete">
+            </form>
+        </span>
+    </div>
+    <br/>
+    <div><b>About the test</b></div>
+    <br/>
+    <div>Test link</div>
+    <div>https://www.makingitdone.kz/testid123456789</div>
+    <br/>
+    <div>Description</div>
+    <div>{{ test.description }}</div>
+    <br/>
+    <div>
+        <span>
+            Date created
+            <b>{{test.created_date|date:"d.m.Y" }}</b>
+        </span> ||
+        <span>
+            Students
+            <b>{{test.students|length}}</b>
+        </span> ||
+        <span>
+            Questions
+            <b>{{test.questions.all|length}}</b>
+        </span> ||
+        <span>
+            Test duration
+            <b>{{test.duration}} min</b>
+        </span> ||
+        <span>
+            Test availability
+            <b>{{test.deadline|date:"d.m.Y H:i"}}</b>
+            <b>{{test.duration}} min</b>
+        </span>
+    </div>
+    <br/>
+    <div><b>Test statistics</b></div>
+    <br/>
+    <div><b>Students and grades</b></div>
+    <div>
+        <label>
+            Sort by:
+            <select id="sort-by" data-test-id="{{ test.id }}" data-user-id="{{ request.user.id }}">
+                <option value="student-name">
+                    Student name
+                </option>
+                <option value="student-group">
+                    Student group
+                </option>
+                <option value="student-point-ascending">
+                    Point(ascending)
+                </option>
+                <option value="student-point-descending">
+                    Point(descending)
+                </option>
+            </select>
+        </label>
+    </div>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <td>Student name</td>
+                <td>Student ID</td>
+                <td>Group</td>
+                <td>Points</td>
+                <td>View answers</td>
+            </tr>
+        </thead>
+        <tbody id="student-result">
+
+        </tbody>
+    </table>
+</body>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/test.js' %}"></script>
+</html>

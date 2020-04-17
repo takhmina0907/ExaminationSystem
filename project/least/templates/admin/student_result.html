@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <span><b>{{ result.student.first_name }} {{ result.student.last_name }}</b></span>
+        <span><b>{{ result.grade }} points</b></span>
+    </div>
+    <br/>
+    <div>{{ result.test.title }}</div>
+    <br/>
+    <div><b>No cheating detected</b></div>
+    <br/>
+    <div><b>Student's answers</b></div>
+    <br/>
+    {% for answer in result.answers.all %}
+        <div style="background-color:{% if answer.answer.is_correct %} skyblue {% elif not answer.answer.is_correct %} grey {% endif %}">
+            <div>
+                <span>Q{{ forloop.counter }} {{ answer.question.question }}</span> ||
+                <span>
+                    {% if not answer.question.is_multiple_choice %}
+                        Single-answer
+                    {% else %}
+                        Multiple-answer
+                    {% endif %}
+                </span>
+            </div>
+            {{ answer.answer.is_correct }}
+            <div>
+                ||
+                {% for option in answer.question.options.all %}
+                    {% if option.is_correct %}
+                        <span style="color:greenyellow;">{{ option.option }} ✓</span> ||
+                    {% else %}
+                        {% if answer.answer == option %}
+                            <span style="color:red">{{ option.option }} ✕</span> ||
+                        {% else %}
+                            <span>{{ option.option }} ✕</span> ||
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</body>
+</html>

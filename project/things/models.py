@@ -1,7 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.db import models
+from django.utils import timezone
 
 from .directionOfFile import images_upload,student_photo_upload
 
@@ -51,9 +51,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=100, blank=False)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    place_of_work = models.CharField(max_length=256)
+    is_email_confirmed = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'place_of_work']
 
     objects = UserManager()
 
@@ -62,12 +64,31 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
 
+class Student(models.Model):
+    id = models.IntegerField(blank=True, primary_key=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+    speciality = models.CharField(max_length=200, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.id, self.email)
+
+
 class TestInfo(models.Model):
     title = models.CharField(max_length=500, null=False, blank=False)
+    description = models.TextField(blank=False, null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tests')
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
     deadline = models.DateTimeField(blank=False, null=False)
+    duration = models.PositiveSmallIntegerField()
     is_visible = models.BooleanField(default=True)
+    students = models.ManyToManyField(Student, related_name='tests', blank=True)
+
+    @property
+    def is_active(self):
+        return self.deadline > timezone.now()
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.author.email)
@@ -102,7 +123,7 @@ class Student(models.Model):
 
 
 class TestResult(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='results')
     test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='results')
     grade = models.FloatField()
     submitted_date = models.DateTimeField(auto_now_add=True, blank=True)
@@ -112,7 +133,8 @@ class TestResult(models.Model):
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    test = models.ForeignKey(TestResult, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.ForeignKey(Option, on_delete=models.CASCADE)
 
     def __str__(self):
