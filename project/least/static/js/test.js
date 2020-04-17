@@ -47,7 +47,7 @@ function result_render(response) {
                 `<tr>
                     <td>${response[i].first_name} ${response[i].last_name}</td>
                     <td>${response[i].id}</td>
-                    <td>${response[i].speciality}</td>
+                    <td>${response[i].speciality_title}</td>
                     <td>--</td>
                     <td>--</td>
                 </tr>`
@@ -57,7 +57,7 @@ function result_render(response) {
                 `<tr>
                     <td>${response[i].first_name} ${response[i].last_name}</td>
                     <td>${response[i].id}</td>
-                    <td>${response[i].speciality}</td>
+                    <td>${response[i].speciality_title}</td>
                     <td>${response[i].points}</td>
                     <td><a href="/admin/${user_id}/tests/${test_id}/result/${response[i].result_id}/">Go to answers</a></td>
                 </tr>`

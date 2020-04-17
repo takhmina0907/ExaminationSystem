@@ -19,13 +19,13 @@ from django.urls import reverse_lazy, reverse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 
 from things.admin_forms.forms import (
-    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm
+    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm, StudentAddForm
 )
 from things.models import TestInfo, Question, Option, User, Student, TestResult, Speciality
 from things.utils.tasks import send_mail_wrapper
@@ -118,6 +118,36 @@ class AdminTestCreateView(BaseAdminView, CreateView):
                                              'test_id': self.object.id})
 
 
+class TestStudentAddView(BaseAdminView, FormView):
+    form_class = StudentAddForm
+    template_name = 'admin/test_add_student.html'
+
+    def get_object(self):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['test'] = self.get_object()
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        test = self.get_object()
+        initial['specialities'] = list(test.students.all().values_list('speciality', flat=True).distinct())
+        return initial
+
+    def get_success_url(self):
+        return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
+
+    def form_valid(self, form):
+        specialities = list(form.cleaned_data['specialities'].values_list('id', flat=True))
+        students = Student.objects.filter(speciality__in=specialities)
+        test = self.get_context_data()['test']
+        test.students.add(*students)
+        return HttpResponseRedirect(self.get_success_url())
+
+
 class TestDeleteView(BaseAdminView, DeleteView):
     model = TestInfo
     pk_url_kwarg = 'test_id'
@@ -196,12 +226,14 @@ def students_results(request, test_id, sort_by):
     if request.is_ajax() and request.method == 'POST':
         test = get_object_or_404(TestInfo, author=request.user.id,
                                  id=test_id)
-        results = test.students.all().annotate(points=F('results__grade')) \
-            .annotate(result_id=F('results__id'))
+        results = test.students.all()\
+            .annotate(points=F('results__grade')) \
+            .annotate(result_id=F('results__id')) \
+            .annotate(speciality_title=F('speciality__title'))
         if sort_by == 'student-name':
             results = results.order_by('first_name', 'last_name')
         elif sort_by == 'student-group':
-            results = results.order_by('speciality')
+            results = results.order_by('speciality__title')
         elif sort_by == 'student-point-ascending':
             results = results.order_by('points')
         elif sort_by == 'student-point-descending':
@@ -244,6 +276,7 @@ class StudentDetailView(BaseAdminView, DetailView):
         context = super().get_context_data(**kwargs)
         context['tests'] = self.object.tests.all().annotate(point=F('results__grade')) \
             .annotate(question_rate=Count('results__answers', filter=Q(results__answers__answer__is_correct=True)))
+        context['test_state'] = TestInfo.TestState.__members__
         return context
 
     def get_queryset(self):
@@ -254,15 +287,6 @@ class StudentCreateView(BaseAdminView, CreateView):
     model = Student
     form_class = StudentCreateForm
     template_name = 'admin/student_create.html'
-
-    def form_valid(self, form):
-        # noinspection PyAttributeOutsideInit
-        self.object = form.save()
-        title = self.object.speciality.strip().upper()
-        speciality = Speciality.objects.filter(title=title)
-        if not speciality.exists():
-            Speciality.objects.create(title=title)
-        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy('admin-create-student-success')
@@ -328,11 +352,13 @@ def student_csv_import(request):
 
             if correct:
                 try:
+                    speciality = Speciality.objects.get_or_create(
+                        title=stud_info[3].strip().upper())[0]
                     Student.objects.create(
                         first_name=stud_info[0],
                         last_name=stud_info[1],
                         id=int(stud_info[2]),
-                        speciality=stud_info[3],
+                        speciality=speciality,
                         email=stud_info[2] + '@stu.sdu.edu.kz'
                     )
                 except IntegrityError:

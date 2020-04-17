@@ -6,7 +6,7 @@ from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField, AuthenticationForm)
 
 from things.models import (
-    User, TestInfo, Student
+    User, TestInfo, Student, Speciality
 )
 
 
@@ -170,7 +170,13 @@ class TestCreateForm(forms.ModelForm):
         return test
 
 
+class StudentAddForm(forms.Form):
+    specialities = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                                  queryset=Speciality.objects.all())
+
+
 class StudentCreateForm(forms.ModelForm):
+    speciality = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         super(StudentCreateForm, self).__init__(*args, **kwargs)
@@ -184,10 +190,16 @@ class StudentCreateForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ('first_name', 'last_name', 'id', 'speciality')
+        fields = ('first_name', 'last_name', 'id')
+
+    def clean_speciality(self):
+        speciality = self.cleaned_data['speciality']
+        return speciality.strip().upper()
 
     def save(self, commit=True):
         student = super().save(commit=False)
+        student.speciality = Speciality.objects.get_or_create(
+            title=self.cleaned_data['speciality'])[0]
         student.email = str(self.cleaned_data['id'])+'@stu.sdu.edu.kz'
         if commit:
             student.save()

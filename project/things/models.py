@@ -69,13 +69,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Speciality(models.Model):
     title = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.title
+
 
 class Student(models.Model):
     id = models.IntegerField(blank=True, primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
-    speciality = models.CharField(max_length=200, blank=True)
+    speciality = models.ForeignKey(Speciality, on_delete=models.SET_NULL, null=True)
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
     photo = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
 
