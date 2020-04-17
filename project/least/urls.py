@@ -30,7 +30,7 @@ from things.admin_views.views import (
     copy_test, admin_question_delete,
     student_csv_import, admin_question_update,
     admin_test, admin_question_add, admin_option_add,
-    students_results,
+    students_results, check_speciality
 )
 
 urlpatterns = [
@@ -73,6 +73,7 @@ urlpatterns = [
     path('admin/tests/<int:test_id>/questions/<int:question_id>/options/create', admin_option_add,
          name='admin-option-add'),
     path('admin/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
+    path('admin/speciality', check_speciality, name='admin-check-speciality'),
     # ajax
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

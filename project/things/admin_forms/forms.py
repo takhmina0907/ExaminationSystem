@@ -179,6 +179,8 @@ class StudentCreateForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Surname'
         self.fields['id'].widget.attrs['placeholder'] = 'ID'
         self.fields['speciality'].widget.attrs['placeholder'] = 'Group'
+        self.fields['speciality'].widget.attrs['autocomplete'] = 'off'
+        self.fields['speciality'].widget.attrs['list'] = 'specialities'
 
     class Meta:
         model = Student

@@ -4,7 +4,6 @@ import enum
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
-from django.utils import timezone
 
 from .directionOfFile import images_upload,student_photo_upload
 
@@ -108,7 +107,7 @@ class TestInfo(models.Model):
         start = datetime.datetime.combine(self.start_date,
                                           self.start_time)
         end = datetime.datetime.combine(self.start_date,
-                                             self.end_time)
+                                        self.end_time)
         if now < start:
             return self.TestState.not_started
         elif now > end:
@@ -137,7 +136,6 @@ class Option(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.option, self.question.question)
-
 
 
 class TestResult(models.Model):

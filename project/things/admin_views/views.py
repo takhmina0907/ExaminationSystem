@@ -27,7 +27,7 @@ from django.views.generic.base import TemplateView, RedirectView
 from things.admin_forms.forms import (
     UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm
 )
-from things.models import TestInfo, Question, Option, User, Student, TestResult
+from things.models import TestInfo, Question, Option, User, Student, TestResult, Speciality
 from things.utils.tasks import send_mail_wrapper
 from things.utils.activation_token import activation_token
 
@@ -255,8 +255,28 @@ class StudentCreateView(BaseAdminView, CreateView):
     form_class = StudentCreateForm
     template_name = 'admin/student_create.html'
 
+    def form_valid(self, form):
+        # noinspection PyAttributeOutsideInit
+        self.object = form.save()
+        title = self.object.speciality.strip().upper()
+        speciality = Speciality.objects.filter(title=title)
+        if not speciality.exists():
+            Speciality.objects.create(title=title)
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         return reverse_lazy('admin-create-student-success')
+
+
+@login_required
+def check_speciality(request):
+    if request.is_ajax() and request.method == 'GET':
+        speciality = request.GET['title'].strip().upper()
+        matches = Speciality.objects.filter(
+            title__startswith=speciality
+        ).values('title')
+        return JsonResponse(json.dumps(list(matches)), safe=False, status=200)
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
 class StudentCreateSuccess(BaseAdminView, TemplateView):
