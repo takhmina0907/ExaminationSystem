@@ -90,7 +90,7 @@ class LoginView(BaseLoginView):
     template_name = 'admin/login.html'
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
+        return reverse_lazy('admin-home')
 
 
 class LogoutView(BaseLogoutView):
@@ -100,6 +100,19 @@ class LogoutView(BaseLogoutView):
 
 class BaseAdminView(LoginRequiredMixin):
     pass
+
+
+class HomeView(BaseAdminView, DetailView):
+    model = User
+    template_name = 'admin/home.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['students_number'] = Student.objects.all().count()
+        return context
 
 
 class AdminTestCreateView(BaseAdminView, CreateView):

@@ -25,7 +25,7 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="{#TODO#}"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
                     <li class="active"><a href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
                     <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
                     <li><a href="{#TODO#}"><i class="fa fa-cog"></i>Settings</a></li>
@@ -40,7 +40,7 @@
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
                 <h2 class="logo-text">LOGO</h2>
                 <ul class="nav flex-column">
-                    <li><a href="{#TODO#}"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
                     <li><a class="active" href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
                     <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
                     <li><a href="{#TODO#}"><i class="fa fa-cog"></i>Settings</a></li>
