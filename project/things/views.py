@@ -1,34 +1,34 @@
 from django.shortcuts import *
 from .forms import LoginForm
 from .models import Test,Student
-# import face_recognition
-# import cv2
-# import numpy as np
+import face_recognition
+import cv2
+import numpy as np
 import os
 import random
 from datetime import date
 # Create your views here.
 # для того что бы сравнить фото с видео 
 def facedect(loc):
-        # cam = cv2.VideoCapture(0)   #включить камеру
-        # s, img = cam.read()
-        # if s: #проверка камеры
-        #         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        #         MEDIA_ROOT =os.path.join(BASE_DIR) #путь до фотки
-        #
-        #         loc=(str(MEDIA_ROOT)+loc)
-        #         face_1_image = face_recognition.load_image_file(loc)
-        #         face_1_face_encoding = face_recognition.face_encodings(face_1_image)[0] #перевести фотку в массив
-        #
-        #         face_locations = face_recognition.face_locations(img) #из видео получить лицо
-        #         if face_locations: #если есть лицо
-        #             face_encodings = face_recognition.face_encodings(img, face_locations) #перевести лицо в массив
-        #             check=face_recognition.compare_faces(face_1_face_encoding, face_encodings) #проверка на совместимость
-        #             print(check)
-        #             if check[0]:
-        #                     return True
-        #             else :
-        #                     return False
+        cam = cv2.VideoCapture(0)   #включить камеру
+        s, img = cam.read()
+        if s: #проверка камеры
+                BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                MEDIA_ROOT =os.path.join(BASE_DIR) #путь до фотки
+
+                loc=(str(MEDIA_ROOT)+loc)
+                face_1_image = face_recognition.load_image_file(loc)
+                face_1_face_encoding = face_recognition.face_encodings(face_1_image)[0] #перевести фотку в массив
+
+                face_locations = face_recognition.face_locations(img) #из видео получить лицо
+                if face_locations: #если есть лицо
+                    face_encodings = face_recognition.face_encodings(img, face_locations) #перевести лицо в массив
+                    check=face_recognition.compare_faces(face_1_face_encoding, face_encodings) #проверка на совместимость
+                    print(check)
+                    if check[0]:
+                            return True
+                    else :
+                            return False
         return True
 
 def reg1(request):
