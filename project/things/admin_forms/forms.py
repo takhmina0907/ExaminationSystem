@@ -150,8 +150,8 @@ class TestCreateForm(forms.ModelForm):
             attrs={'type': 'date'}
         ))
     start_time = forms.TimeField(
-        widget=forms.DateInput(
-            attrs = {'type': 'time'}
+        widget=forms.TimeInput(
+            attrs={'type': 'time'}
         ))
 
     def save(self, commit=True):
@@ -170,9 +170,15 @@ class TestCreateForm(forms.ModelForm):
         return test
 
 
-class StudentAddForm(forms.Form):
+class StudentTestAddForm(forms.Form):
     specialities = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                                   queryset=Speciality.objects.all())
+
+
+class StudentTestEditForm(forms.Form):
+    specialities = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                                  queryset=Speciality.objects.all(),
+                                                  required=False)
 
 
 class StudentCreateForm(forms.ModelForm):

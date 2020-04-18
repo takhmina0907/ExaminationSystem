@@ -25,7 +25,8 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 
 from things.admin_forms.forms import (
-    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm, StudentAddForm
+    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm,
+    StudentTestAddForm, StudentTestEditForm
 )
 from things.models import TestInfo, Question, Option, User, Student, TestResult, Speciality
 from things.utils.tasks import send_mail_wrapper
@@ -119,23 +120,14 @@ class AdminTestCreateView(BaseAdminView, CreateView):
 
 
 class TestStudentAddView(BaseAdminView, FormView):
-    form_class = StudentAddForm
+    form_class = StudentTestAddForm
     template_name = 'admin/test_add_student.html'
-
-    def get_object(self):
-        return get_object_or_404(TestInfo, author=self.request.user,
-                                 id=self.kwargs['test_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['test'] = self.get_object()
+        context['test'] = get_object_or_404(TestInfo, author=self.request.user,
+                                            id=self.kwargs['test_id'])
         return context
-
-    def get_initial(self):
-        initial = super().get_initial()
-        test = self.get_object()
-        initial['specialities'] = list(test.students.all().values_list('speciality', flat=True).distinct())
-        return initial
 
     def get_success_url(self):
         return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
@@ -146,49 +138,6 @@ class TestStudentAddView(BaseAdminView, FormView):
         test = self.get_context_data()['test']
         test.students.add(*students)
         return HttpResponseRedirect(self.get_success_url())
-
-
-class TestDeleteView(BaseAdminView, DeleteView):
-    model = TestInfo
-    pk_url_kwarg = 'test_id'
-
-    def get_queryset(self):
-        return self.request.user.tests.all()
-
-    def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.kwargs['user_id']})
-
-    def delete(self, request, *args, **kwargs):
-        test = self.get_object()
-        messages.success(self.request, 'You have deleted %s test successfully'
-                         % test.title)
-        return super(TestDeleteView, self).delete(request, *args, **kwargs)
-
-
-class TestEditView(BaseAdminView, UpdateView):
-    form_class = TestCreateForm
-    template_name = 'admin/test_edit.html'
-    context_object_name = 'test'
-    pk_url_kwarg = 'test_id'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(TestInfo, author=self.request.user,
-                                 id=self.kwargs['test_id'])
-
-    def get_success_url(self):
-        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
-                                                          'test_id': self.object.id})
-
-
-@login_required
-def copy_test(request, user_id, test_id):
-    test = get_object_or_404(TestInfo, author=request.user,
-                             id=test_id)
-    test.id = None
-    test.title = test.title + ' - Copy'
-    test.save()
-    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'user_id': request.user.id,
-                                                                           'test_id': test.id}))
 
 
 class AdminTestListView(BaseAdminView, ListView):
@@ -219,6 +168,96 @@ class AdminTestDetailView(BaseAdminView, DetailView):
 
     def get_queryset(self):
         return self.request.user.tests.all()
+
+
+class TestEditView(BaseAdminView, UpdateView):
+    form_class = TestCreateForm
+    template_name = 'admin/test_edit.html'
+    context_object_name = 'test'
+    pk_url_kwarg = 'test_id'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_success_url(self):
+        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
+                                                          'test_id': self.object.id})
+
+
+class TestEditStudentsView(BaseAdminView, FormView):
+    form_class = StudentTestEditForm
+    template_name = 'admin/test_student_edit.html'
+
+    def get_object(self):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['test'] = self.get_object()
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        test = self.get_object()
+        initial['specialities'] = list(test.students.all().values_list('speciality', flat=True).distinct())
+        return initial
+
+    def get_success_url(self):
+        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
+                                                          'test_id': self.get_object().id})
+
+    def form_valid(self, form):
+        test = self.get_context_data()['test']
+        specialities = set(form.cleaned_data['specialities'].values_list('id', flat=True))
+        initial_specialities = set(self.get_initial()['specialities'])
+
+        print(initial_specialities)
+        print(specialities)
+
+        if initial_specialities.issubset(specialities):
+            new_specialities = specialities.difference(initial_specialities)
+            students = Student.objects.filter(speciality__in=new_specialities)
+            test.students.add(*students)
+        elif initial_specialities.issuperset(specialities):
+            new_specialities = initial_specialities.difference(specialities)
+            students = Student.objects.filter(speciality__in=new_specialities)
+            test.students.remove(*students)
+        else:
+            students = Student.objects.filter(speciality__in=specialities)
+            test.students.clear()
+            test.students.add(*students)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class TestDeleteView(BaseAdminView, DeleteView):
+    model = TestInfo
+    pk_url_kwarg = 'test_id'
+
+    def get_queryset(self):
+        return self.request.user.tests.all()
+
+    def get_success_url(self):
+        return reverse_lazy('admin-tests', kwargs={'id': self.kwargs['user_id']})
+
+    def delete(self, request, *args, **kwargs):
+        test = self.get_object()
+        messages.success(self.request, 'You have deleted %s test successfully'
+                         % test.title)
+        return super(TestDeleteView, self).delete(request, *args, **kwargs)
+
+
+@login_required
+def copy_test(request, user_id, test_id):
+    test = get_object_or_404(TestInfo, author=request.user,
+                             id=test_id)
+    test.id = None
+    test.title = test.title + ' - Copy'
+    test.save()
+    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'user_id': request.user.id,
+                                                                           'test_id': test.id}))
 
 
 @login_required
@@ -349,6 +388,9 @@ def student_csv_import(request):
             if not stud_info[2].isdigit():
                 correct = False
                 messages.error(request, 'Student id is invalid, line %d' % index)
+            if not stud_info[3]:
+                correct = False
+                messages.error(request, 'Speciality is invalid, line %d' % index)
 
             if correct:
                 try:

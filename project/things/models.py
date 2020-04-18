@@ -83,7 +83,7 @@ class Student(models.Model):
     photo = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.id, self.email)
+        return '{} - {} - {}'.format(self.id, self.first_name, self.speciality)
 
 
 class TestInfo(models.Model):
