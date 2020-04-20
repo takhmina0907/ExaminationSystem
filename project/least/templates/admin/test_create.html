@@ -13,11 +13,11 @@
             </div>
             <br/>
             <div>
-                <a href="{% url 'admin-tests' id=request.user.id %}"><button type="button">Cancel</button></a>
+                <a href="{% url 'admin-tests' request.user.id %}"><button type="button">Cancel</button></a>
                 <span><b>Step 1</b></span>
                 <span>Step 2</span>
                 <span>Step 3</span>
-                <input type="submit" value="Submit">
+                <input type="submit" value="Next">
             </div>
         </form>
     </body>

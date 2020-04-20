@@ -12,13 +12,18 @@
                 {{ form }}
             </div>
             <br/>
-            <div>
-                <a href="{% url 'admin-test' request.user.id test.id %}"><button type="button">Cancel</button></a>
-                <span><b>Step 1</b></span>
-                <span>Step 2</span>
-                <span>Step 3</span>
-                <input type="submit" value="Submit">
-            </div>
+            <input type="submit" value="Next">
         </form>
+            <div>
+                <span>
+                    <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}">
+                       {% csrf_token %}<input type="submit" value="Cancel">
+                    </form>
+                </span>
+                <span>Step 1</span>
+                <span>Step 2</span>
+                <span><b>Step 3</b></span>
+            </div>
+
     </body>
 </html>

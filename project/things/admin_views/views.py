@@ -13,7 +13,7 @@ from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Avg, F, Count, Q
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.template.loader import render_to_string
@@ -125,6 +125,7 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         self.object.save()
+        self.request.session['test_id'] = self.object.id
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -135,6 +136,11 @@ class AdminTestCreateView(BaseAdminView, CreateView):
 class TestStudentAddView(BaseAdminView, FormView):
     form_class = StudentTestAddForm
     template_name = 'admin/test_add_student.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.session.get('test_id'):
+            raise Http404
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -150,6 +156,7 @@ class TestStudentAddView(BaseAdminView, FormView):
         students = Student.objects.filter(speciality__in=specialities)
         test = self.get_context_data()['test']
         test.students.add(*students)
+        del self.request.session['test_id']
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -426,6 +433,9 @@ def student_csv_import(request):
 
 @login_required
 def admin_test(request, user_id, test_id):
+    if not request.session.get('test_id'):
+        raise Http404
+
     test = get_object_or_404(TestInfo, id=test_id, author=request.user)
 
     if test.questions.count() == 0:
