@@ -13,7 +13,7 @@ from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Avg, F, Count, Q
-from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.template.loader import render_to_string
@@ -138,7 +138,8 @@ class TestStudentAddView(BaseAdminView, FormView):
     template_name = 'admin/test_add_student.html'
 
     def get(self, request, *args, **kwargs):
-        if not request.session.get('test_id'):
+        if not request.session.get('test_id') \
+                or request.session.get('test_id') != self.get_context_data()['test'].id:
             raise Http404
         return super().get(request, *args, **kwargs)
 
@@ -184,6 +185,7 @@ class AdminTestDetailView(BaseAdminView, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['average_points'] = self.get_object().results.aggregate(Avg('grade')).get('grade__avg')
+        context['test_state'] = TestInfo.TestState.__members__
         return context
 
     def get_queryset(self):
@@ -196,18 +198,52 @@ class TestEditView(BaseAdminView, UpdateView):
     context_object_name = 'test'
     pk_url_kwarg = 'test_id'
 
+    def form_valid(self, form):
+        self.request.session['edited_test_id'] = self.object.id
+        return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        test = self.get_object()
+        if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
+            return HttpResponse(content="You can't edit this test", status=409)
+        return super().get(request, *args, **kwargs)
+
     def get_object(self, queryset=None):
         return get_object_or_404(TestInfo, author=self.request.user,
                                  id=self.kwargs['test_id'])
 
     def get_success_url(self):
-        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
-                                                          'test_id': self.object.id})
+        return reverse_lazy('admin-edit-questions', kwargs={'user_id': self.request.user.id,
+                                                            'test_id': self.object.id})
+
+
+@login_required
+def admin_test_edit(request, user_id, test_id):
+    if not request.session.get('edited_test_id') \
+            or request.session.get('edited_test_id') != test_id:
+        raise Http404
+
+    test = get_object_or_404(TestInfo, id=test_id, author=request.user)
+
+    if request.method == 'GET':
+        if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
+            return HttpResponse(content="You can't edit this test", status=409)
+
+    return render(request, 'admin/question_edit.html', {'test': test, 'questions': test.questions.all()})
 
 
 class TestEditStudentsView(BaseAdminView, FormView):
     form_class = StudentTestEditForm
     template_name = 'admin/test_student_edit.html'
+
+    def get(self, request, *args, **kwargs):
+        test = self.get_object()
+        if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
+            return HttpResponse(content="You can't edit this test", status=409)
+        if not request.session.get('edited_test_id') \
+                or request.session.get('edited_test_id') != self.get_context_data()['test'].id:
+            raise Http404
+        return super().get(request, *args, **kwargs)
 
     def get_object(self):
         return get_object_or_404(TestInfo, author=self.request.user,
@@ -232,9 +268,6 @@ class TestEditStudentsView(BaseAdminView, FormView):
         test = self.get_context_data()['test']
         specialities = set(form.cleaned_data['specialities'].values_list('id', flat=True))
         initial_specialities = set(self.get_initial()['specialities'])
-
-        print(initial_specialities)
-        print(specialities)
 
         if initial_specialities.issubset(specialities):
             new_specialities = specialities.difference(initial_specialities)
@@ -433,7 +466,7 @@ def student_csv_import(request):
 
 @login_required
 def admin_test(request, user_id, test_id):
-    if not request.session.get('test_id'):
+    if not request.session.get('test_id') or request.session.get('test_id') != test_id:
         raise Http404
 
     test = get_object_or_404(TestInfo, id=test_id, author=request.user)

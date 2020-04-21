@@ -31,7 +31,7 @@ from things.admin_views.views import (
     copy_test, admin_question_delete,
     student_csv_import, admin_question_update,
     admin_test, admin_question_add, admin_option_add,
-    students_results, check_speciality
+    students_results, check_speciality, admin_test_edit
 )
 
 urlpatterns = [
@@ -55,7 +55,8 @@ urlpatterns = [
     path('admin/<int:user_id>/tests/<int:test_id>/groups/', TestStudentAddView.as_view(),
          name='admin-test-add-students'),
     path('admin/<int:user_id>/tests/<int:test_id>/edit/', TestEditView.as_view(), name='admin-edit-test'),
-    path('admin/<int:user_id>/tests/<int:test_id>/edit/groups', TestEditStudentsView.as_view(),
+    path('admin/<int:user_id>/tests/<int:test_id>/edit/questions/', admin_test_edit, name='admin-edit-questions'),
+    path('admin/<int:user_id>/tests/<int:test_id>/edit/groups/', TestEditStudentsView.as_view(),
          name='admin-test-edit-students'),
     path('admin/<int:user_id>/tests/<int:test_id>/delete/', TestDeleteView.as_view(), name='admin-delete-test'),
     path('admin/<int:user_id>/tests/<int:test_id>/copy/', copy_test, name='admin-copy-test'),
