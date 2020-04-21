@@ -23,7 +23,33 @@ function csrfSafeMethod(method) {
 
 
 // Region Requests
-function request(url, success) {
+let status_line = $(`#request-status`);
+
+$(function() {
+    $.ajaxSetup({
+        error: function(jqXHR, exception) {
+            if (jqXHR.status === 0) {
+                status_line.html('Not connected. Please verify your network.');
+            } else if (jqXHR.status === 403) {
+                status_line.html('You are not authorized');
+            } else if (jqXHR.status === 404) {
+                status_line.html('Requested url not found');
+            } else if (jqXHR.status === 500) {
+                status_line.html('Internal Server Error');
+            } else if (exception === 'parsererror') {
+                status_line.html('Requested JSON parse failed');
+            } else if (exception === 'timeout') {
+                status_line.html('Request time out error');
+            } else if (exception === 'abort') {
+                status_line.html('Ajax request aborted');
+            } else {
+                status_line.html('Request didn\'t succeed. Please try again');
+            }
+        }
+    });
+});
+
+function request(url, success, loading_message) {
     $.ajax({
         type: 'POST',
         url: url,
@@ -31,17 +57,13 @@ function request(url, success) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
+            status_line.html(loading_message);
         },
         success: success,
-        error: function (response) {
-            console.log("fail");
-            console.log(response);
-            $('#question-card-rows').append(response)
-        }
     });
 }
 
-function request_with_data(url, data, success) {
+function request_with_data(url, data, loading_message) {
     $.ajax({
         type: 'POST',
         url: url,
@@ -50,16 +72,14 @@ function request_with_data(url, data, success) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
+            status_line.html(loading_message);
         },
-        success: function (response) {
-            console.log("success");
-            console.log(response);
+        success: function () {
+            status_line.empty()
         },
         error: function (response) {
-            console.log("fail");
-            console.log(response);
-            $('#question-card-rows').append(response)
-        }
+            status_line.html('Request didn\'t succeed. Please try again');
+        },
     });
 }
 // End region Requests
@@ -105,7 +125,7 @@ $(document).on('click', '.question-save', function() {
         option.is_correct = $(this).is(':checked');
     });
 
-    request_with_data(`/admin/tests/${test_id}/questions/${question_id}/update`, question);
+    request_with_data(`/admin/tests/${test_id}/questions/${question_id}/update`, question, 'Saving question')
 });
 // End region Question save
 
@@ -172,6 +192,8 @@ let question_add_button = $('#question-add');
 const test_id = parseInt(question_add_button.data('test-id'));
 
 function question_render(response) {
+    status_line.empty();
+
     response = JSON.parse(response);
 
     current_question_card.removeClass('foreground');
@@ -223,13 +245,15 @@ question_add_button.click(function () {
         $(`button.question-save[data-question-id="${current_question_id}"]`).click();
         changed = false;
     }
-    request(`/admin/tests/${test_id}/questions/create`, question_render);
+    request(`/admin/tests/${test_id}/questions/create`, question_render, 'Creating question');
 });
 // End region Add question
 
 
 // Region Question delete
 function handle_delete(response) {
+    status_line.empty();
+
     const question_id = response.question_id;
     $(`#card-${question_id}`).remove();
     const current_question_switch = $(`button[data-question-id=${question_id}].question-switch`);
@@ -255,11 +279,8 @@ function handle_delete(response) {
 }
 
 $(document).on('click', '.question-delete', function() {
-
-    // update_ui(question_no);
-
     const question_id = $(this).data('question-id');
-    request(`/questions/${question_id}/delete`, handle_delete)
+    request(`/questions/${question_id}/delete`, handle_delete, 'Deleting question')
 });
 // End region Question delete
 
@@ -275,10 +296,12 @@ function option_render(response){
             <input name="question-${response.question_id}-option-${response.id}" type="text" value="${response.option}" data-option-id="${response.id}"/>
         </div>`
     );
+
+    status_line.empty();
 }
 
 $(document).on('click', 'button.add-option', function () {
     const question_id = $(this).data('question-id');
-    request(`/admin/tests/${test_id}/questions/${question_id}/options/create`, option_render);
+    request(`/admin/tests/${test_id}/questions/${question_id}/options/create`, option_render, 'Creating option');
 });
 // End region Add option

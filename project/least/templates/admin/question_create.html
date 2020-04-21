@@ -40,6 +40,7 @@
             <p>{{ test.deadline }}</p>
         </div>
         <div id="question-card-rows">
+            <p id="request-status"></p>
             {% for question in questions %}
                 <div id="card-{{ question.id }}" class="card {% if questions|length == forloop.counter %} foreground {% else %} background {% endif %}">
                     <div class="question-title">
