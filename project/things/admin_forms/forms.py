@@ -136,14 +136,23 @@ class TestCreateForm(forms.ModelForm):
         super(TestCreateForm, self).__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['placeholder'] = 'Test name'
         self.fields['title'].widget.attrs['autofocus'] = 'on'
+        self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['placeholder'] = 'Description'
-        self.fields['duration'].widget.attrs['placeholder'] = 'Test duration'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['duration'].widget.attrs['placeholder'] = 'Test duration(minutes)'
+        self.fields['duration'].widget.attrs['class'] = 'form-control'
         self.fields['start_date'].widget.attrs['placeholder'] = 'Date'
+        self.fields['start_date'].widget.attrs['class'] = 'form-control'
         self.fields['start_time'].widget.attrs['placeholder'] = 'Time'
+        self.fields['start_time'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = TestInfo
         fields = ('title', 'description', 'duration', 'start_date', 'start_time')
+
+    description = forms.CharField(
+        widget=forms.TextInput()
+    )
 
     start_date = forms.DateField(
         widget=forms.DateInput(
