@@ -11,6 +11,40 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    .question-page{
+      margin-top: 20px;
+    }
+    .add-question{
+      width: 144px;
+      height: 41px;
+      font-size: 14px;
+      text-align: center;
+      border: 1px dashed #A4A4A4;
+      color: rgba(55, 55, 55, 0.7);
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      padding-top: 9px;
+    }
+    .q_list{
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: #A4A4A4;
+    }
+    .q_btn{
+      width: 147px;
+      height: 41px;
+      background: rgba(57, 44, 209, 0.2);
+      border-radius: 8px;
+      color: #392CD1;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .button-row{
+      margin-top: 10px;
+    }
+  </style>
 
 </head>
 <body>
@@ -31,7 +65,7 @@
         <i class="fa fa-home"></i>Home</a></li>
         <li><a href="test1.html">
           <i class="fa fa-book"></i>Tests</a></li>
-        <li><a href="#">
+        <li><a href="student_add.html">
           <i class="fa fa-users"></i>Students</a></li>
         <li><a href="#">
           <i class="fa fa-cog"></i>Settings</a></li>
@@ -51,7 +85,7 @@
           <i class="fa fa-home"></i>Home</a></li>
         <li><a class="active" href="test1.html"><i class="fa fa-book"></i>
         Tests</a></li>
-        <li><a href="#"><i class="fa fa-users"></i>
+        <li><a href="student_add.html"><i class="fa fa-users"></i>
         Students</a></li>
         <li><a href="#"><i class="fa fa-cog"></i>
         Settings</a></li>
@@ -64,41 +98,41 @@
 <!--End menu-->
     <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
     
-  		<div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
-            <p class="title_test">New Test</p>
+  		<div class="row question-page">
+      		<div class="col-xs-1 col-sm-1"></div>
+  		    <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+  		    	<p class="title_test">Questions</p>
           </div>
+          <div class="col-xs-3 col-sm-3 col-md-5 col-lg-5 col-xl-5">
+            <form id="csv-form" action="#" method="post">
+                <!--<button id="import-csv" type="button" class="add-question"><i class="fa fa-arrow-up"></i>Import CSV</button>
+                <input id="csv-file" style="visibility:hidden;" name="students" type="file" accept=".csv">-->
+
+                <label for="files" class="btn add-question">
+                  <i class="fa fa-arrow-up"></i>Import CSV</label>
+                <input id="files" style="visibility:hidden;" type="file" name="students" accept=".csv">
+            </form>
+          </div>
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+  		</div>
+      
+      <div class="row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+            <p class="q_list">Here you will see the list of your questions</p>
+          </div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
       </div>
 
-      <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 new_test_block">
-         
-            <div class="reg_content align-items-center">
-              <div class="form_block">
-                <form action="#">
-                  <label class="test-label">Test info</label>
-                  <input type="text" class="form-control" placeholder="Enter test name">
-
-                  <input type="text" class="form-control" placeholder="Enter test description">
-
-                  <input type="time" class="form-control" placeholder="Enter test duration">
-
-                  <label class="test-label">Test availability</label>
-                  <input type="date" class="form-control" placeholder="Choose the date">
-                  <input type="datetime-local" class="form-control" placeholder="Choose the time">
-                  
-
-                </form>
-              </div>
-              
-            </div>
-
-        </div>
-        <div class="col-sm-3"></div>
-      </div><!--Test end -->
-
+      <div class="row button-row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+            <button class="q_btn">Add question</button>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+      </div>
+      
+      <!--Bottom menu will change-->
       <div class="row fixed-row-bottom">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
             <div class="step-menu">
@@ -110,13 +144,13 @@
                 <div class="row">
                   <div class="col-sm-1"></div>
                   <div class="col-xs-3 steps">
-                    <a href="new_test.html" class="step active"><p>Step 1</p></a>
+                    <a href="new_test.html" class="step"><p class="step">Step 1</p></a>
                   </div>
                   <div class="col-xs-3 steps">
-                    <a href="new_questions.html" class="step"><p>Step 2</p></a>
+                    <a href="#" class="step active"><p>Step 2</p></a>
                   </div>
                   <div class="col-xs-3 steps">
-                    <a href="student_add.html" class="step"><p>Step 3</p></a>
+                    <a href="#" class="step"><p>Step 3</p></a><!--disabled?-->
                   </div>
 
                 </div>
@@ -124,20 +158,15 @@
               </div>
               <div class="col-sm-1"></div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
-                <a href="new_questions.html"><button class="test-next-btn">Next</button></a>
+                <button type = "button" class="btn test-next-btn disabled">Next</button>
               </div>
             </div>
           </div>
-      </div>
-
-
-    </div><!--section main end-->
+        </div>
       
+    </div>
 
-
-  </div>
-
-</div>
+</div><!--section main end-->
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

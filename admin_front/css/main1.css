@@ -99,15 +99,15 @@ i{
 }
 
 /*Active menu*/
-a.active{
+li a.active{
   background: rgba(57, 44, 209, 0.2);
   color: #392CD1;
   border-left: 3px solid #392CD1; 
 }
-a:hover{
+li a:hover{
 	color: #392CD1;
 }
-a{
+li a{
 	color: #373737;
 }
 /*Dropdown caret*/
