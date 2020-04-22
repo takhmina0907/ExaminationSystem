@@ -97,6 +97,7 @@ class TestInfo(models.Model):
     end_time = models.TimeField(blank=False, null=False)
     duration = models.PositiveSmallIntegerField()
     is_visible = models.BooleanField(default=True)
+    link = models.TextField(blank=True)
     students = models.ManyToManyField(Student, related_name='tests', blank=True)
 
     class TestState(enum.Enum):

@@ -125,6 +125,11 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         self.object.save()
+        encoded_id = urlsafe_base64_encode(force_bytes(self.object.id))
+        domain = get_current_site(self.request)
+        url = reverse('admin-filter-students', kwargs={'uidb64': encoded_id})
+        self.object.link = 'http://{}{}'.format(domain, url)
+
         self.request.session['test_id'] = self.object.id
         return super().form_valid(form)
 
@@ -150,7 +155,8 @@ class TestStudentAddView(BaseAdminView, FormView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
+        test_id = self.get_context_data()['test'].id
+        return reverse_lazy('admin-share-test', kwargs={'test_id': test_id})
 
     def form_valid(self, form):
         specialities = list(form.cleaned_data['specialities'].values_list('id', flat=True))
@@ -159,6 +165,31 @@ class TestStudentAddView(BaseAdminView, FormView):
         test.students.add(*students)
         del self.request.session['test_id']
         return HttpResponseRedirect(self.get_success_url())
+
+
+@login_required
+def share_test(request, test_id):
+    test = get_object_or_404(TestInfo, author=request.user,
+                             id=test_id)
+    return render(request, 'admin/test_invite.html', {'link': test.link})
+
+
+def filter_students(request, uidb64):
+    test = None
+    try:
+        test_id = force_text(urlsafe_base64_decode(uidb64))
+        test = TestInfo.objects.get(id=test_id)
+        correct = True
+    except (TypeError, ValueError, OverflowError, TestInfo.DoesNotExist, ValidationError):
+        correct = False
+
+    if correct and test.is_active == TestInfo.TestState.ongoing:
+        # TODO change redirect url
+        return HttpResponse(content=uidb64)
+    else:
+        # TODO change redirect url
+        messages.error(request, 'Test link is invalid')
+        return HttpResponseRedirect(reverse('admin-login'))
 
 
 class AdminTestListView(BaseAdminView, ListView):

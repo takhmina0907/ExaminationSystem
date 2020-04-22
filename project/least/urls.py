@@ -28,9 +28,9 @@ from things.admin_views.views import (
     StudentDeleteView, TestDeleteView,
     StudentEditView, TestEditView,
     TestStudentAddView, TestEditStudentsView,
-    copy_test, admin_question_delete,
-    student_csv_import, admin_question_update,
-    admin_test, admin_question_add, admin_option_add,
+    copy_test, admin_question_delete, share_test,
+    student_csv_import, admin_question_update, admin_test,
+    filter_students, admin_question_add, admin_option_add,
     students_results, check_speciality, admin_test_edit
 )
 
@@ -54,6 +54,8 @@ urlpatterns = [
     path('admin/<int:user_id>/tests/<int:test_id>/', admin_test, name='admin-test'),
     path('admin/<int:user_id>/tests/<int:test_id>/groups/', TestStudentAddView.as_view(),
          name='admin-test-add-students'),
+    path('admin/tests/<int:test_id>/', share_test, name='admin-share-test'),
+    path('admin/testid<uidb64>/', filter_students, name='admin-filter-students'),
     path('admin/<int:user_id>/tests/<int:test_id>/edit/', TestEditView.as_view(), name='admin-edit-test'),
     path('admin/<int:user_id>/tests/<int:test_id>/edit/questions/', admin_test_edit, name='admin-edit-questions'),
     path('admin/<int:user_id>/tests/<int:test_id>/edit/groups/', TestEditStudentsView.as_view(),
