@@ -134,16 +134,16 @@ class UserChangeForm(forms.ModelForm):
 class TestCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestCreateForm, self).__init__(*args, **kwargs)
-        self.fields['title'].widget.attrs['placeholder'] = 'Test name'
+        self.fields['title'].widget.attrs['placeholder'] = 'Enter test name'
         self.fields['title'].widget.attrs['autofocus'] = 'on'
         self.fields['title'].widget.attrs['class'] = 'form-control'
-        self.fields['description'].widget.attrs['placeholder'] = 'Description'
+        self.fields['description'].widget.attrs['placeholder'] = 'Enter test description'
         self.fields['description'].widget.attrs['class'] = 'form-control'
-        self.fields['duration'].widget.attrs['placeholder'] = 'Test duration(minutes)'
+        self.fields['duration'].widget.attrs['placeholder'] = 'Enter test duration(min)'
         self.fields['duration'].widget.attrs['class'] = 'form-control'
-        self.fields['start_date'].widget.attrs['placeholder'] = 'Date'
+        self.fields['start_date'].widget.attrs['placeholder'] = 'Choose the date'
         self.fields['start_date'].widget.attrs['class'] = 'form-control'
-        self.fields['start_time'].widget.attrs['placeholder'] = 'Time'
+        self.fields['start_time'].widget.attrs['placeholder'] = 'Choose the time'
         self.fields['start_time'].widget.attrs['class'] = 'form-control'
 
     class Meta:

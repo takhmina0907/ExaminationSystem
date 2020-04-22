@@ -48,9 +48,11 @@ h2{
 	color: #392CD1;
 	margin-top: 10px;
 	margin-right: 16px;
+	border-radius: 8px;
 }
 .rating-btn:hover{
 	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+	border-radius: 8px;
 }
 
 .scale-btn{
@@ -60,6 +62,7 @@ h2{
 	text-align: center;
 	border: 1px dashed #A4A4A4;
 	color: rgba(55, 55, 55, 0.7);
+	border-radius: 8px;
 
 }
 i{
@@ -96,15 +99,15 @@ i{
 }
 
 /*Active menu*/
-a.active{
+li a.active{
   background: rgba(57, 44, 209, 0.2);
   color: #392CD1;
-  border-left: 3px solid #392CD1; 
+  border-left: 3px solid #392CD1;
 }
-a:hover{
+li a:hover{
 	color: #392CD1;
 }
-a{
+li a{
 	color: #373737;
 }
 /*Dropdown caret*/

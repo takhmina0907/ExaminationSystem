@@ -26,103 +26,112 @@
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a href="#"><i class="fa fa-book"></i>Tests</a></li>
-                    <li><a href="#"><i class="fa fa-users"></i>Students</a></li>
+                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
                     <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
-                    <li><a href="#"><i class="fa fa-sign-out"></i>Log out</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid">
-        <form class="row" method="post">
+        <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
                 <h2 class="logo-text">LOGO</h2>
                 <ul class="nav flex-column">
                     <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
-                    <li class="active"><a href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
                     <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
-                    <li><a href="{#TODO#}"><i class="fa fa-cog"></i>Settings</a></li>
+                    <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
                     <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
                 </ul>
             </div>
             <br>
-            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-  		        <div class="row">
-      		        <div class="col-sm-1"></div>
-  		            <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 menu_text">
-  		    	        <h4><img src="{% static 'img/Icon.png' %}">New Test</h4>
+            <form method="post" class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+          		<div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
+                        <p class="title_test">New Test</p>
                     </div>
-  		        </div>
+                </div>
 
                 <div class="row">
-      	            <div class="col-sm-1"></div>
-                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <div class="well">
-                            <div class="reg_content align-items-center">
-                                <div class="form_block">
-                                    <div>
-                                        {% csrf_token %}
-                                        {% if form.non_field_errors %}
-                                            {% for error in form.non_field_errors %}
-                                                <p>{{ error }}</p>
-                                            {% endfor %}
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 new_test_block">
+                        <div class="reg_content align-items-center">
+                            <div class="form_block">
+                                <div>
+                                    <label class="test-label">Test info</label>
+                                    {% csrf_token %}
+                                    {% if form.non_field_errors %}
+                                        {% for error in form.non_field_errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
 
-                                        {% endif %}
+                                    {% endif %}
 
-                                        {% for error in form.title.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                        {{ form.title }}
-                                        {% for error in form.description.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                        {{ form.description }}
-                                        {% for error in form.duration.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                        {{ form.duration }}
-                                        {% for error in form.start_date.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                        <label>Test availability</label>
-                                        {{ form.start_date }}
-                                        {% for error in form.start_time.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                        {{ form.start_time }}
-                                    </div>
+                                    {% for error in form.title.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.title }}
+                                    {% for error in form.description.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.description }}
+                                    {% for error in form.duration.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.duration }}
+                                    {% for error in form.start_date.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    <label class="test-label">Test availability</label>
+                                    {{ form.start_date }}
+                                    {% for error in form.start_time.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.start_time }}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-1"></div>
+                    <div class="col-sm-3"></div>
                 </div>
-                <div class="well bottom-menu">
-                    <div class="row">
-                        <div class="container">
-                            <div class="col-sm-3">
-                                <a href="{% url 'admin-tests' request.user.id %}"><button type="button">Cancel</button></a>
+
+                <div class="row fixed-row-bottom">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
+                        <div class="step-menu">
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                                <a href="{% url 'admin-tests' request.user.id %}"><button type="button" class="test-cancel-btn">Cancel</button></a>
                             </div>
-                            <div class="col-sm-2">
-                                <p>Step 1</p>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
+                                <!--Исправь! Width и что-то с row-->
+                                <div class="row">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-xs-3 steps">
+                                        <a href="{% url 'admin-create-test' request.user.id %}" class="step active"><p>Step 1</p></a>
+                                    </div>
+                                    <div class="col-xs-3 steps">
+                                        <p>Step 2</p>
+                                    </div>
+                                    <div class="col-xs-3 steps">
+                                        <p>Step 3</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-2">
-                                <p>Step 2</p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p>Step 3</p>
-                            </div>
-                            <div class="col-sm-3">
-                                <input type="submit" value="Next">
+                            <div class="col-sm-1"></div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+{#                                <a href="new_questions.html">#}
+                                    <button type="submit" class="test-next-btn">Next</button>
+{#                                </a>#}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
