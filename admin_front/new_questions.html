@@ -24,6 +24,7 @@
       color: rgba(55, 55, 55, 0.7);
       background-color: #f8f8f8;
       border-radius: 8px;
+      padding-top: 9px;
     }
   </style>
 
@@ -85,11 +86,14 @@
   		    	<p class="title_test">Questions</p>
           </div>
           <div class="col-xs-3 col-sm-3 col-md-5 col-lg-5 col-xl-5">
-            <a href="#">
-              <button type="button" class="add-question">
-                    <i class="fa fa-arrow-up"></i>Import CSV
-              </button>
-            </a>
+            <form id="csv-form" action="#" method="post">
+                <!--<button id="import-csv" type="button" class="add-question"><i class="fa fa-arrow-up"></i>Import CSV</button>
+                <input id="csv-file" style="visibility:hidden;" name="students" type="file" accept=".csv">-->
+
+                <label for="files" class="btn add-question">
+                  <i class="fa fa-arrow-up"></i>Import CSV</label>
+                <input id="files" style="visibility:hidden;" type="file" name="students" accept=".csv">
+            </form>
           </div>
           <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
   		</div>
