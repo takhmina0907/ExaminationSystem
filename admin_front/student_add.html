@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Adding students</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main1.css">
+  <link rel="stylesheet" href="css/test1.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+
+	.check_title{
+  		font-weight: bold;
+		font-size: 18px;
+		line-height: 22px;
+		color: #373737;
+		margin-bottom: 32px;
+  	}
+  	.add-stud{
+  		margin-top: 20px;
+  	}
+  	.add-info{
+  		margin-top: 48px;
+  	}
+
+	.main { 
+			display: block; 
+			position: relative; 
+			padding-left: 45px; 
+			margin-bottom: 15px; 
+			cursor: pointer; 
+			font-size: 16px; 
+		} 
+
+	input[type=checkbox] { 
+			visibility: hidden; 
+	} 
+
+	.geekmark { 
+		position: absolute; 
+		top: 0; 
+		left: 0; 
+		height: 24px; 
+		width: 24px; 
+		background: #FFFFFF;
+		border-radius: 4px;
+		border: 1px solid #A4A4A4;
+	}
+		
+		/* Specify the background color to be 
+		shown when hovering over checkbox */ 
+		.main:hover input ~ .geekmark { 
+			background-color: #eee; 
+		} 
+		
+		/* Specify the background color to be 
+		shown when checkbox is active */ 
+		.main input:active ~ .geekmark { 
+			background-color: #392CD1; 
+		} 
+		
+		/* Specify the background color */ 
+		.main input:checked ~ .geekmark { 
+			background-color: #392CD1; 
+		} 
+		
+		/* Checkmark to be shown in checkbox */ 
+		/* It is not be shown when not checked */ 
+		.geekmark:after { 
+			content: ""; 
+			position: absolute; 
+			display: none; 
+		} 
+		
+		/* Display checkmark when checked */ 
+		.main input:checked ~ .geekmark:after { 
+			display: block; 
+		} 
+ 
+		.main .geekmark:after { 
+			left: 8px; 
+			bottom: 6px; 
+			width: 6px; 
+			height: 12px; 
+			border: solid white; 
+			border-width: 0 2px 2px 0; 
+			-webkit-transform: rotate(45deg); 
+			-ms-transform: rotate(45deg); 
+			transform: rotate(45deg); 
+		} 
+
+		
+  </style>
+
+</head>
+<body>
+<!--Start menu-->
+<nav class="navbar navbar-default visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="main1.html">
+        <i class="fa fa-home"></i>Home</a></li>
+        <li><a class="active" href="test1.html">
+          <i class="fa fa-book"></i>Tests</a></li>
+        <li><a href="#">
+          <i class="fa fa-users"></i>Students</a></li>
+        <li><a href="#">
+          <i class="fa fa-cog"></i>Settings</a></li>
+        <li><a href="#">
+          <i class="fa fa-sign-out"></i>Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+      <h2 class="logo-text">LOGO</h2>
+      <ul class="nav flex-column">
+        <li><a href="main1.html">
+          <i class="fa fa-home"></i>Home</a></li>
+        <li><a class="active" href="test1.html"><i class="fa fa-book"></i>
+        Tests</a></li>
+        <li><a href=""><i class="fa fa-users"></i>
+        Students</a></li>
+        <li><a href="#"><i class="fa fa-cog"></i>
+        Settings</a></li>
+        <li><a href="#"><i class="fa fa-sign-out"></i>
+        Log out</a></li>
+      </ul>
+      
+    </div>
+    <br>
+<!--End menu-->
+    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+    
+  		<div class="row add-stud">
+      		<div class="col-sm-1"></div>
+  		    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
+  		    	<p class="title_test">Adding Students</p>
+
+          	</div>
+  		</div>
+  		<div class="row">
+  			<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
+  			<div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 add-info">
+	  			<p class="check_title" >Add students from</p>
+	  			<label class="main">CSS 2019
+					<input type="checkbox"> 
+					<span class="geekmark"></span> 
+				</label> 
+				
+				<label class="main">IS 2019 
+					<input type="checkbox" checked="checked"> 
+					<span class="geekmark"></span> 
+				</label> 
+				
+				<label class="main">CSS 2020 
+					<input type="checkbox"> 
+					<span class="geekmark"></span> 
+				</label> 
+				<label class="main">IS 2020 
+					<input type="checkbox"> 
+					<span class="geekmark"></span> 
+				</label> 
+			</div>
+		</div>
+
+		  <!--Bottom menu will change-->
+		<div class="row fixed-row-bottom">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
+            <div class="step-menu">
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                <a href="new_questions.html"><button class="test-cancel-btn">Cancel</button></a>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
+              <!--Исправь! Width и что-то с row--> 
+                <div class="row">
+                  <div class="col-sm-1"></div>
+                  <div class="col-xs-3 steps">
+                    <a href="#" class="step"><p>Step 1</p></a>
+                  </div>
+                  <div class="col-xs-3 steps">
+                    <a href="#" class="step"><p>Step 2</p></a>
+                  </div>
+                  <div class="col-xs-3 steps">
+                    <a href="#" class="step active"><p>Step 3</p></a>
+                  </div>
+
+                </div>
+                
+              </div>
+              <div class="col-sm-1"></div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                <a href="finish_students.html"><button class="test-next-btn">Next</button></a>
+              </div>
+            </div>
+          </div>
+      	</div>
+
+      
+    </div>
+
+</div><!--section main end-->
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
