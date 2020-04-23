@@ -87,7 +87,7 @@
         </div>
         <div>
             <span>
-                <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}">
+                <form method="POST" action="{% url 'admin-delete-test' test.id %}">
                    {% csrf_token %}<input type="submit" value="Cancel">
                 </form>
             </span>

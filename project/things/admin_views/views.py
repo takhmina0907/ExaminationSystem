@@ -271,12 +271,11 @@ class TestEditView(BaseAdminView, UpdateView):
                                  id=self.kwargs['test_id'])
 
     def get_success_url(self):
-        return reverse_lazy('admin-edit-questions', kwargs={'user_id': self.request.user.id,
-                                                            'test_id': self.object.id})
+        return reverse_lazy('admin-edit-questions', kwargs={'test_id': self.object.id})
 
 
 @login_required
-def admin_test_edit(request, user_id, test_id):
+def admin_test_edit(request, test_id):
     if not request.session.get('edited_test_id') \
             or request.session.get('edited_test_id') != test_id:
         raise Http404
@@ -315,8 +314,7 @@ class TestEditStudentsView(BaseAdminView, FormView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
-                                                          'test_id': self.get_object().id})
+        return reverse_lazy('admin-test-details', kwargs={'test_id': self.get_object().id})
 
     def form_valid(self, form):
         test = self.get_context_data()['test']
@@ -359,14 +357,13 @@ class TestDeleteView(BaseAdminView, DeleteView):
 
 
 @login_required
-def copy_test(request, user_id, test_id):
+def copy_test(request, test_id):
     test = get_object_or_404(TestInfo, author=request.user,
                              id=test_id)
     test.id = None
     test.title = test.title + ' - Copy'
     test.save()
-    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'user_id': request.user.id,
-                                                                           'test_id': test.id}))
+    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'test_id': test.id}))
 
 
 @login_required

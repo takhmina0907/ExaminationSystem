@@ -99,7 +99,7 @@
                         <div class="well about-block">
                             <div class="row">
                                 <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                    <a href="{% url 'admin-test-details' user_id=request.user.id test_id=test.id %}"><span class="title_exam">{{test.title}}</span></a>
+                                    <a href="{% url 'admin-test-details' test.id %}"><span class="title_exam">{{test.title}}</span></a>
                                     {% if test.is_active == test_state.ongoing %}
                                         <button class="status_exam ongoing">Ongoing</button>
                                     {% elif test.is_active == test_state.not_started %}
