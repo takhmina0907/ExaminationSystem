@@ -2,7 +2,7 @@
 <html lang="en">
 {% load static %}
 <head>
-    <title>Add students</title>
+    <title>New test</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -12,91 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-    <style>
-    	.check_title{
-  		    font-weight: bold;
-		    font-size: 18px;
-		    line-height: 22px;
-		    color: #373737;
-		    margin-bottom: 32px;
-  	    }
-  	    .add-stud{
-  		    margin-top: 20px;
-  	    }
-  	    .add-info{
-  		    margin-top: 48px;
-  	    }
-
-	    .main {
-			display: block;
-			position: relative;
-			padding-left: 45px;
-			margin-bottom: 15px;
-			cursor: pointer;
-			font-size: 16px;
-		}
-
-	    input[type=checkbox] {
-			visibility: hidden;
-	    }
-
-	    .geekmark {
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		    height: 24px;
-		    width: 24px;
-		    background: #FFFFFF;
-		    border-radius: 4px;
-		    border: 1px solid #A4A4A4;
-	    }
-
-		/* Specify the background color to be
-		shown when hovering over checkbox */
-		.main:hover input ~ .geekmark {
-			background-color: #eee;
-		}
-
-		/* Specify the background color to be
-		shown when checkbox is active */
-		.main input:active ~ .geekmark {
-			background-color: #392CD1;
-		}
-
-		/* Specify the background color */
-		.main input:checked ~ .geekmark {
-			background-color: #392CD1;
-		}
-
-		/* Checkmark to be shown in checkbox */
-		/* It is not be shown when not checked */
-		.geekmark:after {
-			content: "";
-			position: absolute;
-			display: none;
-		}
-
-		/* Display checkmark when checked */
-		.main input:checked ~ .geekmark:after {
-			display: block;
-		}
-
-		.main .geekmark:after {
-			left: 8px;
-			bottom: 6px;
-			width: 6px;
-			height: 12px;
-			border: solid white;
-			border-width: 0 2px 2px 0;
-			-webkit-transform: rotate(45deg);
-			-ms-transform: rotate(45deg);
-			transform: rotate(45deg);
-		}
-    </style>
 </head>
 <body>
-    <!--Start menu-->
     <nav class="navbar navbar-default visible-xs">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -132,73 +49,92 @@
                 </ul>
             </div>
             <br>
-            <!--End menu-->
             <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-  		        <div class="row add-stud">
-      		        <div class="col-sm-1"></div>
-  		            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
-  		    	        <p class="title_test">Adding Students</p>
+          		<div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
+                        <p class="title_test">New Test</p>
                     </div>
-  		        </div>
-  		        <div class="row">
-  			        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
-  			        <form method="post" class="col-sm-6 col-md-6 col-lg-6 col-xl-6 add-info">
-	  			        <p class="check_title" >Add students from</p>
-                        {% csrf_token %}
-                        {% if form.non_field_errors %}
-                            {% for error in form.non_field_errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
+                </div>
 
-                        {% for error in form.specialities.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                        {% for field in form.specialities.field.choices %}
-                            <label class="main">{{ field.1 }}
-                                <input type="checkbox" name="specialities" value="{{ field.0 }}">
-                                <span class="geekmark"></span>
-                            </label>
-                        {% endfor %}
-			        </form>
-		        </div>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 new_test_block">
+                        <div class="reg_content align-items-center">
+                            <div class="form_block">
+                                <form id="update-test" method="post">
+                                    <label class="test-label">Test info</label>
+                                    {% csrf_token %}
+                                    {% if form.non_field_errors %}
+                                        {% for error in form.non_field_errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
 
-		        <!--Bottom menu will change-->
-		        <div class="row fixed-row-bottom">
+                                    {% endif %}
+
+                                    {% for error in form.title.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.title }}
+                                    {% for error in form.description.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.description }}
+                                    {% for error in form.duration.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.duration }}
+                                    {% for error in form.start_date.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    <label class="test-label">Test availability</label>
+                                    {{ form.start_date }}
+                                    {% for error in form.start_time.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {{ form.start_time }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+
+                <div class="row fixed-row-bottom">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
                         <div class="step-menu">
                             <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
                                 {% csrf_token %}
-                                <button class="test-cancel-btn">Cancel</button>
+                                <button type="submit" class="test-cancel-btn">Cancel</button>
                             </form>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
                                 <!--Исправь! Width и что-то с row-->
                                 <div class="row">
                                     <div class="col-sm-1"></div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-update-test' request.user.id test.id %}" class="step"><p>Step 1</p></a>
+                                        <a href="{% url 'admin-create-test' request.user.id %}" class="step active"><p>Step 1</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
                                         <a href="{% url 'admin-test' request.user.id test.id %}" class="step"><p>Step 2</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-test-add-students' request.user.id test.id %}" class="step active"><p>Step 3</p></a>
+                                        <a href="{% url 'admin-test-add-students' request.user.id test.id %}" class="step"><p>Step 3</p></a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-1"></div>
                             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
-                                <button class="test-next-btn">Next</button>
+                                <button type="button" class="test-next-btn">Next</button>
                             </div>
                         </div>
                     </div>
-      	        </div>
+                </div>
             </div>
         </div>
-    </div><!--section main end-->
+    </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="{% static 'js/test_add_student.js' %}"></script>
+    <script src="{% static 'js/test_update.js' %}"></script>
 </body>
 </html>

@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="{% static 'css/tests.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <!--Start menu-->
     <nav class="navbar navbar-default visible-xs">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -26,7 +28,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
-                    <li class="active"><a href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
                     <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
                     <li><a href="{#TODO#}"><i class="fa fa-cog"></i>Settings</a></li>
                     <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
@@ -48,22 +50,33 @@
                 </ul>
             </div>
             <br>
-
+            <!--End menu-->
             <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
                 <div class="row">
                     <div class="col-xs-1 col-sm-1"></div>
                     <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 menu_text">
-                        <h4><img src="{% static 'img/Icon.png' %}">Tests</h4>
+                        <p class="title_test"><i class="fa fa-book"></i>Tests</p>
                     </div>
-                    <div class="col-xs-3 col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 account text-right">
+                    <div class="col-xs-3 col-sm-3 col-md-5 col-lg-5 col-xl-5">
                         <a href="{% url 'admin-create-test' id=request.user.id %}">
                             <button type="button" class="add-btn">
                                 + Add new
                             </button>
                         </a>
                     </div>
-                    <div class="col-xs-1 col-sm-1"></div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                </div>
+
+                <div class="row search-row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 search">
+                        <!-- Search form -->
+                        <form class="form-inline d-flex justify-content-center">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <input type="text" name="title" class="search" placeholder="Type to search...">
+                        </form>
+                    </div>
+                    <div class="col-sm-1"></div>
                 </div>
 
                 <div class="row">
@@ -80,57 +93,80 @@
                 </div>
 
                 {% for test in tests %}
-                    <div class="row">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                            <div class="well">
-                                <div class="row">
-                                    <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                        <span class="title_exam">
-                                            <a href="{% url 'admin-test-details' user_id=request.user.id test_id=test.id %}">
-                                                {{test.title}}
-                                            </a>
-                                        </span>
-                                        {% if test.is_active == test_state.ongoing %}
-                                            <button class="status_exam ongoing">Ongoing</button>
-                                        {% elif test.is_active == test_state.not_started %}
-                                            <button class="status_exam ongoing">Not started</button>
-                                        {% elif test.is_active == test_state.finished %}
-                                            <button class="status_exam ongoing finished">Finished</button>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
-                                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                                        <span class="total">
-                                            {% if test.average_points %}
-                                                {{ test.average_points }}
-                                            {% else %}
-                                                --
-                                            {% endif %}
-                                        </span>
-                                    </div>
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <div class="well about-block">
+                            <div class="row">
+                                <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                    <a href="{% url 'admin-test-details' user_id=request.user.id test_id=test.id %}"><span class="title_exam">{{test.title}}</span></a>
+                                    {% if test.is_active == test_state.ongoing %}
+                                        <button class="status_exam ongoing">Ongoing</button>
+                                    {% elif test.is_active == test_state.not_started %}
+                                        <button class="status_exam ongoing">Not started</button>
+                                    {% elif test.is_active == test_state.finished %}
+                                        <button class="status_exam ongoing finished">Finished</button>
+                                    {% endif %}
                                 </div>
+                                <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
+                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                                    <span class="total">
+                                        {% if test.average_points %}
+                                            {{ test.average_points }}
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
 
-                                <div class="row info">
-                                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                                        <span class="info-text">Students: {{test.students.all|length}}</span>
-                                    </div>
-                                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                                        <span>Questions: {{test.questions.all|length}}</span>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <span>Date created {{test.created_date|date:"d.m.Y" }}</span>
-                                    </div>
-                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
-                                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 average text-right">
-                                        average point
-                                    </div>
+                            <div class="row info">
+                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                                    <span class="info-text">Students: {{test.students.all|length}}</span>
+                                </div>
+                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                                    <span>Questions: {{test.questions.all|length}}</span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <span>Date created {{test.created_date|date:"d.m.Y H:m" }}</span>
+                                </div>
+                                <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 average text-right">
+                                    average point
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-1"></div>
                     </div>
+                    <div class="col-sm-1"></div>
+                </div>
                 {% endfor %}
+
+                <!--Page number -->
+                <div class="row">
+                    <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8"></div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 text-right">
+                        <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ page_obj.previous_page_number }}">
+                                <img src="{% static 'img/arrowback.png' %}"></a>
+                            </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="active page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ num }}">{{ num }}</a></li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ page_obj.next_page_number }}">
+                                <img src="{% static 'img/arrow.png' %}"></a>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
             </div>
         </div>
     </div>
