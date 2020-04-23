@@ -138,6 +138,27 @@ class AdminTestCreateView(BaseAdminView, CreateView):
                                              'test_id': self.object.id})
 
 
+class AdminTestUpdateView(BaseAdminView, UpdateView):
+    model = TestInfo
+    form_class = TestCreateForm
+    template_name = 'admin/test_update.html'
+    context_object_name = 'test'
+
+    def get(self, request, *args, **kwargs):
+        if not request.session.get('test_id') \
+                or request.session.get('test_id') != self.get_object().id:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_success_url(self):
+        return reverse('admin-test', kwargs={'user_id': self.request.user.id,
+                                             'test_id': self.get_object().id})
+
+
 class TestStudentAddView(BaseAdminView, FormView):
     form_class = StudentTestAddForm
     template_name = 'admin/test_add_student.html'
@@ -196,9 +217,21 @@ class AdminTestListView(BaseAdminView, ListView):
     model = TestInfo
     context_object_name = 'tests'
     template_name = 'admin/tests.html'
+    paginate_by = 4
 
     def get_queryset(self):
-        return self.request.user.tests \
+        try:
+            title = self.request.GET['title']
+        except KeyError:
+            title = None
+
+        if title is not None:
+            queryset = self.request.user.tests.filter(title__contains=title)
+        else:
+            queryset = self.request.user.tests
+            
+        return queryset \
+            .order_by('-created_date') \
             .annotate(average_points=Avg('results__grade'))
 
     def get_context_data(self, **kwargs):
@@ -349,7 +382,7 @@ def students_results(request, test_id, sort_by):
     if request.is_ajax() and request.method == 'POST':
         test = get_object_or_404(TestInfo, author=request.user.id,
                                  id=test_id)
-        results = test.students.all()\
+        results = test.students.all() \
             .annotate(points=F('results__grade')) \
             .annotate(result_id=F('results__id')) \
             .annotate(speciality_title=F('speciality__title'))

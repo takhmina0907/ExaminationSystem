@@ -91,9 +91,9 @@
                    {% csrf_token %}<input type="submit" value="Cancel">
                 </form>
             </span>
-            <span>Step 1</span>
-            <span><b>Step 2</b></span>
-            <span>Step 3</span>
+            <span><a href="{% url 'admin-update-test' request.user.id test.id %}">Step 1</a></span>
+            <span><a href="{% url 'admin-test' request.user.id test.id %}"><b>Step 2</b></a></span>
+            <span><a href="{% url 'admin-test-add-students' request.user.id test.id %}">Step 3</a></span>
             <a href="{% url 'admin-test-add-students' request.user.id test.id %}"><button>Next</button></a>
         </div>
     </body>
