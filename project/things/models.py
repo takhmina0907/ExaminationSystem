@@ -3,7 +3,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils import timezone
 
-from .directionOfFile import images_upload,student_photo_upload
+from .directionOfFile import images_upload,student_photo_upload,photo_upload
 
 
 class Test(models.Model):
@@ -71,10 +71,17 @@ class Student(models.Model):
     email = models.EmailField(max_length=100)
     speciality = models.CharField(max_length=200, blank=True)
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
-    photo = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
+    photo = models.ImageField(upload_to=photo_upload,default='',blank=True) # на время потом если будем вводить Deep Learning надо убрать
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.email)
+
+class StudentImage(models.Model):
+    student =  models.ForeignKey(Student,on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
+    
+    def __str__(self):
+        return '{} - {}'.format(self.student.id, self.student.email)
 
 
 class TestInfo(models.Model):

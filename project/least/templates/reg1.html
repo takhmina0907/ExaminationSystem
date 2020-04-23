@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<link rel="stylesheet" href={% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}>
+	<link rel="stylesheet" href= {% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}>
 	<link rel="stylesheet" href={% static 'css/new1.css' %}>
 </head>
 
@@ -24,25 +24,24 @@
 									</h2>
 									<p>Dear student, we are glad that you joined out test for CSS 103 Software Engineering subject at SDU. Please fill in the form to proceed with your exam</p>
 									<div class="form_block">
-										<form action"{% url 'reg' %}" method="post">
-                                        {% csrf_token %}
-											<input type="text" class="form-control" placeholder="Your ID" id="id_id">
-											<input type="text" class="form-control" placeholder="Fullname" id="id_full_name">
-											
+									{% for field in form %}
+										<form action="{% url 'reg1'  %}"  method="post" class="{% if field.errors %} ? novalidate :  was-validated {% endif %}">
+										{% csrf_token %}
+											<input type="number" name='id' class="form-control" id="id_id" placeholder="Your ID" required>
+											<div class="invalid-feedback valid_feed">
+									         {{ field.errors }}
+									        </div>
+											<button type="submit" class="next">
+												Next<img src={% static 'img/3-layers.png' %}  alt="" class="next_img">
+											</button>
 										</form>
+										{% endfor %} 
 									</div>
-									
-									<a href="new2.html">
-										<button type="submit" class="next">
-										Next<img src={% static 'img/3-layers.png' %} alt="" class="next_img">
-										</button>
-									</a>
-									
 								</div>
 								
 							</div>
 							<div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 justify-content-center img__container d-none d-lg-block">
-								<img src= {% static 'img/01.svg' %} alt="">
+								<img src={% static 'img/01.svg' %} alt="">
 								
 							</div>
 					</div>
@@ -54,6 +53,26 @@
 			<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
 		</div>
 	</div>
+	{% comment %} <script>
+	// Example starter JavaScript for disabling form submissions if there are invalid fields
+	(function() {
+	  'use strict';
+	  window.addEventListener('load', function() {
+	    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+	    var forms = document.getElementsByClassName('needs-validation');
+	    // Loop over them and prevent submission
+	    var validation = Array.prototype.filter.call(forms, function(form) {
+	      form.addEventListener('submit', function(event) {
+	        if (form.checkValidity() === false) {
+	          event.preventDefault();
+	          event.stopPropagation();
+	        }
+	        form.classList.add('was-validated');
+	      }, false);
+	    });
+	  }, false);
+	})();
+	</script> {% endcomment %}
 	
 		
 	
