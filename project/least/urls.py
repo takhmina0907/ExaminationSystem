@@ -56,7 +56,7 @@ urlpatterns = [
     path('admin/tests/create/', AdminTestCreateView.as_view(), name='admin-create-test'),
     path('admin/tests/<int:test_id>/create/', AdminTestUpdateView.as_view(), name='admin-update-test'),
     path('admin/tests/<int:test_id>/questions/', admin_test, name='admin-test'),
-    path('admin/<int:user_id>/tests/<int:test_id>/groups/', TestStudentAddView.as_view(),
+    path('admin/tests/<int:test_id>/groups/', TestStudentAddView.as_view(),
          name='admin-test-add-students'),
     path('admin/tests/<int:test_id>/share/', share_test, name='admin-share-test'),
     path('admin/testid<uidb64>/', filter_students, name='admin-filter-students'),
