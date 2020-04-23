@@ -63,8 +63,7 @@ class PreActivationView(TemplateView):
 
 class ActivationView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        user_id = force_text(urlsafe_base64_decode(kwargs['uidb64']))
-        return reverse_lazy('admin-tests', kwargs={'id': user_id})
+        return reverse_lazy('admin-tests')
 
     def get(self, request, *args, **kwargs):
         user = None
@@ -352,7 +351,7 @@ class TestDeleteView(BaseAdminView, DeleteView):
         return self.request.user.tests.all()
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.kwargs['user_id']})
+        return reverse_lazy('admin-tests')
 
     def delete(self, request, *args, **kwargs):
         test = self.get_object()
