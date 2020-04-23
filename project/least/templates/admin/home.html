@@ -93,7 +93,7 @@
                             <div class="lines3">
                                 {% with tests=request.user.tests.all|length %}
                                 <h4 class="gap">{{ tests }}
-                                    <a class="add" href="{% url 'admin-create-test' request.user.id %}">
+                                    <a class="add" href="{% url 'admin-create-test' %}">
                                         <img src="{% static 'img/Add button.png' %}" alt="ADD" align="right">
                                     </a>
                                 </h4>
