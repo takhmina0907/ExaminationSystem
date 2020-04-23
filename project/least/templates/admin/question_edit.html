@@ -89,9 +89,9 @@
             <span>
                 <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button">Cancel</button></a>
             </span>
-            <span>Step 1</span>
-            <span><b>Step 2</b></span>
-            <span>Step 3</span>
+            <span><a href="{% url 'admin-edit-test' request.user.id test.id %}">Step 1</a></span>
+            <span><a href="{% url 'admin-edit-questions' request.user.id test.id %}"><b>Step 2</b></a></span>
+            <span><a href="{% url 'admin-test-edit-students' request.user.id test.id %}">Step 3</a></span>
             <a href="{% url 'admin-test-edit-students' request.user.id test.id %}"><button>Next</button></a>
         </div>
     </body>

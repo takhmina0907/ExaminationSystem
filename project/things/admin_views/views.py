@@ -229,7 +229,7 @@ class AdminTestListView(BaseAdminView, ListView):
             queryset = self.request.user.tests.filter(title__contains=title)
         else:
             queryset = self.request.user.tests
-            
+
         return queryset \
             .order_by('-created_date') \
             .annotate(average_points=Avg('results__grade'))
@@ -262,14 +262,11 @@ class TestEditView(BaseAdminView, UpdateView):
     context_object_name = 'test'
     pk_url_kwarg = 'test_id'
 
-    def form_valid(self, form):
-        self.request.session['edited_test_id'] = self.object.id
-        return super().form_valid(form)
-
     def get(self, request, *args, **kwargs):
         test = self.get_object()
         if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
             return HttpResponse(content="You can't edit this test", status=409)
+        self.request.session['edited_test_id'] = test.id
         return super().get(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
@@ -315,14 +312,10 @@ class TestEditStudentsView(BaseAdminView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['test'] = self.get_object()
-        return context
-
-    def get_initial(self):
-        initial = super().get_initial()
         test = self.get_object()
-        initial['specialities'] = list(test.students.all().values_list('speciality', flat=True).distinct())
-        return initial
+        context['test'] = test
+        context['checked'] = list(test.students.all().values_list('speciality', flat=True).distinct())
+        return context
 
     def get_success_url(self):
         return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
@@ -331,7 +324,7 @@ class TestEditStudentsView(BaseAdminView, FormView):
     def form_valid(self, form):
         test = self.get_context_data()['test']
         specialities = set(form.cleaned_data['specialities'].values_list('id', flat=True))
-        initial_specialities = set(self.get_initial()['specialities'])
+        initial_specialities = set(self.get_context_data()['checked'])
 
         if initial_specialities.issubset(specialities):
             new_specialities = specialities.difference(initial_specialities)
@@ -345,6 +338,8 @@ class TestEditStudentsView(BaseAdminView, FormView):
             students = Student.objects.filter(speciality__in=specialities)
             test.students.clear()
             test.students.add(*students)
+
+        del self.request.session['edited_test_id']
 
         return HttpResponseRedirect(self.get_success_url())
 
