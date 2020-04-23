@@ -115,7 +115,7 @@
                                         <a href="{% url 'admin-create-test' %}" class="step active"><p>Step 1</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-test' request.user.id test.id %}" class="step"><p>Step 2</p></a>
+                                        <a href="{% url 'admin-test' test.id %}" class="step"><p>Step 2</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
                                         <a href="{% url 'admin-test-add-students' request.user.id test.id %}" class="step"><p>Step 3</p></a>

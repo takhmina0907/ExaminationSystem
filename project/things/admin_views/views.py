@@ -133,8 +133,7 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('admin-test', kwargs={'user_id': self.request.user.id,
-                                             'test_id': self.object.id})
+        return reverse('admin-test', kwargs={'test_id': self.object.id})
 
 
 class AdminTestUpdateView(BaseAdminView, UpdateView):
@@ -154,8 +153,7 @@ class AdminTestUpdateView(BaseAdminView, UpdateView):
                                  id=self.kwargs['test_id'])
 
     def get_success_url(self):
-        return reverse('admin-test', kwargs={'user_id': self.request.user.id,
-                                             'test_id': self.get_object().id})
+        return reverse('admin-test', kwargs={'test_id': self.get_object().id})
 
 
 class TestStudentAddView(BaseAdminView, FormView):
@@ -523,7 +521,7 @@ def student_csv_import(request):
 
 
 @login_required
-def admin_test(request, user_id, test_id):
+def admin_test(request, test_id):
     if not request.session.get('test_id') or request.session.get('test_id') != test_id:
         raise Http404
 

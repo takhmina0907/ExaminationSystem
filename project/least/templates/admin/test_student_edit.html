@@ -1,31 +1,3 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#    <head>#}
-{#        <meta charset="UTF-8">#}
-{#        <title>New test</title>#}
-{#    </head>#}
-{#    <body>#}
-{#        <h1>Add students from</h1>#}
-{#        <form id="form-test" method="post">#}
-{#            {% csrf_token %}#}
-{#            <div>#}
-{#                {{ form }}#}
-{#                {% for name, value in form.specialities.field.widget.choices %}#}
-{#                    {{ name }}, {{ value }}#}
-{#                {% endfor %}#}
-{#                {{ checked }}#}
-{#            </div>#}
-{#            <br/>#}
-{#            <div>#}
-{#                <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button">Cancel</button></a>#}
-{#                <span><b>Step 1</b></span>#}
-{#                <span>Step 2</span>#}
-{#                <span>Step 3</span>#}
-{#                <input type="submit" value="Submit">#}
-{#            </div>#}
-{#        </form>#}
-{#    </body>#}
-{#</html>#}
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
