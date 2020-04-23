@@ -171,10 +171,9 @@
 		        <div class="row fixed-row-bottom">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
                         <div class="step-menu">
-                            <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
-                                {% csrf_token %}
-                                <button class="test-cancel-btn">Cancel</button>
-                            </form>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                                <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button" class="test-cancel-btn">Cancel</button></a>
+                            </div>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
                                 <!--Исправь! Width и что-то с row-->
                                 <div class="row">
