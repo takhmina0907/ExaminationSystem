@@ -17,7 +17,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from things.views import StudentLoginView,TestInfo,Test
+
 import things.views as views
+
 from things.admin_views.views import (
     RegistrationView, LoginView, LogoutView,
     HomeView, AdminTestListView, AdminTestCreateView,
@@ -37,9 +40,9 @@ from things.admin_views.views import (
 urlpatterns = [
     path('superuser/', admin.site.urls),
     path('Test/<id>/result/',views.result, name='res'),
-    path('Test/<id>',views.Test_view,name='test'),
-    path('',views.reg1,name="reg1"),
-    path('TestInfo/<id>',views.reg3,name='reg3'),
+    path('Test/<int:id>',Test.as_view(),name='test'),
+    path('',StudentLoginView.as_view(),name="reg1"),
+    path('TestInfo/<id>',TestInfo.as_view(),name='reg3'),
     path('notAvailable/<id>',views.no,name="notAvailable"),
     path('Cannot/<id>',views.cannot,name="Cannot"),
 #----------------------------

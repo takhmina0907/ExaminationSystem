@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+	<meta charset="UTF-8">
+	<title>Test</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href={% static 'css/finance.css' %}>
+	<link rel="stylesheet" href={% static 'css/pop.css' %}>
+</head>
+<body onload="startTimer()">
+	<section class="Section1">
+		<div class="container cn">
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="test_title">
+						Q.45					
+					</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="q_block">
+						<div class="question d-flex">
+							<p class="question_title">
+								The covariance of returns on two investments over a 10-year period is 0.009. If the variance of returns for investment. A is 0.020 and the variance of returns for investment B is 0.033, what is the correlation coefficient for the returns?
+							</p>
+						</div>
+						<div class="answer">
+							<div class="block_radio">
+								<form action="#">
+									<div class="radio">
+										<label class="d-flex">
+											<input type="radio" name="r1">
+											<i></i>
+											<div class="radio_text">
+												0.444
+											</div>
+										</label>
+									</div>
+									<div class="radio">
+										<label class="d-flex">
+											<input type="radio" name="r1">
+											<i></i>
+											<div class="radio_text">
+												0.765
+											</div>
+										</label>
+									</div>
+									<div class="radio">
+										<label class="d-flex">
+											<input type="radio" name="r1">
+											<i></i>
+											<div class="radio_text">
+												0.123
+											</div>
+										</label>
+									</div>
+									<div class="radio">
+										<label class="d-flex">
+											<input type="radio" name="r1">
+											<i></i>
+											<div class="radio_text">
+												0.567
+											</div>
+										</label>
+									</div>
+								</form>
+							</div>					
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="row">
+				
+				<div class="next_q">
+					<button type="button" class="next">
+						Next question<img src={% static 'img/3-layers.png' %} alt="" class="next_img">
+					</button>
+				</div>	
+			</div>
+			<div class="row">
+				<div class="prev_q">
+					<button type="button" class="prev">
+						<img src={% static 'img/prev.png' %} alt="" class="prev_img">Previous question
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="Section2">
+		<div class="container align-items-center">
+			<div class="row">
+				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
+					<img src={% static 'img/chronometer.svg' %} class="time_svg">
+
+					<p class="time_text"><span id="time">30:00</span></p>
+				</div>
+				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
+				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
+					<span class="num_of_q">45 out of 100</span>
+				</div>
+				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
+			
+				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+					<button class="btn btn-header" href="#" data-target="#loginModal" data-toggle="modal" id="myBtn">Finish test
+					</button>
+					<!-- The Modal -->
+            		<div id="myModal" class="modal">
+
+              		<!-- Modal content -->
+	              		<div class="modal-content">
+			                <p class="reg_par">
+								Are you sure you want to complete the test?
+							</p>
+							<div class="row">
+								<div class="col">
+									<form action="new_student_section.html">
+										<button class="btn btn-header skip-btn">Cancel
+										</button><!--с ссылки на button-->
+									</form>
+								</div>
+								<div class="col"></div>
+								<div class="col">
+									<form action="new3.html">
+										<button type="submit" class="btn btn-header next-btn">Finish test
+										</button>
+									</form>
+								</div>
+							</div>
+					
+
+		                
+		              	</div>
+              
+            		</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--Modal form js -->
+    <script>
+      var modal = document.getElementById('myModal');
+
+      var btn = document.getElementById("myBtn");
+
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the modal 
+      btn.onclick = function() {
+          modal.style.display = "block";
+      }
+
+      span.onclick = function() {
+          modal.style.display = "none";
+      }
+
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+    </script>
+    <script src="tabs.js"></script>
+</body>
+</html>
