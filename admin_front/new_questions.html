@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>New test</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main1.css">
+  <link rel="stylesheet" href="css/test1.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    .question-page{
+      margin-top: 20px;
+    }
+    .add-question{
+      width: 144px;
+      height: 41px;
+      font-size: 14px;
+      text-align: center;
+      border: 1px dashed #A4A4A4;
+      color: rgba(55, 55, 55, 0.7);
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      padding-top: 9px;
+    }
+    .q_list{
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: #A4A4A4;
+    }
+    .q_btn{
+      width: 147px;
+      height: 41px;
+      background: rgba(57, 44, 209, 0.2);
+      border-radius: 8px;
+      color: #392CD1;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .button-row{
+      margin-top: 10px;
+    }
+  </style>
+
+</head>
+<body>
+<!--Start menu-->
+<nav class="navbar navbar-default visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="main1.html">
+        <i class="fa fa-home"></i>Home</a></li>
+        <li><a href="test1.html">
+          <i class="fa fa-book"></i>Tests</a></li>
+        <li><a href="student_add.html">
+          <i class="fa fa-users"></i>Students</a></li>
+        <li><a href="#">
+          <i class="fa fa-cog"></i>Settings</a></li>
+        <li><a href="#">
+          <i class="fa fa-sign-out"></i>Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+      <h2 class="logo-text">LOGO</h2>
+      <ul class="nav flex-column">
+        <li><a href="main1.html">
+          <i class="fa fa-home"></i>Home</a></li>
+        <li><a class="active" href="test1.html"><i class="fa fa-book"></i>
+        Tests</a></li>
+        <li><a href="student_add.html"><i class="fa fa-users"></i>
+        Students</a></li>
+        <li><a href="#"><i class="fa fa-cog"></i>
+        Settings</a></li>
+        <li><a href="#"><i class="fa fa-sign-out"></i>
+        Log out</a></li>
+      </ul>
+      
+    </div>
+    <br>
+<!--End menu-->
+    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+    
+  		<div class="row question-page">
+      		<div class="col-xs-2 col-sm-2"></div>
+  		    <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+  		    	<p class="title_test">Questions</p>
+          </div>
+          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+
+            <form id="csv-form" action="#" method="post">
+                <!--<button id="import-csv" type="button" class="add-question"><i class="fa fa-arrow-up"></i>Import CSV</button>
+                <input id="csv-file" style="visibility:hidden;" name="students" type="file" accept=".csv">-->
+
+                <label for="files" class="btn add-question">
+                  <i class="fa fa-arrow-up"></i>Import CSV</label>
+                <input id="files" style="visibility:hidden;" type="file" name="students" accept=".csv">
+            </form>
+
+          </div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+  		</div>
+      
+      <div class="row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+            <p class="q_list">Here you will see the list of your questions</p>
+          </div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+      </div>
+
+      <div class="row button-row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+            <button class="q_btn">Add question</button>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+      </div>
+      
+      <!--Bottom menu will change-->
+      <div class="row fixed-row-bottom">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
+            <div class="step-menu">
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                <a href="test1.html"><button class="test-cancel-btn">Cancel</button></a>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
+              <!--Исправь! Width и что-то с row--> 
+                <div class="row">
+                  <div class="col-sm-1"></div>
+                  <div class="col-xs-3 steps">
+                    <a href="new_test.html" class="step"><p class="step">Step 1</p></a>
+                  </div>
+                  <div class="col-xs-3 steps">
+                    <a href="#" class="step active"><p>Step 2</p></a>
+                  </div>
+                  <div class="col-xs-3 steps">
+                    <a href="#" class="step"><p>Step 3</p></a><!--disabled?-->
+                  </div>
+
+                </div>
+                
+              </div>
+              <div class="col-sm-1"></div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                <button type = "button" class="btn test-next-btn disabled">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+    </div>
+
+</div><!--section main end-->
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

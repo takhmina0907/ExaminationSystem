@@ -9,9 +9,11 @@
     <div>
         <span><b>{{test.title}}</b></span> ||
         <span>
-            {% if test.is_active %}
+            {% if test.is_active == test_state.ongoing %}
                 Ongoing
-            {% else %}
+            {% elif test.is_active == test_state.not_started %}
+                Not started
+            {% elif test.is_active == test_state.finished %}
                 Finished
             {% endif %}
         </span> ||
@@ -61,8 +63,9 @@
         </span> ||
         <span>
             Test availability
-            <b>{{test.deadline|date:"d.m.Y H:i"}}</b>
-            <b>{{test.duration}} min</b>
+{#            <b>{{test.deadline|date:"d.m.Y H:i"}}</b>#}
+            <b>{{test.start_date|date:"d.m.Y"}}</b>
+            <b>{{test.start_time|date:"H:i"}}</b> - <b>{{test.end_time|date:"H:i"}}</b>
         </span>
     </div>
     <br/>

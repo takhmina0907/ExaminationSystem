@@ -13,21 +13,22 @@ from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError
 from django.db.models import Avg, F, Count, Q
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 
 from things.admin_forms.forms import (
-    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm
+    UserCreateForm, UserAuthForm, TestCreateForm, StudentCreateForm, StudentEditForm,
+    StudentTestAddForm, StudentTestEditForm
 )
-from things.models import TestInfo, Question, Option, User, Student, TestResult
+from things.models import TestInfo, Question, Option, User, Student, TestResult, Speciality
 from things.utils.tasks import send_mail_wrapper
 from things.utils.activation_token import activation_token
 
@@ -89,7 +90,7 @@ class LoginView(BaseLoginView):
     template_name = 'admin/login.html'
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.request.user.id})
+        return reverse_lazy('admin-home')
 
 
 class LogoutView(BaseLogoutView):
@@ -99,6 +100,19 @@ class LogoutView(BaseLogoutView):
 
 class BaseAdminView(LoginRequiredMixin):
     pass
+
+
+class HomeView(BaseAdminView, DetailView):
+    model = User
+    template_name = 'admin/home.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['students_number'] = Student.objects.all().count()
+        return context
 
 
 class AdminTestCreateView(BaseAdminView, CreateView):
@@ -111,11 +125,195 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         self.object.save()
+        encoded_id = urlsafe_base64_encode(force_bytes(self.object.id))
+        domain = get_current_site(self.request)
+        url = reverse('admin-filter-students', kwargs={'uidb64': encoded_id})
+        self.object.link = 'http://{}{}'.format(domain, url)
+
+        self.request.session['test_id'] = self.object.id
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('admin-test', kwargs={'user_id': self.request.user.id,
                                              'test_id': self.object.id})
+
+
+class TestStudentAddView(BaseAdminView, FormView):
+    form_class = StudentTestAddForm
+    template_name = 'admin/test_add_student.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.session.get('test_id') \
+                or request.session.get('test_id') != self.get_context_data()['test'].id:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['test'] = get_object_or_404(TestInfo, author=self.request.user,
+                                            id=self.kwargs['test_id'])
+        return context
+
+    def get_success_url(self):
+        test_id = self.get_context_data()['test'].id
+        return reverse_lazy('admin-share-test', kwargs={'test_id': test_id})
+
+    def form_valid(self, form):
+        specialities = list(form.cleaned_data['specialities'].values_list('id', flat=True))
+        students = Student.objects.filter(speciality__in=specialities)
+        test = self.get_context_data()['test']
+        test.students.add(*students)
+        del self.request.session['test_id']
+        return HttpResponseRedirect(self.get_success_url())
+
+
+@login_required
+def share_test(request, test_id):
+    test = get_object_or_404(TestInfo, author=request.user,
+                             id=test_id)
+    return render(request, 'admin/test_invite.html', {'link': test.link})
+
+
+def filter_students(request, uidb64):
+    test = None
+    try:
+        test_id = force_text(urlsafe_base64_decode(uidb64))
+        test = TestInfo.objects.get(id=test_id)
+        correct = True
+    except (TypeError, ValueError, OverflowError, TestInfo.DoesNotExist, ValidationError):
+        correct = False
+
+    if correct and test.is_active == TestInfo.TestState.ongoing:
+        # TODO change redirect url
+        return HttpResponse(content=uidb64)
+    else:
+        # TODO change redirect url
+        messages.error(request, 'Test link is invalid')
+        return HttpResponseRedirect(reverse('admin-login'))
+
+
+class AdminTestListView(BaseAdminView, ListView):
+    model = TestInfo
+    context_object_name = 'tests'
+    template_name = 'admin/tests.html'
+
+    def get_queryset(self):
+        return self.request.user.tests \
+            .annotate(average_points=Avg('results__grade'))
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminTestListView, self).get_context_data(**kwargs)
+        context['test_state'] = TestInfo.TestState.__members__
+        return context
+
+
+class AdminTestDetailView(BaseAdminView, DetailView):
+    model = TestInfo
+    context_object_name = 'test'
+    pk_url_kwarg = 'test_id'
+    template_name = 'admin/test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['average_points'] = self.get_object().results.aggregate(Avg('grade')).get('grade__avg')
+        context['test_state'] = TestInfo.TestState.__members__
+        return context
+
+    def get_queryset(self):
+        return self.request.user.tests.all()
+
+
+class TestEditView(BaseAdminView, UpdateView):
+    form_class = TestCreateForm
+    template_name = 'admin/test_edit.html'
+    context_object_name = 'test'
+    pk_url_kwarg = 'test_id'
+
+    def form_valid(self, form):
+        self.request.session['edited_test_id'] = self.object.id
+        return super().form_valid(form)
+
+    def get(self, request, *args, **kwargs):
+        test = self.get_object()
+        if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
+            return HttpResponse(content="You can't edit this test", status=409)
+        return super().get(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_success_url(self):
+        return reverse_lazy('admin-edit-questions', kwargs={'user_id': self.request.user.id,
+                                                            'test_id': self.object.id})
+
+
+@login_required
+def admin_test_edit(request, user_id, test_id):
+    if not request.session.get('edited_test_id') \
+            or request.session.get('edited_test_id') != test_id:
+        raise Http404
+
+    test = get_object_or_404(TestInfo, id=test_id, author=request.user)
+
+    if request.method == 'GET':
+        if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
+            return HttpResponse(content="You can't edit this test", status=409)
+
+    return render(request, 'admin/question_edit.html', {'test': test, 'questions': test.questions.all()})
+
+
+class TestEditStudentsView(BaseAdminView, FormView):
+    form_class = StudentTestEditForm
+    template_name = 'admin/test_student_edit.html'
+
+    def get(self, request, *args, **kwargs):
+        test = self.get_object()
+        if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
+            return HttpResponse(content="You can't edit this test", status=409)
+        if not request.session.get('edited_test_id') \
+                or request.session.get('edited_test_id') != self.get_context_data()['test'].id:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def get_object(self):
+        return get_object_or_404(TestInfo, author=self.request.user,
+                                 id=self.kwargs['test_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['test'] = self.get_object()
+        return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        test = self.get_object()
+        initial['specialities'] = list(test.students.all().values_list('speciality', flat=True).distinct())
+        return initial
+
+    def get_success_url(self):
+        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
+                                                          'test_id': self.get_object().id})
+
+    def form_valid(self, form):
+        test = self.get_context_data()['test']
+        specialities = set(form.cleaned_data['specialities'].values_list('id', flat=True))
+        initial_specialities = set(self.get_initial()['specialities'])
+
+        if initial_specialities.issubset(specialities):
+            new_specialities = specialities.difference(initial_specialities)
+            students = Student.objects.filter(speciality__in=new_specialities)
+            test.students.add(*students)
+        elif initial_specialities.issuperset(specialities):
+            new_specialities = initial_specialities.difference(specialities)
+            students = Student.objects.filter(speciality__in=new_specialities)
+            test.students.remove(*students)
+        else:
+            students = Student.objects.filter(speciality__in=specialities)
+            test.students.clear()
+            test.students.add(*students)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class TestDeleteView(BaseAdminView, DeleteView):
@@ -135,21 +333,6 @@ class TestDeleteView(BaseAdminView, DeleteView):
         return super(TestDeleteView, self).delete(request, *args, **kwargs)
 
 
-class TestEditView(BaseAdminView, UpdateView):
-    form_class = TestCreateForm
-    template_name = 'admin/test_edit.html'
-    context_object_name = 'test'
-    pk_url_kwarg = 'test_id'
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(TestInfo, author=self.request.user,
-                                 id=self.kwargs['test_id'])
-
-    def get_success_url(self):
-        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
-                                                          'test_id': self.object.id})
-
-
 @login_required
 def copy_test(request, user_id, test_id):
     test = get_object_or_404(TestInfo, author=request.user,
@@ -161,42 +344,19 @@ def copy_test(request, user_id, test_id):
                                                                            'test_id': test.id}))
 
 
-class AdminTestListView(BaseAdminView, ListView):
-    model = TestInfo
-    context_object_name = 'tests'
-    template_name = 'admin/tests.html'
-
-    def get_queryset(self):
-        return self.request.user.tests \
-            .annotate(average_points=Avg('results__grade'))
-
-
-class AdminTestDetailView(BaseAdminView, DetailView):
-    model = TestInfo
-    context_object_name = 'test'
-    pk_url_kwarg = 'test_id'
-    template_name = 'admin/test.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['average_points'] = self.get_object().results.aggregate(Avg('grade')).get('grade__avg')
-        return context
-
-    def get_queryset(self):
-        return self.request.user.tests.all()
-
-
 @login_required
 def students_results(request, test_id, sort_by):
     if request.is_ajax() and request.method == 'POST':
         test = get_object_or_404(TestInfo, author=request.user.id,
                                  id=test_id)
-        results = test.students.all().annotate(points=F('results__grade')) \
-            .annotate(result_id=F('results__id'))
+        results = test.students.all()\
+            .annotate(points=F('results__grade')) \
+            .annotate(result_id=F('results__id')) \
+            .annotate(speciality_title=F('speciality__title'))
         if sort_by == 'student-name':
             results = results.order_by('first_name', 'last_name')
         elif sort_by == 'student-group':
-            results = results.order_by('speciality')
+            results = results.order_by('speciality__title')
         elif sort_by == 'student-point-ascending':
             results = results.order_by('points')
         elif sort_by == 'student-point-descending':
@@ -239,6 +399,7 @@ class StudentDetailView(BaseAdminView, DetailView):
         context = super().get_context_data(**kwargs)
         context['tests'] = self.object.tests.all().annotate(point=F('results__grade')) \
             .annotate(question_rate=Count('results__answers', filter=Q(results__answers__answer__is_correct=True)))
+        context['test_state'] = TestInfo.TestState.__members__
         return context
 
     def get_queryset(self):
@@ -252,6 +413,17 @@ class StudentCreateView(BaseAdminView, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('admin-create-student-success')
+
+
+@login_required
+def check_speciality(request):
+    if request.is_ajax() and request.method == 'GET':
+        speciality = request.GET['title'].strip().upper()
+        matches = Speciality.objects.filter(
+            title__startswith=speciality
+        ).values('title')
+        return JsonResponse(json.dumps(list(matches)), safe=False, status=200)
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
 class StudentCreateSuccess(BaseAdminView, TemplateView):
@@ -300,14 +472,19 @@ def student_csv_import(request):
             if not stud_info[2].isdigit():
                 correct = False
                 messages.error(request, 'Student id is invalid, line %d' % index)
+            if not stud_info[3]:
+                correct = False
+                messages.error(request, 'Speciality is invalid, line %d' % index)
 
             if correct:
                 try:
+                    speciality = Speciality.objects.get_or_create(
+                        title=stud_info[3].strip().upper())[0]
                     Student.objects.create(
                         first_name=stud_info[0],
                         last_name=stud_info[1],
                         id=int(stud_info[2]),
-                        speciality=stud_info[3],
+                        speciality=speciality,
                         email=stud_info[2] + '@stu.sdu.edu.kz'
                     )
                 except IntegrityError:
@@ -320,6 +497,9 @@ def student_csv_import(request):
 
 @login_required
 def admin_test(request, user_id, test_id):
+    if not request.session.get('test_id') or request.session.get('test_id') != test_id:
+        raise Http404
+
     test = get_object_or_404(TestInfo, id=test_id, author=request.user)
 
     if test.questions.count() == 0:

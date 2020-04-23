@@ -5,8 +5,12 @@
 	text-align: center;
 	border: 1px dashed #A4A4A4;
 	color: rgba(55, 55, 55, 0.7);
-	margin-top: 20px;/*найди замену*/
 	background-color: #f8f8f8;
+	border-radius: 8px;
+}
+.about-block:hover{
+      box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
+      border-radius: 8px;
 }
 .title_exam{
 	font-size: 20px;
@@ -18,16 +22,19 @@
 }
 /*input for test*/
 .form_block input{
-	margin-bottom: 20px;
-	width: 400px;
+	margin-bottom: 24px;
 	height: 48px;
 }
 .fixed-row-bottom { 
 	position: fixed; 
 	bottom: 0;
-	
-	height: 50px;
+	height: 85px;
+	width: 100%;
+	background: #FFFFFF;
+	box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+
 }
+
 .ongoing{
 	background: rgba(255, 208, 88, 0.4);
 	width: 95px;
@@ -59,9 +66,97 @@
 	font-size: 14px;
 }
 
+.search input{
+	border: 0;
+    box-shadow: none;
+	background-color: #f8f8f8;
+	width: 90%;
 
+}
+.search form{
+	padding-bottom: 8px;
+	border-bottom: 1px solid #A4A4A4;
+}
+.search-row{
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+.pagination>.active>a{
+  color: #392CD1; 
+  background-color: #f8f8f8;
+  font-weight: bold;
+}
 
+.pagination>li>a, .pagination>li>span {
+    border: none !important;
+    background-color: #f8f8f8; 
+    color: #373737;
 
+}
 
+.pagination>.active>span:hover, .pagination>.active>a:hover{
+	border: none !important;
+    background-color: #f8f8f8; 
+    color: #373737;
+}
+.title_test{
+	color: #392CD1;
+	font-weight: 600;
+	font-size: 24px;
 
+}
+label{
+	color: #373737;
+	font-weight: 600;
+	font-size: 18px;
+	margin-bottom: 24px;
+}
+.new_test_block{
+	margin-top: 48px;
+}
+
+.test-cancel-btn{
+	width: 83px;
+	height: 35px;
+	background: #FFFFFF;
+
+	border: 1px dashed #A4A4A4;
+	box-sizing: border-box;
+	border-radius: 8px;
+	font-size: 12px;
+	color: #A4A4A4;
+}
+.test-next-btn{
+	width: 82px;
+	height: 35px;
+	background: #392CD1;
+	border-radius: 8px;
+	color: #fff;
+	font-size: 12px;
+}
+.test-next-btn:hover{
+	color: #fff;
+}
+.steps{
+	padding-top: 7px;
+}
+.step-menu{
+	margin-top: 22px;
+}
+.steps a.active{
+	color: #392CD1;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 16px;
+
+}
+.step{
+	font-size: 16px;
+	color: #373737;
+	text-decoration: none;
+}
+.step:hover{
+	color: #392CD1;
+	text-decoration: none;
+}
 

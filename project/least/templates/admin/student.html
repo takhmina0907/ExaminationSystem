@@ -39,9 +39,11 @@
     <div>
         <div><a><h3>{{ test.title }}</h3></a></div>
         <div>
-            {% if test.is_active %}
+            {% if test.is_active == test_state.ongoing %}
                 Ongoing
-            {% else %}
+            {% elif test.is_active == test_state.not_started %}
+                Not started
+            {% elif test.is_active == test_state.finished %}
                 Finished
             {% endif %}
         </div>

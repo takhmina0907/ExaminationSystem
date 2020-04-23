@@ -1,3 +1,4 @@
+// Region CSRF
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -18,11 +19,37 @@ let csrftoken = getCookie('csrftoken');
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+// End region CSRF
 
-let question_add_button = $('#question-add');
-const test_id = parseInt(question_add_button.data('test-id'));
 
-function request(url, success) {
+// Region Requests
+let status_line = $(`#request-status`);
+
+$(function() {
+    $.ajaxSetup({
+        error: function(jqXHR, exception) {
+            if (jqXHR.status === 0) {
+                status_line.html('Not connected. Please verify your network.');
+            } else if (jqXHR.status === 403) {
+                status_line.html('You are not authorized');
+            } else if (jqXHR.status === 404) {
+                status_line.html('Requested url not found');
+            } else if (jqXHR.status === 500) {
+                status_line.html('Internal Server Error');
+            } else if (exception === 'parsererror') {
+                status_line.html('Requested JSON parse failed');
+            } else if (exception === 'timeout') {
+                status_line.html('Request time out error');
+            } else if (exception === 'abort') {
+                status_line.html('Ajax request aborted');
+            } else {
+                status_line.html('Request didn\'t succeed. Please try again');
+            }
+        }
+    });
+});
+
+function request(url, success, loading_message) {
     $.ajax({
         type: 'POST',
         url: url,
@@ -30,17 +57,13 @@ function request(url, success) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
+            status_line.html(loading_message);
         },
         success: success,
-        error: function (response) {
-            console.log("fail");
-            console.log(response);
-            $('#question-card-rows').append(response)
-        }
     });
 }
 
-function request_with_data(url, data, success) {
+function request_with_data(url, data, loading_message) {
     $.ajax({
         type: 'POST',
         url: url,
@@ -49,75 +72,39 @@ function request_with_data(url, data, success) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
+            status_line.html(loading_message);
         },
-        success: function (response) {
-            console.log("success");
-            console.log(response);
+        success: function () {
+            status_line.empty()
         },
         error: function (response) {
-            console.log("fail");
-            console.log(response);
-            $('#question-card-rows').append(response)
-        }
+            status_line.html('Request didn\'t succeed. Please try again');
+        },
     });
 }
+// End region Requests
 
-let question_container = $('#question-card-rows');
 
-function question_render(response) {
-    response = JSON.parse(response);
+// Region Question/Option change
+let changed = false;
 
-    const question_no = parseInt(question_add_button.data('question-count'))+1;
-    question_add_button.data('question-count', question_no);
-
-    question_container.append(
-        `<div class="card">
-            <div class="question_title">
-                <label>
-                    Q${question_no}
-                    <input name="question-${response.id}" type="text" value="${response.question}" data-question-id="${response.id}"/>
-                </label>
-                <span class="badge-${response.id}" data-correct-count="0"></span>
-            </div>
-            <div id="question-${response.id}-option">
-                <div>
-                    <input type="checkbox" class="is-correct" name="question-${response.id}-option" value="${response.options[0].id}" data-question-id="${response.id}"/>
-                    <input name="question-${response.id}-option-${response.options[0].id}" type="text" value="${response.options[0].option}" data-option-id="${response.options[0].id}"/>
-                </div>
-                <div>
-                    <input type="checkbox" class="is-correct" name="question-${response.id}-option" value="${response.options[1].id}" data-question-id="${response.id}"/>
-                    <input name="question-${response.id}-option-${response.options[1].id}" type="text" value="${response.options[1].option}" data-option-id="${response.options[1].id}"/>
-                </div>
-            </div>
-            <button class="add-option" data-question-id="${response.id}">Add option</button>
-            <button data-question-id="${response.id}" class="question-save">Save</button>
-        <div>`
-    );
-}
-
-question_add_button.click(function () {
-        request(`/admin/tests/${test_id}/questions/create`, question_render);
-    }
-);
-
-function option_render(response){
-    response = JSON.parse(response);
-    let question = $(`#question-${response.question_id}-option`);
-
-    question.append(
-        `<div>
-            <input type="checkbox" class="is-correct" name="question-${response.question_id}-option" value="${response.id}" data-question-id="${response.question_id}"/>
-            <input name="question-${response.question_id}-option-${response.id}" type="text" value="${response.option}" data-option-id="${response.id}"/>
-        </div>`
-    );
-}
-
-$(document).on('click', 'button.add-option', function () {
-    const question_id = $(this).data('question-id');
-    request(`/admin/tests/${test_id}/questions/${question_id}/options/create`, option_render);
+$(document).on('keyup', 'input.option', function () {
+    if(changed === false)
+        changed = true;
 });
 
+$(document).on('keyup', 'input.question', function () {
+    if(changed === false)
+        changed = true;
+});
+// End region Question/Option change
+
+
+// Region Question save
 $(document).on('click', '.question-save', function() {
+    if(changed)
+        changed = false;
+
     const question_id = $(this).data('question-id');
     let question = {
         'id': question_id,
@@ -138,12 +125,16 @@ $(document).on('click', '.question-save', function() {
         option.is_correct = $(this).is(':checked');
     });
 
-    $(`.question-save button[data-question-id=${question_id}]`).visibility = 'hidden';
-
-    request_with_data(`/admin/tests/${test_id}/questions/${question_id}/update`, question);
+    request_with_data(`/admin/tests/${test_id}/questions/${question_id}/update`, question, 'Saving question')
 });
+// End region Question save
 
+
+// Region Question type
 $(document).on('change', 'input.is-correct', function () {
+    if(changed === false)
+        changed = true;
+
     const question_id = $(this).data('question-id');
     let badge = $(`.badge-${question_id}`);
     let correct = badge.data('correct-count');
@@ -151,20 +142,166 @@ $(document).on('change', 'input.is-correct', function () {
         correct += 1;
         badge.data('correct-count', correct);
         if(correct===1) {
-            badge.html('<span class="badge">Single-answer</span>');
+            badge.removeClass('background');
+            badge.html('Single-answer');
         } else if(correct>1) {
-            badge.html('<span class="badge">Multi-answer</span>');
+            badge.html('Multi-answer');
         }
-    }
-    else{
+    }  else{
         correct -= 1;
+        badge.data('correct-count', correct);
         if(correct===1) {
-            badge.html('<span class="badge">Single-answer</span>');
+            badge.html('Single-answer');
         } else if(correct===0) {
             badge.empty();
+            badge.addClass('background');
         }
-        badge.data('correct-count', correct);
+    }
+});
+// End region Question type
+
+
+// Region Question switch
+let current_question_id = $('button.question-switch.active').data('question-id');
+let current_question_card = $(`#card-${current_question_id}`);
+$(document).on('click', '.question-switch', function () {
+    const clicked_question_id = $(this).data('question-id');
+    const clicked_question_card = $(`#card-${clicked_question_id}`);
+
+    current_question_card.removeClass('foreground');
+    current_question_card.addClass('background');
+    clicked_question_card.removeClass('background');
+    clicked_question_card.addClass('foreground');
+
+    $(`button.question-switch[data-question-id="${current_question_id}"]`).removeClass('active');
+    $(`button.question-switch[data-question-id="${clicked_question_id}"]`).addClass('active');
+
+    if(changed){
+        $(`button.question-save[data-question-id="${current_question_id}"]`).click();
+        changed = false;
     }
 
-    console.log(correct);
+    current_question_card = clicked_question_card;
+    current_question_id = clicked_question_id;
 });
+// End region Question switch
+
+
+// Region Add question
+let question_add_button = $('#question-add');
+const test_id = parseInt(question_add_button.data('test-id'));
+
+function question_render(response) {
+    status_line.empty();
+
+    response = JSON.parse(response);
+
+    current_question_card.removeClass('foreground');
+    current_question_card.addClass('background');
+
+    $('#question-card-rows').append(
+        `<div id="card-${response.id}" class="card foreground">
+            <div class="question-title">
+                <input type="text" class="question" name="question-${response.id}" value="${response.question}" data-question-id="${response.id}"/>
+                <span class="badge badge-${response.id} background" data-correct-count="0"></span>
+            </div>
+            <div id="question-${response.id}-option">
+                <div>
+                    <input type="checkbox" class="is-correct" name="question-${response.id}-option" value="${response.options[0].id}" data-question-id="${response.id}"/>
+                    <input type="text" class="option" name="question-${response.id}-option-${response.options[0].id}" value="${response.options[0].option}" data-option-id="${response.options[0].id}"/>
+                </div>
+                <div>
+                    <input type="checkbox" class="is-correct" name="question-${response.id}-option" value="${response.options[1].id}" data-question-id="${response.id}"/>
+                    <input type="text" class="option" name="question-${response.id}-option-${response.options[1].id}" value="${response.options[1].option}" data-option-id="${response.options[1].id}"/>
+                </div>
+            </div>
+            <button class="add-option" data-question-id="${response.id}">+ add new option</button>
+            <br>
+            <button class="question-delete" data-question-id="${response.id}">Delete</button>
+            <button class="question-save" data-question-id="${response.id}">Save</button>
+        <div>`
+    );
+
+    let question_switches = $('#question-switches');
+
+    const question_no = parseInt(question_switches.data('question-count'))+1;
+    question_switches.data('question-count', question_no);
+
+    $(`button[data-question-id=${current_question_id}].question-switch`).removeClass('active');
+    question_switches.append(
+        `
+        <button class="question-switch active" data-question-id="${response.id}">
+            Question ${question_no}
+        </button>`
+    );
+    $(`button[data-question-id=${response.id}].question-switch`).addClass('active');
+
+    current_question_card = $(`#card-${response.id}`);
+    current_question_id = response.id;
+}
+
+question_add_button.click(function () {
+    if(changed) {
+        $(`button.question-save[data-question-id="${current_question_id}"]`).click();
+        changed = false;
+    }
+    request(`/admin/tests/${test_id}/questions/create`, question_render, 'Creating question');
+});
+// End region Add question
+
+
+// Region Question delete
+function handle_delete(response) {
+    status_line.empty();
+
+    const question_id = response.question_id;
+    $(`#card-${question_id}`).remove();
+    const current_question_switch = $(`button[data-question-id=${question_id}].question-switch`);
+    if(current_question_switch.next().length) {
+        current_question_switch.next().click();
+        current_question_switch.remove();
+    } else if(current_question_switch.prev().length) {
+        current_question_switch.prev().click();
+        current_question_switch.remove();
+    } else {
+        current_question_switch.remove();
+    }
+
+    let question_switches = $('#question-switches');
+
+    const question_no = parseInt(question_switches.data('question-count'))-1;
+    question_switches.data('question-count', question_no);
+
+    const children = $(`button.question-switch`);
+    children.each(function (index) {
+         $(this).html(`Question ${index+1}`);
+    });
+}
+
+$(document).on('click', '.question-delete', function() {
+    const question_id = $(this).data('question-id');
+    request(`/questions/${question_id}/delete`, handle_delete, 'Deleting question')
+});
+// End region Question delete
+
+
+// Region Add option
+function option_render(response){
+    response = JSON.parse(response);
+    let question = $(`#question-${response.question_id}-option`);
+
+    question.append(
+        `<div>
+            <input type="checkbox" class="is-correct" name="question-${response.question_id}-option" value="${response.id}" data-question-id="${response.question_id}"/>
+            <input name="question-${response.question_id}-option-${response.id}" type="text" value="${response.option}" data-option-id="${response.id}"/>
+        </div>`
+    );
+
+    status_line.empty();
+}
+
+$(document).on('click', 'button.add-option', function () {
+    const question_id = $(this).data('question-id');
+    request(`/admin/tests/${test_id}/questions/${question_id}/options/create`, option_render, 'Creating option');
+});
+// End region Add option

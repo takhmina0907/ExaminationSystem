@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load my_tags %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <style>
+            .card{
+                border: 1px black solid;
+                padding: 10px;
+                margin-bottom: 10px;
+                width: 400px;
+            }
+            .question-title{
+                margin-bottom: 10px;
+
+            }
+            .badge{
+                border: 1px grey solid;
+                background-color: grey;
+                color: white;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+            .background {
+                display: none;
+            }
+            .foreground {
+                display: block;
+            }
+            .active{
+                color: #20c997;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <p>{{ test.title }}</p>
+            <p>{{ test.deadline }}</p>
+        </div>
+        <div id="question-card-rows">
+            <p id="request-status"></p>
+            {% for question in questions %}
+                <div id="card-{{ question.id }}" class="card {% if questions|length == forloop.counter %} foreground {% else %} background {% endif %}">
+                    <div class="question-title">
+                        <input type="text" class="question" name="question-{{ question.id }}" value="{{ question.question }}" data-question_id="{{ question.id }}"/>
+                        {% with correct=question|count_correct %}
+                            {% if correct > 0 %}
+                                <span class="badge badge-{{ question.id }}" data-correct-count="{{ correct }}">
+                                    {% if correct == 1 %}
+                                        Single-answer
+                                    {% elif correct > 1 %}
+                                        Multi-answer
+                                    {% endif %}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-{{ question.id }} background" data-correct-count="{{ correct }}"></span>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div id="question-{{ question.id }}-option">
+                        {% for option in question.options.all %}
+                            <div>
+                                <input type="checkbox" class="is-correct" name="question-{{ question.id }}-option" value="{{ option.id }}" {% if option.is_correct %} checked {% endif %} data-question-id="{{ question.id }}"/>
+                                <input type="text" class="option" name="question-{{ question.id }}-option-{{ option.id }}" value="{{ option.option }}" data-option-id="{{ option.id }}"/>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="add-option" data-question-id="{{ question.id }}">+ add new option</button>
+                    <br>
+                    <button class="question-delete" data-question-id="{{ question.id }}">Delete</button>
+                    <button class="question-save" data-question-id="{{ question.id }}">Save</button>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="question-switches" data-question-count="{{ questions|length }}">
+            {% for question in questions %}
+                <button class="question-switch {% if questions|length == forloop.counter %} active {% endif %}" data-question-id="{{ question.id }}">
+                    Question {{ forloop.counter }}
+                </button>
+            {% endfor %}
+        </div>
+        <br>
+        <div>
+            <button id="question-add" data-question-count="{{ questions|length }}" data-test-id="{{ test.id }}">+ Add question</button>
+        </div>
+        <div>
+            <span>
+                <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button">Cancel</button></a>
+            </span>
+            <span>Step 1</span>
+            <span><b>Step 2</b></span>
+            <span>Step 3</span>
+            <a href="{% url 'admin-test-edit-students' request.user.id test.id %}"><button>Next</button></a>
+        </div>
+    </body>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/question_create.js' %}"></script>
+</html>

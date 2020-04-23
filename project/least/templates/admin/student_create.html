@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% load static %}
     <head>
         <meta charset="UTF-8">
         <title>Create a student</title>
@@ -9,7 +10,41 @@
         <form id="form-test" method="post">
             {% csrf_token %}
             <div>
-                {{ form }}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+
+                {% endif %}
+
+                <div>
+                    {% for error in form.fisrt_name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    {% for error in form.last_name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    {{ form.last_name }}
+                </div>
+                <div>
+                    {% for error in form.id.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    {{ form.id }}
+                </div>
+                <div>
+                    <div id="draft">
+                    </div>
+                    {% for error in form.speciality.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    {{ form.speciality }}
+                    <datalist id="specialities">
+                    </datalist>
+                </div>
             </div>
             <br/>
             <div>
@@ -18,4 +53,6 @@
             </div>
         </form>
     </body>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/student_create.js' %}"></script>
 </html>

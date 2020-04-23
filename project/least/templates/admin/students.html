@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Students</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}">
 </head>
 <body>
     Students
@@ -37,7 +37,7 @@
         <div>
             <div><a href="{% url 'admin-student-details' student.pk %}"><h1>{{ student.first_name }} {{ student.last_name }}</h1></a></div>
             <div>ID {{ student.id }}</div>
-            <div>Group {{ student.speciality }}</div>
+            <div>Group {{ student.speciality.title }}</div>
         </div>
         <br/>
     {% endfor %}

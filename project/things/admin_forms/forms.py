@@ -6,7 +6,7 @@ from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField, AuthenticationForm)
 
 from things.models import (
-    User, TestInfo, Student
+    User, TestInfo, Student, Speciality
 )
 
 
@@ -132,32 +132,66 @@ class UserChangeForm(forms.ModelForm):
 
 
 class TestCreateForm(forms.ModelForm):
-    deadline_date = forms.DateField(input_formats=('%d/%m/%Y',))
-    deadline_time = forms.TimeField(input_formats=('%H:%M',))
-
     def __init__(self, *args, **kwargs):
         super(TestCreateForm, self).__init__(*args, **kwargs)
-        self.fields['title'].widget.attrs['placeholder'] = 'Test name'
+        self.fields['title'].widget.attrs['placeholder'] = 'Enter test name'
         self.fields['title'].widget.attrs['autofocus'] = 'on'
-        self.fields['description'].widget.attrs['placeholder'] = 'Description'
-        self.fields['duration'].widget.attrs['placeholder'] = 'Test duration'
-        self.fields['deadline_date'].widget.attrs['placeholder'] = 'Date'
-        self.fields['deadline_time'].widget.attrs['placeholder'] = 'Time'
+        self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['description'].widget.attrs['placeholder'] = 'Enter test description'
+        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['duration'].widget.attrs['placeholder'] = 'Enter test duration(min)'
+        self.fields['duration'].widget.attrs['class'] = 'form-control'
+        self.fields['start_date'].widget.attrs['placeholder'] = 'Choose the date'
+        self.fields['start_date'].widget.attrs['class'] = 'form-control'
+        self.fields['start_time'].widget.attrs['placeholder'] = 'Choose the time'
+        self.fields['start_time'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = TestInfo
-        fields = ('title', 'description', 'duration')
+        fields = ('title', 'description', 'duration', 'start_date', 'start_time')
+
+    description = forms.CharField(
+        widget=forms.TextInput()
+    )
+
+    start_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={'type': 'date'}
+        ))
+    start_time = forms.TimeField(
+        widget=forms.TimeInput(
+            attrs={'type': 'time'}
+        ))
 
     def save(self, commit=True):
         test = super().save(commit=False)
-        test.deadline = datetime.datetime.combine(self.cleaned_data['deadline_date'],
-                                                  self.cleaned_data['deadline_time'])
+        test.deadline = datetime.datetime.combine(self.cleaned_data['start_date'],
+                                                  self.cleaned_data['start_time'])
+
+        temp_date = datetime.datetime(1, 1, 1, self.cleaned_data['start_time'].hour,
+                                      self.cleaned_data['start_time'].minute, self.cleaned_data['start_time'].second)
+
+        temp_date = temp_date + datetime.timedelta(minutes=self.cleaned_data['duration'])
+        test.end_time = temp_date.time()
+
         if commit:
             test.save()
         return test
 
 
+class StudentTestAddForm(forms.Form):
+    specialities = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                                  queryset=Speciality.objects.all())
+
+
+class StudentTestEditForm(forms.Form):
+    specialities = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                                  queryset=Speciality.objects.all(),
+                                                  required=False)
+
+
 class StudentCreateForm(forms.ModelForm):
+    speciality = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         super(StudentCreateForm, self).__init__(*args, **kwargs)
@@ -166,13 +200,21 @@ class StudentCreateForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Surname'
         self.fields['id'].widget.attrs['placeholder'] = 'ID'
         self.fields['speciality'].widget.attrs['placeholder'] = 'Group'
+        self.fields['speciality'].widget.attrs['autocomplete'] = 'off'
+        self.fields['speciality'].widget.attrs['list'] = 'specialities'
 
     class Meta:
         model = Student
-        fields = ('first_name', 'last_name', 'id', 'speciality')
+        fields = ('first_name', 'last_name', 'id')
+
+    def clean_speciality(self):
+        speciality = self.cleaned_data['speciality']
+        return speciality.strip().upper()
 
     def save(self, commit=True):
         student = super().save(commit=False)
+        student.speciality = Speciality.objects.get_or_create(
+            title=self.cleaned_data['speciality'])[0]
         student.email = str(self.cleaned_data['id'])+'@stu.sdu.edu.kz'
         if commit:
             student.save()

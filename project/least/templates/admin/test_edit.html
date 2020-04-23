@@ -13,8 +13,13 @@
             </div>
             <br/>
             <div>
-                <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button">Cancel</button></a>
-                <input type="submit" value="Save">
+                <div>
+                    <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button">Cancel</button></a>
+                    <span><b>Step 1</b></span>
+                    <span>Step 2</span>
+                    <span>Step 3</span>
+                    <input type="submit" value="Next">
+                </div>
             </div>
         </form>
     </body>
