@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+from string import ascii_lowercase
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login
@@ -31,6 +32,7 @@ from things.admin_forms.forms import (
 from things.models import TestInfo, Question, Option, User, Student, TestResult, Speciality
 from things.utils.tasks import send_mail_wrapper
 from things.utils.activation_token import activation_token
+from things.utils.utils import lower_headers
 
 
 class RegistrationView(CreateView):
@@ -529,6 +531,48 @@ def admin_test(request, test_id):
         Option.objects.create(question=question, option='Option 2', is_correct=False)
 
     return render(request, 'admin/question_create.html', {'test': test, 'questions': test.questions.all()})
+
+
+@login_required
+def questions_csv_import(request, test_id):
+    if not request.session.get('test_id') or request.session.get('test_id') != test_id:
+        raise Http404
+
+    test = get_object_or_404(TestInfo, author=request.user,
+                             id=test_id)
+    file = request.FILES['questions'].read().decode('UTF-8')
+    csv_str = io.StringIO(file)
+    questions = csv.DictReader(lower_headers(csv_str), delimiter=',', quotechar='"')
+    totalrow, outof = 0, 0
+    for row in questions:
+        totalrow += 1
+        correct_num = 0
+        try:
+            question = Question.objects.create(
+                test=test,
+                question=row['question']
+            )
+            correct = [c.strip().lower() for c in row['correct'].split(',')]
+            for letter in ascii_lowercase:
+                if letter in questions.fieldnames \
+                        and row[letter] is not None:
+                    option = Option.objects.create(
+                        question=question,
+                        option=row[letter],
+                        is_correct=letter in correct
+                    )
+
+                    if option.is_correct:
+                        correct_num += 1
+
+            if correct_num > 1:
+                question.is_multiple_choice = True
+        except KeyError:
+            outof += 1
+
+    messages.info(request, '%d questions were created successfully out of %d' % (totalrow - outof, totalrow))
+
+    return HttpResponseRedirect(reverse_lazy('admin-test', kwargs={'test_id': test_id}))
 
 
 @login_required
