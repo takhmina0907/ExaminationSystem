@@ -1,6 +1,6 @@
-import json
-import io
 import csv
+import io
+import json
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login
@@ -360,10 +360,9 @@ class TestDeleteView(BaseAdminView, DeleteView):
 def copy_test(request, test_id):
     test = get_object_or_404(TestInfo, author=request.user,
                              id=test_id)
-    test.id = None
-    test.title = test.title + ' - Copy'
-    test.save()
-    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'test_id': test.id}))
+    copy = test.clone()
+    request.session['test_id'] = copy.id
+    return HttpResponseRedirect(reverse_lazy('admin-update-test', kwargs={'test_id': copy.id}))
 
 
 @login_required
