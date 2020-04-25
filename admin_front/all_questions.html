@@ -20,7 +20,7 @@
       color: #373737;
       /*overflow*/
       display: block;
-      width: 400px;
+      width: 130%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -39,6 +39,12 @@
     }
     .ans{
       margin-right: 16px;
+      /*overflow*/
+      display: block;
+      width: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     .incorrect{
       color: #373737;
@@ -46,6 +52,11 @@
     .correct{
       color: #119A48;
     }
+    .trash, .edit{
+      border: none;
+      background-color: none;
+    }
+
   </style>
 
 </head>
@@ -133,7 +144,7 @@
               
 
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                <a href="#delete"><img src="images/edit.png"></a>
+                <button class="edit"><img src="images/edit.png"></button>
               </div>
               
                 
@@ -141,24 +152,35 @@
             </div>
 
             <div class="row info">
-              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                <span class="ans incorrect">
-                  <i class="far fa-times"></i>Green
-                </span>
-                <span class="ans incorrect">
-                  <i class="far fa-times"></i>Blue
-                </span>
+              <!-- нет адаптивности в md sm xs -->
+
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans correct">
-                  <i class="far fa-check"></i>Red
+                  <i class="far fa-check"></i>2 types of creating bla bla
                 </span>
+              </div>
+
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <span class="ans incorrect">
+                  <i class="far fa-times"></i>2 types of creating bla bla
+                </span>
+              </div>
+
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <span class="ans incorrect">
+                  <i class="far fa-times"></i>2 types red
+                </span>
+              </div>
+
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
                   <i class="far fa-times"></i>Black
                 </span>
               </div>
                
-               <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                <a href="#delete"><img src="images/trash.png"></a>
+                <button class = "trash"><img src="images/trash.png"></button>
                </div>
 
              </div>
@@ -185,33 +207,38 @@
               
 
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                <a href="#delete"><img src="images/edit.png"></a>
+                <button class = "edit"><img src="images/edit.png"></button>
               </div>
               
-                
-             
+
             </div>
 
             <div class="row info">
-              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans correct">
                   <i class="far fa-check"></i>Green
                 </span>
+              </div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
                   <i class="far fa-times"></i>Blue
                 </span>
+              </div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans correct">
                   <i class="far fa-check"></i>Red
                 </span>
+              </div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
                   <i class="far fa-times"></i>Black
                 </span>
               </div>
                
-               <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
-               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                <a href="#delete"><img src="images/trash.png"></a>
-               </div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                <button class="trash" data-target="#loginModal" data-toggle="modal" id="myBtn"><img src="images/trash.png"></button>
+              </div>
 
              </div>
 
@@ -221,12 +248,97 @@
       </div>
       <!-- End question card-->
 
+
+
+      <!--Add question modal -->
       <div class="row button-row">
           <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
           <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
             <button type="button" class="q_btn" data-toggle="modal" data-target="#exampleModal3">Add question</button>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+      </div>
+            <div class="row">
+        <!-- Modal add questions -->
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <p class="modal-title text-center title_test" id="exampleModal3Label">New Question
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                      <i class="fal fa-times"></i>
+                    </span><!--&times;-->
+                  </button>
+                </p>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                  <!--inputs -->
+                    <div class="reg_content align-items-center">
+                      <div class="form_block">
+                        <form action="#">
+                          <select class="form-control input">
+                            <option value="" disabled selected> Select question type</option>
+                            <option value="option-1">Multiple Questions</option>
+                            <option value="option-2">Sections</option>
+                            <option value="option-3">One question test</option>
+                          </select>
+                          <i class="far fa-arrow-down"></i>
+
+                          <textarea type="text" class="form-control" rows="3" placeholder="Enter problem statement"></textarea>
+
+
+                          <label class="question-label">Question options</label>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <input type="text" class = "test_selection" placeholder="A. Enter option text">
+
+                          </div>
+
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <input type="text" class = "test_selection" placeholder="B. Enter option text">
+                          </div>
+                          <!--спросить у Алины как будет уходит placeholder https://qna.habr.com/q/610344-->
+                          
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1"><!--checked="checked"-->
+                            <input type="text" class = "test_selection" placeholder="C. Enter option text(optional)">
+                          </div>
+
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <input type="text" class = "test_selection" placeholder="D. Enter option text(optional)">
+                          </div>
+                          
+                          <button class="add_option">+ Add new option</button>
+
+                        </form>
+                      </div>
+                      
+                    </div>
+
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center">
+                  <a href="all_questions.html">
+                    <button type="button" class="btn btn-save">Save</button>
+                  </a>
+                </div>
+
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
 
@@ -256,7 +368,7 @@
               </div>
               <div class="col-xs-1"></div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
-                <button type = "button" class="btn test-next-btn">Next</button>
+                <a href="student_add.html"><button type = "button" class="btn test-next-btn">Next</button></a>
               </div>
             </div>
           </div>
