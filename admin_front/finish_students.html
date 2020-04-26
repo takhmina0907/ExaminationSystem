@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="main1.css">
-  <link rel="stylesheet" href="test1.css">
+  <link rel="stylesheet" href="css/main1.css">
+  <link rel="stylesheet" href="css/test1.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -24,25 +24,37 @@
 		color: #373737;
   	}
   	.test-link{
-  		font-size: 30px;
-		color: #392CD1;
-		text-decoration: underline;
-		align-items: center;
+  		font-size: 28px;
+  		color: #392CD1;
+  		text-decoration: underline;
+		
   	}
   	.test-link:hover{
   		color: #392CD1;
   	}
-  	.finish_next{
+  	.finish-next{
   		width: 165px;
-		height: 42px;
-		background: rgba(57, 44, 209, 0.2);
-		border-radius: 8px;
-		border: none;
-		font-size: 14px;
-		color: #392CD1;
-		font-weight: bold;
+  		height: 42px;
+  		background: rgba(57, 44, 209, 0.2);
+  		border-radius: 8px;
+  		border: none;
+  		font-size: 14px;
+  		color: #392CD1;
+  		font-weight: bold;
   	}
-
+    .media-icon{
+      border: none;
+      background-color: #f8f8f8;
+    }
+    .img-row{
+      margin-top: 40px;
+    }
+    .btn-row{
+      margin-top: 60px;
+    }
+    .finish-content{
+      margin-top: 60px;/*замени*/
+    }
 
   </style>
 
@@ -97,58 +109,63 @@
     <br>
 <!--End menu-->
 
-	<div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+	<div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 d-flex justify-content-center align-items-center finish-content">
     
   		<div class="row"><!--justify-content-md-center-->
-			<div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
-			<div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 d-flex justify-content-center align-items-center">
-				<h1 class = "finish-title text-center">Congratulations!</h1>
-				<p class="finish-desc text-center">You have created the test! You can find it in the link:</p>
-				<a class="test-link text-center" href="">https://www.makingitdone.kz/testid12345678</a>
-				<p class="finish-desc text-center">To test the system you can login and check the test with your e-mail</p>
+  			<div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
+  			<div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+  				<h1 class = "finish-title text-center">Congratulations!</h1>
+  				<p class="finish-desc text-center">You have created the test! You can find it in the link:</p>
 
-			</div>
-			<div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
+  			</div>
+  			<div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
   		</div>
 
-  		<div class="row">
-  			<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3"></div>
-  			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-  				<div class="row">
-		  			<div class="icons text-center">
-		  				<a href="#"><img src="images/copy.png" alt=""></a>
-						<a href="#"><img src="images/telega.png" alt=""></a>
-						<a href="#"><img src="images/whatsup.png" alt=""></a>
-						<a href="#"><img src="images/email.png" alt=""></a>
-					</div>
-				</div>
+      <div class="row">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 justify-content-center align-items-center text-center">
+          <p><a href="#" class="test-link">https://www.makingitdone.kz/test</a></p>
+          <p class="finish-desc">To test the system you can login and check the test with your e-mail</p>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+      </div>
 
-				<div class="row">
-		  			<div class="icons text-center">
-		  				<span>Copy</span>
-		  				<span>Telegram</span>
-		  				<span>Whats up</span>
-		  				<span>Email</span>
-					</div>
-				</div>
+      <div class="row img-row">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
 
-				<div class="row">
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4"></div>
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
-						<a href="#">
-							<button type="button" class="finish_next">
-								Go to next page
-							</button>
-						</a>
-					</div>
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4"></div>
-		  			
-				</div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+          <button class = "media-icon"><img src="images/copy.png" alt=""></button>
+          <p>Copy</p>
+        </div>
 
-			</div>
-			<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3"></div>
-  		</div>
-  	</div>
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+          <button class = "media-icon"><img src="images/telega.png" alt=""></button>
+          <p>Telegram</p>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+          <button class = "media-icon"><img src="images/whatsup.png" alt=""></button>
+          <p>Whats up</p>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+          <button class = "media-icon"><img src="images/email.png" alt=""></button>
+          <p>Mail</p>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+      </div>
+
+      <div class="row btn-row">
+        <div class="col-xs-5 col-xl-5 col-lg-5 col-md-5 col-sm-5"></div>
+        <div class="col-xs-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 text-center">
+          <a href="test1.html"><button class="finish-next">Go to test page</button></a>
+        </div>
+        <div class="col-xs-5 col-xl-5 col-lg-5 col-md-5 col-sm-5"></div>
+      </div>
+
+
+  </div>
 
  </div><!--section main end-->
 
