@@ -34,7 +34,7 @@
       color: #009BF2;
       border:none;
     }
-    .far{
+    .check_icon{
       padding-right: 6px;
     }
     .ans{
@@ -55,6 +55,48 @@
     .trash, .edit{
       border: none;
       background-color: none;
+    }
+    .delete_q{
+      font-weight: bold;
+      font-size: 14px;
+      color: #392CD1;
+    }
+    .delete-title{
+      font-weight: bold;
+      font-size: 16px;
+      color: #392CD1;
+      padding-left: 9px;
+
+    }
+    .delete_header{
+      border-bottom: 1px solid #A4A4A4;
+      padding-left: 9px;
+      font-weight: 500;
+    }
+    .btn-delete{
+      width: 119px;
+      height: 35px;
+      background: #392CD1;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12px;
+      color: #FFFFFF;
+    }
+    .btn-delete:hover{
+      color: #FFFFFF;
+    }
+
+    .btn-del-cancel{
+      width: 83px;
+      height: 35px;
+      background: #FFFFFF;
+      border: 1px dashed #A4A4A4;
+      box-sizing: border-box;
+      border-radius: 8px;
+      color: rgba(55, 55, 55, 0.7);
+      font-weight: 600;
+      font-size: 12px;
+
     }
 
   </style>
@@ -78,7 +120,7 @@
         <i class="fas fas-home"></i>Home</a></li>
         <li><a href="test1.html">
           <i class="fas fa-books"></i>Tests</a></li>
-        <li><a href="student_add.html">
+        <li><a href="#">
           <i class="fas fa-users"></i>Students</a></li>
         <li><a href="#">
           <i class="fas fa-cog"></i>Settings</a></li>
@@ -98,7 +140,7 @@
           <i class="fas fa-home"></i>Home</a></li>
         <li><a class="active" href="test1.html"><i class="fas fa-books"></i>
         Tests</a></li>
-        <li><a href="student_add.html"><i class="fas fa-users"></i>
+        <li><a href="#"><i class="fas fa-users"></i>
         Students</a></li>
         <li><a href="#"><i class="fas fa-cog"></i>
         Settings</a></li>
@@ -156,31 +198,31 @@
 
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans correct">
-                  <i class="far fa-check"></i>2 types of creating bla bla
+                  <i class="far fa-check check_icon"></i>2 types of creating bla bla
                 </span>
               </div>
 
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
-                  <i class="far fa-times"></i>2 types of creating bla bla
+                  <i class="far fa-times check_icon"></i>2 types of creating bla bla
                 </span>
               </div>
 
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
-                  <i class="far fa-times"></i>2 types red
+                  <i class="far fa-times check_icon"></i>2 types red
                 </span>
               </div>
 
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
-                  <i class="far fa-times"></i>Black
+                  <i class="far fa-times check_icon"></i>Black
                 </span>
               </div>
                
                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                <button class = "trash"><img src="images/trash.png"></button>
+                <button type = "button" class="trash" data-toggle="modal" data-target="#exampleModal"><img src="images/trash.png"></button>
                </div>
 
              </div>
@@ -216,28 +258,64 @@
             <div class="row info">
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans correct">
-                  <i class="far fa-check"></i>Green
+                  <i class="far fa-check check_icon"></i>Green
                 </span>
               </div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
-                  <i class="far fa-times"></i>Blue
+                  <i class="far fa-times check_icon"></i>Blue
                 </span>
               </div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans correct">
-                  <i class="far fa-check"></i>Red
+                  <i class="far fa-check check_icon"></i>Red
                 </span>
               </div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                 <span class="ans incorrect">
-                  <i class="far fa-times"></i>Black
+                  <i class="far fa-times check_icon"></i>Black
                 </span>
               </div>
                
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                <button class="trash" data-target="#loginModal" data-toggle="modal" id="myBtn"><img src="images/trash.png"></button>
+                <button type = "button" class="trash" data-toggle="modal" data-target="#exampleModal"><img src="images/trash.png"></button>
+
+                <div class="row">
+                  <!-- Modal delete questions -->
+                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+
+                        <div class="modal-header delete_header">
+                          <p class="delete-title text-left">Delete the question
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">
+                                <i class="fal fa-times"></i>
+                              </span><!--&times;-->
+                            </button>
+                          </p>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row">
+                            <div class="col-xs-12 text-left">
+                              <p>Are you sure you want to delete this question and all the related data permanently?</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <div class="row">
+                            <div class="col-xs-12 text-left">
+                              <button type="button" class="btn btn-delete">Yes, delete</button><!--если нужна будет форма напишите-->
+                              <button type="button" class="btn btn-del-cancel" data-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
              </div>
@@ -258,7 +336,7 @@
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
       </div>
-            <div class="row">
+      <div class="row">
         <!-- Modal add questions -->
         <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
           <div class="modal-dialog" role="document">
