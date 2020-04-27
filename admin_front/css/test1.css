@@ -10,6 +10,7 @@
 	color: rgba(55, 55, 55, 0.7);
 	background-color: #f8f8f8;
 	border-radius: 8px;
+	margin-top: 12px;
 }
 .about-block:hover{
       box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
