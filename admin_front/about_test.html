@@ -14,7 +14,34 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   <style>
-    
+    .icon-down{
+      border: none;
+      background-color: #f8f8f8;
+    }
+    .filter{
+      /*width: 218px;*/
+      height: 40px;
+      border: 1px solid #CDCDCD;
+      box-sizing: border-box;
+      border-radius: 8px;
+    }
+    select.filter {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      -o-appearance: none;
+    }
+    select + i.far {
+      float: right;
+      margin-top: -27px;
+      pointer-events: none;
+      color: #392CD1;
+    }
+    .sorting{
+      font-size: 16px;
+    }
+    .filter-icon{
+      padding-right: 10px;
+    }
 
   </style>
 
@@ -68,6 +95,7 @@
     </div>
     <br>
 <!--End menu-->
+    <div class="col-sm-2"></div>
     <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
   		<!--Main info about test-->
       <div class="row">
@@ -170,10 +198,182 @@
       </div>
 
       <div class="row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
-        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last">
+      </div>
+      
+      <div class="row"><!--Collapse-->
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+          <h3 class="title-about">Test statistics
+              <button class="icon-down" type="button" data-toggle="collapse" data-target="#test-stat">
+            <i class="far fa-angle-down"></i>
+          </button>
+          </h3>
           
+          <div id="test-stat" class="collapse">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </div>
         </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+      </div>
+      
+
+      <div class="row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+      </div>
+            <div class="row"><!--Collapse-->
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+          <h3 class="title-about">Students and grades
+              <button class="icon-down" type="button" data-toggle="collapse" data-target="#students">
+            <i class="far fa-angle-down"></i>
+          </button>
+          </h3>
+          
+          <div id="students" class="collapse">
+
+            <div class="row">
+              <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <span class="sorting">Sort by:</span>
+              </div>
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="reg_content align-items-center">
+                  <div class="form_block">
+                    <form action="#">
+                      
+                      <select class="form-control filter">
+                        <option value="" disabled selected> Select a filter</option>
+                        <option value="option-1">Students name</option>
+                        <option value="option-2">Group</option>
+                        <option value="option-3">Points</option>
+                      </select>
+                      <i class="far fa-arrow-down filter-icon"></i>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+            </div>
+
+            <div class="row table-row">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Student ID</th>
+                    <th>Group</th>
+                    <th class="sss">Points</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Aizatova Madina</td>
+                    <td>160107022</td>
+                    <td>CSS 2020</td>
+                    <td>
+                      <div class="row">
+                      <div class="col-sm-1"><span>98</span></div>
+                      <div class="col-sm-10">
+                      <div class="progress">
+                        <div class="progress-bar great-res" role="progressbar" style="  width: 98%;" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="col-sm-1"></div>
+                      </div>
+                      </div>
+                    </td>
+                    <td><a class="view-res" href="#">View answers sheet <i class="far fa-angle-right"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>Aizatova Madina</td>
+                    <td>160107022</td>
+                    <td>CSS 2020</td>
+                    <td>
+                      <div class="row">
+                      <div class="col-sm-1"><span>66</span></div>
+                      <div class="col-sm-10">
+                      <div class="progress">
+                        <div class="progress-bar normal-res" role="progressbar" style="width: 66%;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="col-sm-1"></div>
+                      </div>
+                      </div>
+                    </td>
+                    <td><a class="view-res" href="#">View answers sheet <i class="far fa-angle-right"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td>Aizatova Madina</td>
+                    <td>160107022</td>
+                    <td>CSS 2020</td>
+                    <td>
+                      <div class="row">
+                        <div class="col-sm-1"><span>41</span></div>
+                        <div class="col-sm-10">
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 41%; background-color: #FFB9B9;" aria-valuenow="41" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        <div class="col-sm-1"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><a class="view-res" href="#">View answers sheet <i class="far fa-angle-right"></i></a></td>
+                  </tr>
+
+                  <tr>
+                    <td>Aizatova Madina</td>
+                    <td>160107022</td>
+                    <td>CSS 2020</td>
+                    <td>
+                      <div class="row">
+                      <div class="col-sm-1"><span>79</span></div>
+                      <div class="col-sm-10">
+                      <div class="progress">
+                        <div class="progress-bar great-res" role="progressbar" style="  width: 79%;" aria-valuenow="79" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="col-sm-1"></div>
+                      </div>
+                      </div>
+                    </td>
+                    <td><a class="view-res" href="#">View answers sheet <i class="far fa-angle-right"></i></a></td>
+                  </tr>
+
+                  <tr>
+                    <td>Aizatova Madina</td>
+                    <td>160107022</td>
+                    <td>CSS 2020</td>
+                    <td>
+                      <div class="row">
+                        <div class="col-sm-1"><span>33</span></div>
+                        <div class="col-sm-10">
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 33%; background-color: #FFB9B9;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        <div class="col-sm-1"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><a class="view-res" href="#">View answers sheet <i class="far fa-angle-right"></i></a></td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
         <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
       </div>
 
