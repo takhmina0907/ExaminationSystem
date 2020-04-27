@@ -60,3 +60,37 @@ img{
   opacity: 0.3;
   margin-top: 30px;
 }
+/*table components*/
+.progress{
+  border-radius: 8px;
+  background: #EEEEEE;
+  border:none;
+}
+table{
+  border: 1px solid #CDCDCD;
+}
+.table-row{
+  margin-top: 24px;
+}
+.sss{
+  width: 200px;
+}
+.progress-bar{
+  border-radius: 8px;
+  border:none;
+}
+.great-res{ 
+  background: rgba(59, 210, 119, 0.4);
+}
+.normal-res{
+  background: rgba(255, 208, 88, 0.4);
+}
+.view-res{
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #392CD1;
+}
+.view-res:hover{
+  color: #392CD1;
+}
