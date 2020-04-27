@@ -1,0 +1,62 @@
+.ongoing{
+  margin-top: 22px;
+}
+.test_func{
+  color: #000000;
+  text-decoration: underline;
+}
+.text{
+  margin-bottom: 0px;
+}
+.about-title{
+  font-weight: bold;
+  font-size: 30px;
+  color: #373737;
+}
+.info-row{
+  margin-top: 14px;
+}
+.far{
+  padding-right: 6px;
+}
+.action-btn{
+  width: 109px;
+  height: 35px;
+  background: #f8f8f8;
+  border: 1px dashed #A4A4A4;
+  box-sizing: border-box;
+  border-radius: 8px;
+  color: rgba(55, 55, 55, 0.7);
+  font-size: 12px;
+  margin-right: 16px;
+}
+.title-about{
+  color: #392CD1;
+  font-weight: 600;
+}
+.test-title{
+  font-weight: 600;
+  font-size: 16px;
+  color: #A4A4A4;
+}
+.link_test,.link_desc,.test-info{
+  font-weight: 500;
+  font-size: 20px;
+  color: #373737;
+}
+.link_test{
+  text-decoration: underline;
+}
+.copy-img{
+  border: none;
+  background:none;
+}
+img{
+  width: 32px;
+  height: 32px;
+}
+.last{
+  border-bottom: 2px solid #A4A4A4;
+  opacity: 0.3;
+  margin-top: 30px;
+}
