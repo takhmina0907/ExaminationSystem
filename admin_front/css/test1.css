@@ -1,3 +1,6 @@
+.question-page{
+  margin-top: 20px;
+}
 .add-btn{
 	width: 119px;
 	height: 41px;
@@ -7,6 +10,7 @@
 	color: rgba(55, 55, 55, 0.7);
 	background-color: #f8f8f8;
 	border-radius: 8px;
+	margin-top: 12px;
 }
 .about-block:hover{
       box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
@@ -82,8 +86,8 @@
 	margin-top: 10px;
 }
 .pagination>.active>a{
-  color: #392CD1; 
-  background-color: #f8f8f8;
+  color: #fff; 
+  background-color: #392CD1 !important;
   font-weight: bold;
 }
 
@@ -97,7 +101,7 @@
 .pagination>.active>span:hover, .pagination>.active>a:hover{
 	border: none !important;
     background-color: #f8f8f8; 
-    color: #373737;
+    color: #392CD1 !important;
 }
 .title_test{
 	color: #392CD1;

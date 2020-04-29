@@ -39,6 +39,11 @@
             <p>{{ test.title }}</p>
             <p>{{ test.deadline }}</p>
         </div>
+        <form id="csv-form" action="{% url 'admin-import-questions-csv' test.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <button id="import-csv" type="button">+ Import CSV</button>
+            <input id="csv-file" style="visibility:hidden;" name="questions" type="file" accept=".csv">
+        </form>
         <div id="question-card-rows">
             <p id="request-status"></p>
             {% for question in questions %}
@@ -87,14 +92,14 @@
         </div>
         <div>
             <span>
-                <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}">
+                <form method="POST" action="{% url 'admin-delete-test' test.id %}">
                    {% csrf_token %}<input type="submit" value="Cancel">
                 </form>
             </span>
-            <span><a href="{% url 'admin-update-test' request.user.id test.id %}">Step 1</a></span>
-            <span><a href="{% url 'admin-test' request.user.id test.id %}"><b>Step 2</b></a></span>
-            <span><a href="{% url 'admin-test-add-students' request.user.id test.id %}">Step 3</a></span>
-            <a href="{% url 'admin-test-add-students' request.user.id test.id %}"><button>Next</button></a>
+            <span><a href="{% url 'admin-update-test' test.id %}">Step 1</a></span>
+            <span><a href="{% url 'admin-test' test.id %}"><b>Step 2</b></a></span>
+            <span><a href="{% url 'admin-test-add-students' test.id %}">Step 3</a></span>
+            <a href="{% url 'admin-test-add-students' test.id %}"><button>Next</button></a>
         </div>
     </body>
     <script src="{% static 'js/jquery.min.js' %}"></script>

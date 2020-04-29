@@ -27,10 +27,10 @@
         </span>
     </div>
     <div>
-        <span><a href="{% url 'admin-edit-test' request.user.id test.id %}"><button>Edit</button></a></span> ||
-        <span><a href="{% url 'admin-copy-test' request.user.id test.id %}"><button>Copy</button></a></span> ||
+        <span><a href="{% url 'admin-edit-test' test.id %}"><button>Edit</button></a></span> ||
+        <span><a href="{% url 'admin-copy-test' test.id %}"><button>Copy</button></a></span> ||
         <span>
-            <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}">
+            <form method="POST" action="{% url 'admin-delete-test' test.id %}">
                {% csrf_token %}<input type="submit" value="Delete">
             </form>
         </span>
@@ -51,7 +51,7 @@
         </span> ||
         <span>
             Students
-            <b>{{test.students|length}}</b>
+            <b>{{test.students.all|length}}</b>
         </span> ||
         <span>
             Questions
@@ -63,7 +63,6 @@
         </span> ||
         <span>
             Test availability
-{#            <b>{{test.deadline|date:"d.m.Y H:i"}}</b>#}
             <b>{{test.start_date|date:"d.m.Y"}}</b>
             <b>{{test.start_time|date:"H:i"}}</b> - <b>{{test.end_time|date:"H:i"}}</b>
         </span>

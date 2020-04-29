@@ -305,3 +305,13 @@ $(document).on('click', 'button.add-option', function () {
     request(`/admin/tests/${test_id}/questions/${question_id}/options/create`, option_render, 'Creating option');
 });
 // End region Add option
+
+const csv_input = $("#csv-file");
+
+csv_input.change(function() {
+    $('#csv-form').submit();
+});
+
+$('#import-csv').click(function () {
+    csv_input.click();
+});

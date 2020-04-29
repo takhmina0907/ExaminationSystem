@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a class="active" href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fa fa-book"></i>Tests</a></li>
                     <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
                     <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
                     <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
@@ -42,7 +42,7 @@
                 <h2 class="logo-text">LOGO</h2>
                 <ul class="nav flex-column">
                     <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a class="active" href="{% url 'admin-tests' id=request.user.id %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fa fa-book"></i>Tests</a></li>
                     <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
                     <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
                     <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
@@ -103,7 +103,7 @@
                 <div class="row fixed-row-bottom">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
                         <div class="step-menu">
-                            <form method="POST" action="{% url 'admin-delete-test' request.user.id test.id %}" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                            <form method="POST" action="{% url 'admin-delete-test' test.id %}" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
                                 {% csrf_token %}
                                 <button type="submit" class="test-cancel-btn">Cancel</button>
                             </form>
@@ -112,13 +112,13 @@
                                 <div class="row">
                                     <div class="col-sm-1"></div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-create-test' request.user.id %}" class="step active"><p>Step 1</p></a>
+                                        <a href="{% url 'admin-update-test' test.id %}" class="step active"><p>Step 1</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-test' request.user.id test.id %}" class="step"><p>Step 2</p></a>
+                                        <a href="{% url 'admin-test' test.id %}" class="step"><p>Step 2</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-test-add-students' request.user.id test.id %}" class="step"><p>Step 3</p></a>
+                                        <a href="{% url 'admin-test-add-students' test.id %}" class="step"><p>Step 3</p></a>
                                     </div>
                                 </div>
                             </div>

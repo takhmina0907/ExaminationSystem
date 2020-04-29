@@ -1,3 +1,4 @@
+from copy import deepcopy
 import datetime
 import enum
 
@@ -107,6 +108,20 @@ class TestInfo(models.Model):
             return self.TestState.ongoing
         # return self.deadline > timezone.now()
 
+    def clone(self):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.title = copy.title + ' - Copy'
+        copy.save()
+        for question in self.questions.all():
+            question_copy = question.clone()
+            copy.questions.add(question_copy)
+            for option in question.options.all():
+                option_copy = option.clone()
+                question_copy.options.add(option_copy)
+
+        return copy
+
     def __str__(self):
         return '{} - {}'.format(self.id, self.author.email)
 
@@ -116,6 +131,12 @@ class Question(models.Model):
     question = models.TextField(blank=False, null=False)
     is_multiple_choice = models.BooleanField(default=False)
 
+    def clone(self):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.save()
+        return copy
+
     def __str__(self):
         return '{} - {}'.format(self.test.title, self.question)
 
@@ -124,6 +145,12 @@ class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
     option = models.CharField(max_length=1024, null=False, blank=False)
     is_correct = models.BooleanField(default=False)
+
+    def clone(self):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.save()
+        return copy
 
     def __str__(self):
         return '{} - {}'.format(self.option, self.question.question)

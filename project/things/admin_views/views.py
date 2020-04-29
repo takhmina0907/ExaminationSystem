@@ -1,6 +1,7 @@
-import json
-import io
 import csv
+import io
+import json
+from string import ascii_lowercase
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login
@@ -31,6 +32,7 @@ from things.admin_forms.forms import (
 from things.models import TestInfo, Question, Option, User, Student, TestResult, Speciality
 from things.utils.tasks import send_mail_wrapper
 from things.utils.activation_token import activation_token
+from things.utils.utils import lower_headers
 
 
 class RegistrationView(CreateView):
@@ -63,8 +65,7 @@ class PreActivationView(TemplateView):
 
 class ActivationView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        user_id = force_text(urlsafe_base64_decode(kwargs['uidb64']))
-        return reverse_lazy('admin-tests', kwargs={'id': user_id})
+        return reverse_lazy('admin-tests')
 
     def get(self, request, *args, **kwargs):
         user = None
@@ -134,8 +135,7 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('admin-test', kwargs={'user_id': self.request.user.id,
-                                             'test_id': self.object.id})
+        return reverse('admin-test', kwargs={'test_id': self.object.id})
 
 
 class AdminTestUpdateView(BaseAdminView, UpdateView):
@@ -155,8 +155,7 @@ class AdminTestUpdateView(BaseAdminView, UpdateView):
                                  id=self.kwargs['test_id'])
 
     def get_success_url(self):
-        return reverse('admin-test', kwargs={'user_id': self.request.user.id,
-                                             'test_id': self.get_object().id})
+        return reverse('admin-test', kwargs={'test_id': self.get_object().id})
 
 
 class TestStudentAddView(BaseAdminView, FormView):
@@ -229,7 +228,7 @@ class AdminTestListView(BaseAdminView, ListView):
             queryset = self.request.user.tests.filter(title__contains=title)
         else:
             queryset = self.request.user.tests
-            
+
         return queryset \
             .order_by('-created_date') \
             .annotate(average_points=Avg('results__grade'))
@@ -262,14 +261,11 @@ class TestEditView(BaseAdminView, UpdateView):
     context_object_name = 'test'
     pk_url_kwarg = 'test_id'
 
-    def form_valid(self, form):
-        self.request.session['edited_test_id'] = self.object.id
-        return super().form_valid(form)
-
     def get(self, request, *args, **kwargs):
         test = self.get_object()
         if test.is_active == TestInfo.TestState.ongoing or test.is_active == TestInfo.TestState.finished:
             return HttpResponse(content="You can't edit this test", status=409)
+        self.request.session['edited_test_id'] = test.id
         return super().get(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
@@ -277,12 +273,11 @@ class TestEditView(BaseAdminView, UpdateView):
                                  id=self.kwargs['test_id'])
 
     def get_success_url(self):
-        return reverse_lazy('admin-edit-questions', kwargs={'user_id': self.request.user.id,
-                                                            'test_id': self.object.id})
+        return reverse_lazy('admin-edit-questions', kwargs={'test_id': self.object.id})
 
 
 @login_required
-def admin_test_edit(request, user_id, test_id):
+def admin_test_edit(request, test_id):
     if not request.session.get('edited_test_id') \
             or request.session.get('edited_test_id') != test_id:
         raise Http404
@@ -315,23 +310,18 @@ class TestEditStudentsView(BaseAdminView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['test'] = self.get_object()
+        test = self.get_object()
+        context['test'] = test
+        context['checked'] = list(test.students.all().values_list('speciality', flat=True).distinct())
         return context
 
-    def get_initial(self):
-        initial = super().get_initial()
-        test = self.get_object()
-        initial['specialities'] = list(test.students.all().values_list('speciality', flat=True).distinct())
-        return initial
-
     def get_success_url(self):
-        return reverse_lazy('admin-test-details', kwargs={'user_id': self.request.user.id,
-                                                          'test_id': self.get_object().id})
+        return reverse_lazy('admin-test-details', kwargs={'test_id': self.get_object().id})
 
     def form_valid(self, form):
         test = self.get_context_data()['test']
         specialities = set(form.cleaned_data['specialities'].values_list('id', flat=True))
-        initial_specialities = set(self.get_initial()['specialities'])
+        initial_specialities = set(self.get_context_data()['checked'])
 
         if initial_specialities.issubset(specialities):
             new_specialities = specialities.difference(initial_specialities)
@@ -346,6 +336,8 @@ class TestEditStudentsView(BaseAdminView, FormView):
             test.students.clear()
             test.students.add(*students)
 
+        del self.request.session['edited_test_id']
+
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -357,7 +349,7 @@ class TestDeleteView(BaseAdminView, DeleteView):
         return self.request.user.tests.all()
 
     def get_success_url(self):
-        return reverse_lazy('admin-tests', kwargs={'id': self.kwargs['user_id']})
+        return reverse_lazy('admin-tests')
 
     def delete(self, request, *args, **kwargs):
         test = self.get_object()
@@ -367,14 +359,12 @@ class TestDeleteView(BaseAdminView, DeleteView):
 
 
 @login_required
-def copy_test(request, user_id, test_id):
+def copy_test(request, test_id):
     test = get_object_or_404(TestInfo, author=request.user,
                              id=test_id)
-    test.id = None
-    test.title = test.title + ' - Copy'
-    test.save()
-    return HttpResponseRedirect(reverse_lazy('admin-test-details', kwargs={'user_id': request.user.id,
-                                                                           'test_id': test.id}))
+    copy = test.clone()
+    request.session['test_id'] = copy.id
+    return HttpResponseRedirect(reverse_lazy('admin-update-test', kwargs={'test_id': copy.id}))
 
 
 @login_required
@@ -529,7 +519,7 @@ def student_csv_import(request):
 
 
 @login_required
-def admin_test(request, user_id, test_id):
+def admin_test(request, test_id):
     if not request.session.get('test_id') or request.session.get('test_id') != test_id:
         raise Http404
 
@@ -541,6 +531,48 @@ def admin_test(request, user_id, test_id):
         Option.objects.create(question=question, option='Option 2', is_correct=False)
 
     return render(request, 'admin/question_create.html', {'test': test, 'questions': test.questions.all()})
+
+
+@login_required
+def questions_csv_import(request, test_id):
+    if not request.session.get('test_id') or request.session.get('test_id') != test_id:
+        raise Http404
+
+    test = get_object_or_404(TestInfo, author=request.user,
+                             id=test_id)
+    file = request.FILES['questions'].read().decode('UTF-8')
+    csv_str = io.StringIO(file)
+    questions = csv.DictReader(lower_headers(csv_str), delimiter=',', quotechar='"')
+    totalrow, outof = 0, 0
+    for row in questions:
+        totalrow += 1
+        correct_num = 0
+        try:
+            question = Question.objects.create(
+                test=test,
+                question=row['question']
+            )
+            correct = [c.strip().lower() for c in row['correct'].split(',')]
+            for letter in ascii_lowercase:
+                if letter in questions.fieldnames \
+                        and row[letter] is not None:
+                    option = Option.objects.create(
+                        question=question,
+                        option=row[letter],
+                        is_correct=letter in correct
+                    )
+
+                    if option.is_correct:
+                        correct_num += 1
+
+            if correct_num > 1:
+                question.is_multiple_choice = True
+        except KeyError:
+            outof += 1
+
+    messages.info(request, '%d questions were created successfully out of %d' % (totalrow - outof, totalrow))
+
+    return HttpResponseRedirect(reverse_lazy('admin-test', kwargs={'test_id': test_id}))
 
 
 @login_required

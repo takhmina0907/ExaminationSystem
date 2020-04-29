@@ -87,12 +87,12 @@
         </div>
         <div>
             <span>
-                <a href="{% url 'admin-test-details' request.user.id test.id %}"><button type="button">Cancel</button></a>
+                <a href="{% url 'admin-test-details' test.id %}"><button type="button">Cancel</button></a>
             </span>
-            <span>Step 1</span>
-            <span><b>Step 2</b></span>
-            <span>Step 3</span>
-            <a href="{% url 'admin-test-edit-students' request.user.id test.id %}"><button>Next</button></a>
+            <span><a href="{% url 'admin-edit-test' test.id %}">Step 1</a></span>
+            <span><a href="{% url 'admin-edit-questions' test.id %}"><b>Step 2</b></a></span>
+            <span><a href="{% url 'admin-test-edit-students' test.id %}">Step 3</a></span>
+            <a href="{% url 'admin-test-edit-students' test.id %}"><button>Next</button></a>
         </div>
     </body>
     <script src="{% static 'js/jquery.min.js' %}"></script>

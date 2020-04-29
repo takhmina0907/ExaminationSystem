@@ -1,24 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>New test</title>
-    </head>
-    <body>
-        <h1>Add students from</h1>
-        <form id="form-test" method="post">
-            {% csrf_token %}
-            <div>
-                {{ form }}
+{% load static %}
+<head>
+    <title>Add students</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+    	.check_title{
+  		    font-weight: bold;
+		    font-size: 18px;
+		    line-height: 22px;
+		    color: #373737;
+		    margin-bottom: 32px;
+  	    }
+  	    .add-stud{
+  		    margin-top: 20px;
+  	    }
+  	    .add-info{
+  		    margin-top: 48px;
+  	    }
+
+	    .main {
+			display: block;
+			position: relative;
+			padding-left: 45px;
+			margin-bottom: 15px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+	    input[type=checkbox] {
+			visibility: hidden;
+	    }
+
+	    .geekmark {
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    height: 24px;
+		    width: 24px;
+		    background: #FFFFFF;
+		    border-radius: 4px;
+		    border: 1px solid #A4A4A4;
+	    }
+
+		/* Specify the background color to be
+		shown when hovering over checkbox */
+		.main:hover input ~ .geekmark {
+			background-color: #eee;
+		}
+
+		/* Specify the background color to be
+		shown when checkbox is active */
+		.main input:active ~ .geekmark {
+			background-color: #392CD1;
+		}
+
+		/* Specify the background color */
+		.main input:checked ~ .geekmark {
+			background-color: #392CD1;
+		}
+
+		/* Checkmark to be shown in checkbox */
+		/* It is not be shown when not checked */
+		.geekmark:after {
+			content: "";
+			position: absolute;
+			display: none;
+		}
+
+		/* Display checkmark when checked */
+		.main input:checked ~ .geekmark:after {
+			display: block;
+		}
+
+		.main .geekmark:after {
+			left: 8px;
+			bottom: 6px;
+			width: 6px;
+			height: 12px;
+			border: solid white;
+			border-width: 0 2px 2px 0;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
+    </style>
+</head>
+<body>
+    <!--Start menu-->
+    <nav class="navbar navbar-default visible-xs">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Logo</a>
             </div>
-            <br/>
-            <div>
-                <a href="{% url 'admin-test' request.user.id test.id %}"><button type="button">Cancel</button></a>
-                <span><b>Step 1</b></span>
-                <span>Step 2</span>
-                <span>Step 3</span>
-                <input type="submit" value="Submit">
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
+                    <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
+                </ul>
             </div>
-        </form>
-    </body>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+                <h2 class="logo-text">LOGO</h2>
+                <ul class="nav flex-column">
+                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fa fa-book"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
+                    <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
+            <br>
+            <!--End menu-->
+            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+  		        <div class="row add-stud">
+      		        <div class="col-sm-1"></div>
+  		            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
+  		    	        <p class="title_test">Adding Students</p>
+                    </div>
+  		        </div>
+  		        <div class="row">
+  			        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
+  			        <form method="post" class="col-sm-6 col-md-6 col-lg-6 col-xl-6 add-info">
+	  			        <p class="check_title" >Edit groups</p>
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% for error in form.specialities.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                        {% for field in form.specialities.field.choices %}
+                            <label class="main">{{ field.1 }}
+                                {% if field.0 in checked %}
+                                    <input type="checkbox" name="specialities" value="{{ field.0 }}" checked>
+                                {% else %}
+                                    <input type="checkbox" name="specialities" value="{{ field.0 }}">
+                                {% endif %}
+                                <span class="geekmark"></span>
+                            </label>
+                        {% endfor %}
+			        </form>
+		        </div>
+
+		        <!--Bottom menu will change-->
+		        <div class="row fixed-row-bottom">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
+                        <div class="step-menu">
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                                <a href="{% url 'admin-test-details' test.id %}"><button type="button" class="test-cancel-btn">Cancel</button></a>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
+                                <!--Исправь! Width и что-то с row-->
+                                <div class="row">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-xs-3 steps">
+                                        <a href="{% url 'admin-edit-test' test.id %}" class="step"><p>Step 1</p></a>
+                                    </div>
+                                    <div class="col-xs-3 steps">
+                                        <a href="{% url 'admin-edit-questions' test.id %}" class="step"><p>Step 2</p></a>
+                                    </div>
+                                    <div class="col-xs-3 steps">
+                                        <a href="{% url 'admin-test-edit-students' test.id %}" class="step active"><p>Step 3</p></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                                <button class="test-next-btn">Next</button>
+                            </div>
+                        </div>
+                    </div>
+      	        </div>
+            </div>
+        </div>
+    </div><!--section main end-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'js/test_add_student.js' %}"></script>
+</body>
 </html>

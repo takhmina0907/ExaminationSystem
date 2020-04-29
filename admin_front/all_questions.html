@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>All questions</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main1.css">
+  <link rel="stylesheet" href="css/question.css">
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+  
+  <link rel="stylesheet" href="fontawesome-pro-5.3.1-web/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    .info_question{
+      font-weight: 600;
+      font-size: 16px;
+      color: #373737;
+      /*overflow*/
+      display: block;
+      width: 130%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .type_of_exam{
+      width: 117px;
+      height: 25px;
+      background: rgba(69, 188, 255, 0.4);
+      margin-left: 16px;
+      text-align: center;
+      color: #009BF2;
+      border:none;
+    }
+    .check_icon{
+      padding-right: 6px;
+    }
+    .ans{
+      margin-right: 16px;
+      /*overflow*/
+      display: block;
+      width: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .answers{/*ans columns margin*/
+      margin-right: 16px;
+    }
+    .incorrect{
+      color: #373737;
+    }
+    .correct{
+      color: #119A48;
+    }
+    .trash, .edit{
+      border: none;
+      background-color: none;
+    }
+    .delete_q{
+      font-weight: bold;
+      font-size: 14px;
+      color: #392CD1;
+    }
+    .delete-title{
+      font-weight: bold;
+      font-size: 16px;
+      color: #392CD1;
+      padding-left: 9px;
+
+    }
+    .delete_header{
+      border-bottom: 1px solid #A4A4A4;
+      padding-left: 9px;
+      font-weight: 500;
+    }
+    .btn-delete{
+      width: 119px;
+      height: 35px;
+      background: #392CD1;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12px;
+      color: #FFFFFF;
+    }
+    .btn-delete:hover{
+      color: #FFFFFF;
+    }
+
+    .btn-del-cancel{
+      width: 83px;
+      height: 35px;
+      background: #FFFFFF;
+      border: 1px dashed #A4A4A4;
+      box-sizing: border-box;
+      border-radius: 8px;
+      color: rgba(55, 55, 55, 0.7);
+      font-weight: 600;
+      font-size: 12px;
+
+    }
+
+  </style>
+
+</head>
+<body>
+<!--Start menu-->
+<nav class="navbar navbar-default visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="main1.html">
+        <i class="fas fas-home"></i>Home</a></li>
+        <li><a href="test1.html">
+          <i class="fas fa-books"></i>Tests</a></li>
+        <li><a href="students.html">
+          <i class="fas fa-users"></i>Students</a></li>
+        <li><a href="#">
+          <i class="fas fa-cog"></i>Settings</a></li>
+        <li><a href="#">
+          <i class="fas fa-sign-out"></i>Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+      <h2 class="logo-text">LOGO</h2>
+      <ul class="nav flex-column">
+        <li><a href="main1.html">
+          <i class="fas fa-home"></i>Home</a></li>
+        <li><a class="active" href="test1.html"><i class="fas fa-books"></i>
+        Tests</a></li>
+        <li><a href="students.html"><i class="fas fa-users"></i>
+        Students</a></li>
+        <li><a href="#"><i class="fas fa-cog"></i>
+        Settings</a></li>
+        <li><a href="#"><i class="fas fa-sign-out"></i>
+        Log out</a></li>
+      </ul>
+      
+    </div>
+    <br>
+<!--End menu-->
+    <div class="col-sm-2"></div>
+    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+    
+  		<div class="row question-page">
+      		<div class="col-xs-2 col-sm-2"></div>
+  		    <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+  		    	<p class="title_test">Questions</p>
+          </div>
+          <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+
+            <form id="csv-form" action="#" method="post">
+                <label for="files" class="btn add-question">
+                  <i class="fas fa-arrow-to-top"></i>Import CSV</label>
+                <input id="files" style="visibility:hidden;" type="file" name="students" accept=".csv">
+            </form>
+
+          </div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+  		</div>
+
+      <!--Question cards-->
+      <div class="row">
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+          <div class="well about-block">
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                <span class="info_question">Q1. What are the main characteristics?</span>
+              </div>
+              
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
+                <button class="type_of_exam">Single choice</button>
+              </div>
+              
+
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                <button class="edit"><img src="images/edit.png"></button>
+              </div>
+              
+                
+             
+            </div>
+
+            <div class="row info">
+              <!-- нет адаптивности в md sm xs -->
+              <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                <div class="row">
+
+                  <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans correct">
+                    <i class="far fa-check check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
+
+                </div>
+              </div>
+ 
+               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                <button type = "button" class="trash" data-toggle="modal" data-target="#exampleModal"><img src="images/trash.png"></button>
+               </div>
+
+             </div>
+
+          </div>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+      </div>
+      <!-- End question card-->
+
+      <!--Question cards-->
+      <div class="row">
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+          <div class="well about-block">
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                <span class="info_question">Q2. What are the main characteristics for beginners to com</span>
+              </div>
+              
+              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
+                <button class="type_of_exam">Multi choice</button>
+              </div>
+              
+
+              <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                <button class = "edit"><img src="images/edit.png"></button>
+              </div>
+              
+
+            </div>
+
+            <div class="row info">
+              <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                <div class="row">
+
+                  <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans correct">
+                    <i class="far fa-check check_icon"></i>Green
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Blue
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans correct">
+                    <i class="far fa-check check_icon"></i>Red
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+                </div>
+              </div>
+               
+
+              <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                <button type = "button" class="trash" data-toggle="modal" data-target="#exampleModal"><img src="images/trash.png"></button>
+
+                <div class="row">
+                  <!-- Modal delete questions -->
+                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+
+                        <div class="modal-header delete_header">
+                          <p class="delete-title text-left">Delete the question
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">
+                                <i class="fal fa-times"></i>
+                              </span><!--&times;-->
+                            </button>
+                          </p>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row">
+                            <div class="col-xs-12 text-left">
+                              <p>Are you sure you want to delete this question and all the related data permanently?</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <div class="row">
+                            <div class="col-xs-12 text-left">
+                              <button type="button" class="btn btn-delete">Yes, delete</button><!--если нужна будет форма напишите-->
+                              <button type="button" class="btn btn-del-cancel" data-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+             </div>
+
+          </div>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+      </div>
+      <!-- End question card-->
+
+
+
+      <!--Add question modal -->
+      <div class="row button-row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+            <button type="button" class="q_btn" data-toggle="modal" data-target="#exampleModal3">Add question</button>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+      </div>
+      <div class="row">
+        <!-- Modal add questions -->
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <p class="modal-title text-center title_test" id="exampleModal3Label">New Question
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                      <i class="fal fa-times"></i>
+                    </span><!--&times;-->
+                  </button>
+                </p>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                  <!--inputs -->
+                    <div class="reg_content align-items-center">
+                      <div class="form_block">
+                        <form action="#">
+                          <select class="form-control input">
+                            <option value="" disabled selected> Select question type</option>
+                            <option value="option-1">Multiple Questions</option>
+                            <option value="option-2">Sections</option>
+                            <option value="option-3">One question test</option>
+                          </select>
+                          <i class="far fa-arrow-down"></i>
+
+                          <textarea type="text" class="form-control" rows="3" placeholder="Enter problem statement"></textarea>
+
+
+                          <label class="question-label">Question options</label>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <input type="text" class = "test_selection" placeholder="A. Enter option text">
+
+                          </div>
+
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <input type="text" class = "test_selection" placeholder="B. Enter option text">
+                          </div>
+                          <!--спросить у Алины как будет уходит placeholder https://qna.habr.com/q/610344-->
+                          
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1"><!--checked="checked"-->
+                            <input type="text" class = "test_selection" placeholder="C. Enter option text(optional)">
+                          </div>
+
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <input type="text" class = "test_selection" placeholder="D. Enter option text(optional)">
+                          </div>
+                          
+                          <button class="add_option">+ Add new option</button>
+
+                        </form>
+                      </div>
+                      
+                    </div>
+
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center">
+                  <a href="all_questions.html">
+                    <button type="button" class="btn btn-save">Save</button>
+                  </a>
+                </div>
+
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!--Bottom menu will change-->
+      <div class="row fixed-row-bottom">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
+            <div class="step-menu">
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                <a href="test1.html"><button class="test-cancel-btn">Cancel</button></a>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
+              <!--Исправь! Width и что-то с row--> 
+                <div class="row">
+                  <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 steps">
+                    <a href="new_test.html" class="step"><p class="step">Step 1</p></a>
+                  </div>
+                  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-33 steps">
+                    <a href="#" class="step active"><p>Step 2</p></a>
+                  </div>
+                  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 steps">
+                    <a href="#" class="step"><p>Step 3</p></a><!--disabled?-->
+                  </div>
+
+                </div>
+                
+              </div>
+              <div class="col-xs-1"></div>
+              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                <a href="student_add.html"><button type = "button" class="btn test-next-btn">Next</button></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+    </div>
+
+</div><!--section main end-->
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+</body>
+</html>
