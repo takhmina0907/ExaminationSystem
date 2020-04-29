@@ -13,67 +13,39 @@
 		<div class="container cn">
 			<div class="row">
 				<div class="col-md-12">
-					<h1 class="test_title">
-						Q.45					
+					<h1 class="test_title" id = "index">				
 					</h1>
 				</div>
 			</div>
-			<div class="row">
+			{% for question  in questions %}
+			<div class="row question_cart" data-id="{{ question.id }}">
 				<div class="col-md-12">
 					<div class="q_block">
 						<div class="question d-flex">
 							<p class="question_title">
-								The covariance of returns on two investments over a 10-year period is 0.009. If the variance of returns for investment. A is 0.020 and the variance of returns for investment B is 0.033, what is the correlation coefficient for the returns?
+								{{question.question}}
 							</p>
 						</div>
 						<div class="answer">
 							<div class="block_radio">
-								<form action="#">
+								{% for option in question.options.all  %}
 									<div class="radio">
 										<label class="d-flex">
-											<input type="radio" name="r1">
+											<input type="checkbox" name="{{question.id}}" value = {{option.id}}>
 											<i></i>
 											<div class="radio_text">
-												0.444
+												{{ option }}
 											</div>
 										</label>
 									</div>
-									<div class="radio">
-										<label class="d-flex">
-											<input type="radio" name="r1">
-											<i></i>
-											<div class="radio_text">
-												0.765
-											</div>
-										</label>
-									</div>
-									<div class="radio">
-										<label class="d-flex">
-											<input type="radio" name="r1">
-											<i></i>
-											<div class="radio_text">
-												0.123
-											</div>
-										</label>
-									</div>
-									<div class="radio">
-										<label class="d-flex">
-											<input type="radio" name="r1">
-											<i></i>
-											<div class="radio_text">
-												0.567
-											</div>
-										</label>
-									</div>
-								</form>
+								{% endfor %}
 							</div>					
 						</div>
 					</div>
-					
 				</div>
 			</div>
+			{% endfor %}
 			<div class="row">
-				
 				<div class="next_q">
 					<button type="button" class="next">
 						Next question<img src={% static 'img/3-layers.png' %} alt="" class="next_img">
@@ -87,6 +59,15 @@
 					</button>
 				</div>
 			</div>
+			{% comment %} <div class="row">
+				<div id="question-switches" data-question-count="{{ questions|length }}">
+				{% for question in questions %}
+					<button class="question-switch {% if questions|length == forloop.counter %} active {% endif %}" data-question-id="{{ question.id }}">
+						Question {{ forloop.counter }}
+					</button>
+				{% endfor %}
+			</div> {% endcomment %}
+        </div>
 		</div>
 	</section>
 	<section class="Section2">
@@ -95,11 +76,11 @@
 				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
 					<img src={% static 'img/chronometer.svg' %} class="time_svg">
 
-					<p class="time_text"><span id="time">30:00</span></p>
+					<p class="time_text"><span id="time">{{duration}}:00</span></p>
 				</div>
 				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
 				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
-					<span class="num_of_q">45 out of 100</span>
+					<span class="num_of_q" id = "progress">45 out of 100</span>
 				</div>
 				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
 			
@@ -116,22 +97,14 @@
 							</p>
 							<div class="row">
 								<div class="col">
-									<form action="new_student_section.html">
-										<button class="btn btn-header skip-btn">Cancel
-										</button><!--с ссылки на button-->
-									</form>
+									<button class="btn btn-header skip-btn">Cancel
+									</button><!--с ссылки на button-->
 								</div>
 								<div class="col"></div>
 								<div class="col">
-									<form action="new3.html">
-										<button type="submit" class="btn btn-header next-btn">Finish test
-										</button>
-									</form>
+									<button type="submit" class="btn btn-header next-btn">Finish test
 								</div>
 							</div>
-					
-
-		                
 		              	</div>
               
             		</div>
@@ -145,11 +118,16 @@
 
       var btn = document.getElementById("myBtn");
 
+	  var cancelBtn = document.getElementsByClassName("skip-btn")[0];
+
       var span = document.getElementsByClassName("close")[0];
 
       // When the user clicks the button, open the modal 
       btn.onclick = function() {
           modal.style.display = "block";
+      }
+	  cancelBtn.onclick = function() {
+          modal.style.display = "none";
       }
 
       span.onclick = function() {
@@ -161,7 +139,10 @@
               modal.style.display = "none";
           }
       }
+
     </script>
-    <script src="tabs.js"></script>
+	<script src={% static 'js/jquery.min.js' %}></script>
+	<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+    <script src={% static 'js/display_test.js' %}></script>
 </body>
 </html>

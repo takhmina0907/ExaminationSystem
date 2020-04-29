@@ -1,13 +1,15 @@
 from django.shortcuts import *
 from .forms import StudentLoginForm
-from .models import Test,Student
+from .models import Student,TestInfo,CheatingReport,Question,Option,TestResult
 import face_recognition
 import cv2
+import json
 import numpy as np
 import os
 import random
 from datetime import date
 from django.views.generic import View,TemplateView
+from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.core.exceptions import ValidationError
 
 path = "/Users/infinity/Desktop/important/questionnaire/project/"
@@ -24,6 +26,8 @@ def facedect(loc):
                 
                 loc=(str(MEDIA_ROOT)+loc)
                 face_1_image = face_recognition.load_image_file(loc)
+                print(face_1_image)
+                print(face_recognition.face_encodings(face_1_image))
                 face_1_face_encoding = face_recognition.face_encodings(face_1_image)[0] #перевести фотку в массив
 
                 face_locations = face_recognition.face_locations(img) #из видео получить лицо
@@ -45,9 +49,9 @@ def create_photo(id):
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         print(faces)
         for (x,y,w,h) in faces:
-            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            cv2.rectangle(img,(x+1000,y+1000),(x+w+1000,y+h+1000),(255,0,0),2)
             roi_gray = gray[y:y+h, x:x+w]
-            if not os.path.isfile(image_path + str(id)):
+            if not os.path.isfile(image_path + str(id)):# надо сделать что то с тем если папка существует
                 os.makedirs(image_path + str(id))
             image = image_path + str(id)+ "/image.png"
             image_item ="/students/" + str(id)+"/image.png"
@@ -61,7 +65,7 @@ class StudentLoginView(View):
     
     def post(self,request):
         bound_form = StudentLoginForm(request.POST)
-        print(bound_form)
+        # print(bound_form)
         if bound_form.is_valid() :
             user = Student.objects.get(id = bound_form.cleaned_data['id'])
             if user.photo != "":
@@ -74,69 +78,61 @@ class StudentLoginView(View):
         return render(request,'reg1.html',{"form":bound_form})      
 
 
-# 
 
-def no(request,id):
-    return render(request,'not_available.html',{'id':id})
+# def no(request,id):
+#     return render(request,'not_available.html',{'id':id})
 
-def cannot(request,id):
-    return render(request,'done.html',{'id':id})
+# def cannot(request,id):
+#     return render(request,'done.html',{'id':id})
 
-class TestInfo(TemplateView):
+class TestInfoView(TemplateView):
     template_name = "reg3.html"
 
-class Test(TemplateView):
+class TestView(TemplateView):
     template_name = "new_student_section.html"
+    def get(self,request,user_id):
+        test = get_object_or_404(TestInfo, id=32)
+        return render(request,"new_student_section.html", {'questions': test.questions.all(),'duration':test.duration,'user_id' :user_id })
 
-def Test_view(request,id):
-    arr = ['0:10', '10:20', '20:30', '30:40', '40:51']
-    random.shuffle(arr)
-    ch = arr[0].split(':')
-    arr.remove(arr[0])
-    finance=Test.objects.filter(sections=1,data=date.today())[int(ch[0]):int(ch[1])]
-    ch = arr[0].split(':')
-    arr.remove(arr[0])
-    market=Test.objects.filter(sections=1,data=date.today())[int(ch[0]):int(ch[1])]
-    ch = arr[0].split(':')
-    arr.remove(arr[0])
-    sd=Test.objects.filter(sections=1,data=date.today())[int(ch[0]):int(ch[1])]
-    ch = arr[0].split(':')
-    arr.remove(arr[0])
-    ede=Test.objects.filter(sections=1,data=date.today())[int(ch[0]):int(ch[1])]
-    ch = arr[0].split(':')
-    arr.remove(arr[0])
-    ede2=Test.objects.filter(sections=1,data=date.today())[int(ch[0]):int(ch[1])]
+def result(request,user_id):
+    point = 0
+    if request.is_ajax() and request.method == 'POST':
+        json_data = json.loads(request.body.decode('utf-8'))
+        print(json_data)
+        for data in json_data:
+            question = Question.objects.get(id = data['id'])
+            print(question)
+            answers = Option.objects.filter(question = question)
+            print(answers)
+            if question.is_multiple_choice and data['options'].length > 1:
+                for option in data['options']:
+                    if option in answers:
+                        point += 1
+            elif (not question.is_multiple_choice )and data['options'].count == 1:
+                if option in answers:
+                        point += 1
 
-
-    return render(request,'finance.html',{'finance':ede2,'markets':ede,'analyses':sd,'calc':market,'theory':finance,'id':id})
-
-
-
-def result(request,id):
-    a = request.GET['res']
-    correct = 0
-    d={}
-    a = a.replace(",", "")
-    i=0
-    while i<len(a)-2:
-        if (a[i+1].isdigit() and a[i].isdigit()):
-            d[a[i]+a[i+1]]=a[i+2]
-            i=i+3
-        elif a[i].isdigit():
-            d[a[i]]=a[i+1]
-            i=i+2
-    for key in d:
-        value = d[key]
-        ans=Test.objects.filter(number=int(key),sections=1,data=date.today())
-        if(value is str(ans[0])):
-            correct+=1
-    # install = User_table.objects.get(id=id)
-    # install.string=a
-    # install.sections=1
-    # install.score=correct
-    # install.date=date.today()
-    # install.save()
+        print(point)
+        student = Student.objects.get(id = user_id)
+        test = TestInfo.objects.get(id = 32)
+        result = TestResult(student = student,test=test,grade=point,submitted_date = date.today )
+        result.save
+        return redirect('reg1')
     return render(request, 'result.html')
+
+def checkStudent(request,user_id):
+    user = Student.objects.get(id = user_id)
+    if not facedect(user.photo.url):
+        report = CheatingReport()
+        report.student = user
+        report.test = TestInfo.objects.get(id=32)
+        report.cheating_date = date.today
+        report.reason = "Not the same person"
+        report.save()
+    elif  facedect(user.photo.url):
+        return JsonResponse({'response': 'Student was successfully identificated'}, status=200)
+
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
 
