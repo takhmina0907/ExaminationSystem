@@ -46,6 +46,10 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
+    .answers{/*ans columns margin*/
+      margin-right: 16px;
+    }
     .incorrect{
       color: #373737;
     }
@@ -120,7 +124,7 @@
         <i class="fas fas-home"></i>Home</a></li>
         <li><a href="test1.html">
           <i class="fas fa-books"></i>Tests</a></li>
-        <li><a href="#">
+        <li><a href="students.html">
           <i class="fas fa-users"></i>Students</a></li>
         <li><a href="#">
           <i class="fas fa-cog"></i>Settings</a></li>
@@ -140,7 +144,7 @@
           <i class="fas fa-home"></i>Home</a></li>
         <li><a class="active" href="test1.html"><i class="fas fa-books"></i>
         Tests</a></li>
-        <li><a href="#"><i class="fas fa-users"></i>
+        <li><a href="students.html"><i class="fas fa-users"></i>
         Students</a></li>
         <li><a href="#"><i class="fas fa-cog"></i>
         Settings</a></li>
@@ -196,31 +200,36 @@
 
             <div class="row info">
               <!-- нет адаптивности в md sm xs -->
+              <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                <div class="row">
 
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans correct">
-                  <i class="far fa-check check_icon"></i>2 types of creating bla bla
-                </span>
-              </div>
+                  <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans correct">
+                    <i class="far fa-check check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
 
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans incorrect">
-                  <i class="far fa-times check_icon"></i>2 types of creating bla bla
-                </span>
-              </div>
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
 
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans incorrect">
-                  <i class="far fa-times check_icon"></i>2 types red
-                </span>
-              </div>
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
 
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans incorrect">
-                  <i class="far fa-times check_icon"></i>Black
-                </span>
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>2 types of creating bla bla
+                  </span>
+                  </div>
+
+                </div>
               </div>
-               
+ 
                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
                 <button type = "button" class="trash" data-toggle="modal" data-target="#exampleModal"><img src="images/trash.png"></button>
@@ -249,7 +258,7 @@
               </div>
               
 
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+              <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
                 <button class = "edit"><img src="images/edit.png"></button>
               </div>
               
@@ -257,29 +266,55 @@
             </div>
 
             <div class="row info">
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans correct">
-                  <i class="far fa-check check_icon"></i>Green
-                </span>
-              </div>
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans incorrect">
-                  <i class="far fa-times check_icon"></i>Blue
-                </span>
-              </div>
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans correct">
-                  <i class="far fa-check check_icon"></i>Red
-                </span>
-              </div>
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                <span class="ans incorrect">
-                  <i class="far fa-times check_icon"></i>Black
-                </span>
+              <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                <div class="row">
+
+                  <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans correct">
+                    <i class="far fa-check check_icon"></i>Green
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Blue
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans correct">
+                    <i class="far fa-check check_icon"></i>Red
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+
+                  <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                  <span class="ans incorrect">
+                    <i class="far fa-times check_icon"></i>Black
+                  </span>
+                  </div>
+                </div>
               </div>
                
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
-              <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+
+              <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
                 <button type = "button" class="trash" data-toggle="modal" data-target="#exampleModal"><img src="images/trash.png"></button>
 
                 <div class="row">
