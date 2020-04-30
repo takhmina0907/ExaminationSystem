@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Student</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main1.css">
+  <link rel="stylesheet" href="css/student.css">
+  <link rel="stylesheet" href="css/test1.css">
+  <link rel="stylesheet" href="fontawesome-pro-5.3.1-web/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+    .card{
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      margin-top: 24px;
+      padding: 24px 16px;
+      width: 145px;
+
+    }
+    .card-title{
+      font-size: 14px;
+      font-weight: 600;
+      color: #373737;
+    }
+    .cards-row{
+      margin-left: 15px;/*only in this page*/
+    }
+    .card-text{
+      font-weight: 500;
+      font-size: 12px;
+      color: #A4A4A4;
+      margin-bottom: 8px;
+    }
+    .id-num{
+      float: right;
+    }
+  </style>
+
+</head>
+<body>
+<!--Start menu-->
+<nav class="navbar navbar-default visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="main1.html">
+        <i class="fas fa-home"></i>Home</a></li>
+        <li><a href="test1.html">
+          <i class="fas fa-books"></i>Tests</a></li>
+        <li class="active"><a href="students.html">
+          <i class="fas fa-users"></i>Students</a></li>
+        <li><a href="#">
+          <i class="fas fa-cog"></i>Settings</a></li>
+        <li><a href="admin1.html">
+          <i class="fas fa-sign-out"></i>Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+      <h2 class="logo-text">LOGO</h2>
+      <ul class="nav flex-column">
+        <li><a href="main1.html">
+          <i class="fas fa-home"></i>Home</a></li>
+        <li><a href="test1.html"><i class="fas fa-books"></i>
+        Tests</a></li>
+        <li><a class="active" href="students.html"><i class="fas fa-users"></i>
+        Students</a></li>
+        <li><a href="#"><i class="fas fa-cog"></i>
+        Settings</a></li>
+        <li><a href="admin1.html"><i class="fas fa-sign-out"></i>
+        Log out</a></li>
+      </ul>
+      
+    </div>
+    <br>
+<!--End menu-->
+    <div class="col-sm-2"></div>
+    <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
+      <div class="row cards-row">
+          
+          <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 col-xl-3 menu_text">
+            <p class="title_test"><img src="images/student.svg" alt="">Students</p>
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-5 col-lg-5 col-xl-5">
+            <a href="adding_students.html">
+              <button type="button" class="add-btn">
+                    + Add new
+              </button>
+            </a>
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
+      </div>
+
+      <div class="row search-row cards-row">
+
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 search">
+          <!-- Search form -->
+          <form class="form-inline d-flex justify-content-center">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="text" name="Search" class="search" placeholder="Type to search...">
+          </form>
+        </div>
+
+      </div>
+      <!-- Cards -->
+      <div class="row cards-row">
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/green.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/pink.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/yellow.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/blue.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/green.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/yellow.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/green.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/pink.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+          <a href="about_student.html" class="custom-card">
+            <div class="card text-center">
+              <img class="card-img-top" src="images/yellow.svg" alt="Card image cap">
+              <div class="card-body text-center">
+                <h5 class="card-title">Aibenov Bakhtiyar</h5>
+                <p class="card-text text-left">
+                  ID: <span class="id-num">160107081</span>
+                </p>
+                <p class="card-text text-left">
+                  Group: <span class="id-num">CSS2020</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+
+      </div>
+
+      <!--Page number -->
+      <div class="row cards-row">
+        <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9"></div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 text-right">
+        
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link" href="#">
+                <img src="images/prev.svg">
+              </a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="active page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">
+                <img src="images/next.svg">
+              </a></li>
+            </ul>
+          
+        </div>
+
+        
+      </div>
+      
+    </div>
+
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
