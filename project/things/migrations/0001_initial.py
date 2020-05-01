@@ -28,7 +28,6 @@ class Migration(migrations.Migration):
                 ('number', models.IntegerField()),
                 ('sections', models.PositiveSmallIntegerField(choices=[(1, 'English'), (2, 'Russion')])),
                 ('question', models.TextField(default='')),
-                ('img', models.ImageField(blank=True, default='', upload_to=things.directionOfFile.images_upload)),
                 ('second_part', models.TextField(blank=True, default='')),
                 ('A', models.CharField(max_length=1024)),
                 ('B', models.CharField(max_length=1024)),

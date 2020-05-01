@@ -1,16 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
-from .models import Test,User
-from .models import TestInfo, Question, Option, Student, TestResult, Answer, Speciality,StudentImage
+from .models import User
+from .models import TestInfo, Question, Option, Student, TestResult,CheatingReport, Answer, Speciality,StudentImage
 from things.admin_forms.forms import UserCreateForm, UserChangeForm
 
 
-class TestAdmin(admin.ModelAdmin):
-    list_display = ['number', 'sections', 'question', 'A', 'B', 'C', 'D', 'E', 'answer', 'data', ]
-    list_filter = ('sections', 'data')
-    search_fields = ('number', 'data', 'question')
-admin.site.register(Test, TestAdmin)
 
 class NewUserAdmin(DjangoUserAdmin):
     form = UserChangeForm
@@ -36,6 +31,6 @@ class NewUserAdmin(DjangoUserAdmin):
 admin.site.register(User, NewUserAdmin)
 
 
-@admin.register(TestInfo, Question, Option, Student,StudentImage, TestResult, Answer, Speciality)
+@admin.register(TestInfo, Question, Option, Student,StudentImage, TestResult,CheatingReport, Answer, Speciality)
 class BasicAdmin(admin.ModelAdmin):
     pass

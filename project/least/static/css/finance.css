@@ -10,6 +10,17 @@ ul, li {
 	margin: 0;
 	padding: 0;
 }
+/* нужно было для отоброжение и скрытие вопросов */
+.background {
+    display: none;
+}
+.foreground {
+    display: block;
+}
+/* нужно было для того что показать вопрос активный или нет */
+.active {
+    color: #20c997;
+}
 
 button:active, button:focus {
   outline: none;

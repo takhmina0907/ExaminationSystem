@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>About student</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main1.css">
+  <link rel="stylesheet" href="css/test1.css">
+  <link rel="stylesheet" href="css/about-test.css">
+  <link rel="stylesheet" href="fontawesome-pro-5.3.1-web/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+    .edit{
+      width: 134px;
+      height: 35px;
+    }
+    .del{
+      width: 147px;
+      height: 35px;
+    }
+    .edit,.del{
+      background: #f8f8f8;
+      border: 1px dashed #A4A4A4;
+      box-sizing: border-box;
+      border-radius: 8px;
+      color: rgba(55, 55, 55, 0.7);
+      font-size: 12px;
+      margin-right: 16px;
+      margin-top: 7px;
+    }
+
+    .icon-down{
+      border: none;
+      background-color: #f8f8f8;
+    }
+    .on{
+      width: 95px;
+      height: 25px;
+      background: rgba(255, 208, 88, 0.4);
+      color: #F2AE00;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+    }
+    .points{
+      font-weight: 600;
+      font-size: 18px;
+      color: #A4A4A4;
+    }
+    .overall{
+      font-weight: bold;
+      color: #000000;
+    }
+    .fin{
+      background: rgba(59, 210, 119, 0.4);
+      color: #119A48;
+    }
+
+  </style>
+
+</head>
+<body>
+<!--Start menu-->
+<nav class="navbar navbar-default visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="main1.html">
+        <i class="fas fa-home"></i>Home</a></li>
+        <li><a href="test1.html">
+          <i class="fas fa-books"></i>Tests</a></li>
+        <li class="active"><a href="students.html">
+          <i class="fas fa-users"></i>Students</a></li>
+        <li><a href="#">
+          <i class="fas fa-cog"></i>Settings</a></li>
+        <li><a href="admin1.html">
+          <i class="fas fa-sign-out"></i>Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+      <h2 class="logo-text">LOGO</h2>
+      <ul class="nav flex-column">
+        <li><a href="main1.html">
+          <i class="fa fa-home"></i>Home</a></li>
+        <li><a href="test1.html"><i class="fa fa-books"></i>
+        Tests</a></li>
+        <li><a class="active" href="students.html"><i class="fa fa-users"></i>
+        Students</a></li>
+        <li><a href="#"><i class="fa fa-cog"></i>
+        Settings</a></li>
+        <li><a href="admin1.html"><i class="fa fa-sign-out"></i>
+        Log out</a></li>
+      </ul>
+      
+    </div>
+    <br>
+<!--End menu-->
+    <div class="col-sm-2"></div>
+    <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
+  		<!--Main info about test-->
+      <div class="row">
+      		<div class="col-sm-1"></div>
+  		    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 align-items-center">
+              <h3 class="about-title">Abdykalykova Zarina</h3>
+          </div>
+          <div class="col-sm-1"></div>
+      
+  		</div>
+
+      <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-7">
+            <button class="edit del"><i class="far fa-edit"></i>Edit student</button>
+            <button class="edit del"><i class="far fa-trash-alt"></i>Delete student</button>
+
+          </div>
+
+
+      </div>
+      <!--End-->
+
+      <div class="row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+          <h3 class="title-about">About student</h3>
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+      </div>
+      
+
+      <div class="row info-row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+
+        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+          <p class="test-title">Date created</p>
+          <p class="test-info date">12.02.2020</p>
+        </div>
+
+        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+          <p class="test-title">Student ID</p>
+          <p class="test-info stud_id">160107024</p>
+        </div>
+
+        <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+          <p class="test-title">Group</p>
+          <p class="test-info">CSS 2020</p>
+        </div>
+
+         <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+          <p class="test-title">Assigned tests</p>
+          <p class="test-info">12</p>
+        </div>
+
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+      </div>
+
+      <div class="row"><!--Collapse-->
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+          <h3 class="title-about">Student's tests
+              <button class="icon-down" type="button" data-toggle="collapse" data-target="#test-stat">
+            <i class="far fa-angle-down"></i>
+          </button>
+          </h3>
+          
+          <div id="test-stat" class="collapse"><!--Test collapse-->
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <a href="about_test.html" class="custom-card">
+                  <div class="well about-block">
+                    
+                    <div class="row">
+                      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                        <span class="title_exam">Flat MID II 2020</span>
+                        
+                        <button class="status_exam on">Ongoing</button>
+                      </div>
+                      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
+                      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                        <span class="total">59.6</span>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <span class="info-text"><i class="far fa-clipboard-list icons"></i>
+                        Questions rate: <span class="overall">15/40</span></span>
+                      </div>
+                       <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                         <span class="info-text"><i class="far fa-clipboard-list icons"></i>Cheating: <span class="overall">Not detected</span></span>
+                       </div>
+                       <div class="col-sm-4">
+                        <span class="info-text"><i class="far fa-calendar-alt icons"></i>Date created <span class="overall">08.03.2020</span></span>
+                       </div>
+                       <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+
+                       <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 points text-right">
+                        gained point
+                       </div>
+
+                     </div>
+                          
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <a href="about_test.html" class="custom-card">
+                  <div class="well about-block">
+                    
+                    <div class="row">
+                      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                        <span class="title_exam">Flat MID II 2020</span>
+                        
+                        <button class="status_exam on fin">Finished</button>
+                      </div>
+                      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
+                      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                        <span class="total">59.6</span>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <span class="info-text"><i class="far fa-clipboard-list icons"></i>
+                        Questions rate: <span class="overall">15/40</span></span>
+                      </div>
+                       <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                         <span class="info-text"><i class="far fa-clipboard-list icons"></i>Cheating: <span class="overall">Not detected</span></span>
+                       </div>
+                       <div class="col-sm-4">
+                        <span class="info-text"><i class="far fa-calendar-alt icons"></i>Date created <span class="overall">08.03.2020</span></span>
+                       </div>
+                       <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+
+                       <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 points text-right">
+                        gained point
+                       </div>
+
+                     </div>
+                          
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <a href="about_test.html" class="custom-card">
+                  <div class="well about-block">
+                    
+                    <div class="row">
+                      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                        <span class="title_exam">Flat MID II 2020</span>
+                        
+                        <button class="status_exam on fin">Finished</button>
+                      </div>
+                      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
+                      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                        <span class="total">59.6</span>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <span class="info-text"><i class="far fa-clipboard-list icons"></i>
+                        Questions rate: <span class="overall">15/40</span></span>
+                      </div>
+                       <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                         <span class="info-text"><i class="far fa-clipboard-list icons"></i>Cheating: <span class="overall">Not detected</span></span>
+                       </div>
+                       <div class="col-sm-4">
+                        <span class="info-text"><i class="far fa-calendar-alt icons"></i>Date created <span class="overall">08.03.2020</span></span>
+                       </div>
+                       <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+
+                       <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 points text-right">
+                        gained point
+                       </div>
+
+                     </div>
+                          
+                  </div>
+                </a>
+              </div>
+            </div>
+
+          </div><!--end Test collapse-->
+
+        </div>
+        <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+      </div><!--End collapse -->
+
+    </div>
+
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

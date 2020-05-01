@@ -6,28 +6,8 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
-from .directionOfFile import images_upload,student_photo_upload,photo_upload
+from .directionOfFile import student_photo_upload,photo_upload
 
-
-class Test(models.Model):
-    number=models.IntegerField();
-    SECTION_TYPE = (
-        (1, 'English'),
-        (2, 'Russion'),
-    );
-    sections = models.PositiveSmallIntegerField(choices=SECTION_TYPE);
-    question=models.TextField(default='')
-    img=models.ImageField(upload_to=images_upload,default='',blank=True)
-    second_part=models.TextField(default='',blank=True)
-    A=models.CharField(max_length=1024)
-    B=models.CharField(max_length=1024)
-    C=models.CharField(max_length=1024)
-    D=models.CharField(max_length=1024 ,blank=True,default="")
-    E=models.CharField(max_length=1024 ,blank=True,default="")
-    answer=models.CharField(max_length=256)
-    data=models.DateField(default="2018-01-01")
-    def __str__(self):
-        return self.answer
 
 class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -193,3 +173,13 @@ class Answer(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.question.question, self.answer.option)
+
+class CheatingReport(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='cheating')
+    test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='cheating')
+    reason = models.CharField(max_length=1024, null=False, blank=False,default="No reason")
+    cheating_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.student.id,self.test.title)
+    
