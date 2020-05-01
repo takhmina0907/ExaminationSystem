@@ -576,36 +576,6 @@ def questions_csv_import(request, test_id):
 
 
 @login_required
-def admin_question_add(request, test_id):
-    test = get_object_or_404(TestInfo, id=test_id, author=request.user)
-
-    if request.is_ajax() and request.method == 'POST':
-        question = Question.objects.create(test=test, question='Enter the question', is_multiple_choice=False)
-        option_1 = Option.objects.create(question=question, option='Option 1', is_correct=False)
-        option_2 = Option.objects.create(question=question, option='Option 2', is_correct=False)
-        return JsonResponse(json.dumps({
-            'id': question.id,
-            'question': question.question,
-            'options': [
-                {
-                    'id': option_1.id,
-                    'option': option_1.option,
-                    'is_correct': option_1.is_correct,
-                },
-                {
-                    'id': option_2.id,
-                    'option': option_2.option,
-                    'is_correct': option_2.is_correct,
-                }
-            ]
-        }),
-            safe=False,
-            status=200)
-
-    return JsonResponse({'error': 'ajax request is required'}, status=400)
-
-
-@login_required
 def admin_question_delete(request, question_id):
     if request.is_ajax() and request.method == 'POST':
         question = get_object_or_404(Question, id=question_id)
@@ -663,19 +633,32 @@ def admin_question_update(request, test_id, question_id):
 
 
 @login_required
-def admin_option_add(request, test_id, question_id):
+def ajax_question_create(request):
     if request.is_ajax() and request.method == 'POST':
-        question = get_object_or_404(Question, id=question_id)
-        option = Option.objects.create(
-            question=question,
-            option='Option {}'.format(question.options.count() + 1),
-            is_correct=False
+        data = json.loads(request.body.decode('utf-8'))
+        test = get_object_or_404(TestInfo, author=request.user,
+                                 id=data['test_id'])
+        question = Question.objects.create(
+            question=data['question'],
+            is_multiple_choice=data['is_multiple_choice'],
+            test=test
         )
-        return JsonResponse(json.dumps({'id': option.id,
-                                        'question_id': question.id,
-                                        'option': option.option,
-                                        'is_correct': option.is_correct,
-                                        }),
+
+        options = list()
+        for option in data['options']:
+            obj = Option.objects.create(
+                question=question,
+                option=option['option'],
+                is_correct=option['is_correct']
+            )
+            options.append({
+                'id': obj.id, 'option': obj.option, 'is_correct': obj.is_correct
+            })
+
+        response = {'id': question.id, 'title': question.question,
+                    'is_multiple_choice': question.is_multiple_choice, 'options': options}
+
+        return JsonResponse(json.dumps(response),
                             safe=False,
                             status=200)
 

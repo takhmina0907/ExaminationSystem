@@ -33,9 +33,8 @@ from things.admin_views.views import (
     TestStudentAddView, TestEditStudentsView,
     copy_test, admin_question_delete, share_test,
     student_csv_import, admin_question_update, admin_test,
-    filter_students, admin_question_add, admin_option_add,
-    students_results, check_speciality, admin_test_edit,
-    questions_csv_import,
+    filter_students, students_results, check_speciality,
+    admin_test_edit, questions_csv_import, ajax_question_create
 )
 
 urlpatterns = [
@@ -81,14 +80,13 @@ urlpatterns = [
     path('admin/students/<int:student_id>/edit/', StudentEditView.as_view(), name='admin-edit-student'),
 
     # ajax
-    path('admin/tests/<int:test_id>/questions/create', admin_question_add, name='admin-question-add'),
     path('questions/<int:question_id>/delete', admin_question_delete, name='admin-delete-question'),
     path('admin/tests/<int:test_id>/questions/<int:question_id>/update', admin_question_update,
          name='admin-question-update'),
-    path('admin/tests/<int:test_id>/questions/<int:question_id>/options/create', admin_option_add,
-         name='admin-option-add'),
     path('admin/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
     path('admin/speciality', check_speciality, name='admin-check-speciality'),
+
+    path('ajax/questions/create', ajax_question_create, name='ajax-question-create')
     # ajax
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
