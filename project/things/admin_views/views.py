@@ -407,9 +407,37 @@ class StudentListView(BaseAdminView, ListView):
     model = Student
     context_object_name = 'students'
     template_name = 'admin/students.html'
+    paginate_by = 12
+
+    # noinspection PyMethodMayBeStatic
+    def colors(self):
+        return [('#FFD058', '#F2AE00'),
+                ('#EF6363', '#EF6363'),
+                ('#3BD277', '#119A48')]
 
     def get_queryset(self):
-        return Student.objects.all()
+        try:
+            name = self.request.GET['student']
+            print(name)
+            if ' ' in name:
+                name = name.split(' ')
+            print(name)
+        except KeyError:
+            name = None
+
+        if name is not None and isinstance(name, list) and len(name) == 2:
+            queryset = Student.objects.filter(
+                Q(first_name__startswith=name[0]) | Q(last_name__startswith=name[1])
+                | Q(first_name__startswith=name[1]) | Q(last_name__startswith=name[0]))
+            print(queryset.query)
+        elif name is not None and isinstance(name, str):
+            queryset = Student.objects.filter(
+                Q(first_name__startswith=name) | Q(last_name__startswith=name))
+        else:
+            queryset = Student.objects.all()
+
+        return queryset \
+            .order_by('-created_date')
 
 
 class StudentDetailView(BaseAdminView, DetailView):
@@ -483,6 +511,7 @@ def student_csv_import(request):
     students = request.FILES['students'].read().decode('UTF-8')
     students_textual = io.StringIO(students)
     students_list = list(csv.reader(students_textual, delimiter=','))
+    outof = 0
     for index in range(len(students_list)):
         stud_info = students_list[index]
         if len(stud_info) == 4:
@@ -490,14 +519,14 @@ def student_csv_import(request):
 
             if not stud_info[0].replace(' ', '').isalpha() or \
                     not stud_info[1].replace(' ', '').isalpha():
-                correct = False
-                messages.error(request, 'Student name and surname are invalid, line %d' % index)
+                outof += 1
+                continue
             if not stud_info[2].isdigit():
-                correct = False
-                messages.error(request, 'Student id is invalid, line %d' % index)
+                outof += 1
+                continue
             if not stud_info[3]:
-                correct = False
-                messages.error(request, 'Speciality is invalid, line %d' % index)
+                outof += 1
+                continue
 
             if correct:
                 try:
@@ -511,11 +540,29 @@ def student_csv_import(request):
                         email=stud_info[2] + '@stu.sdu.edu.kz'
                     )
                 except IntegrityError:
-                    messages.error(request, 'Student with %s already exists, line %d' % (stud_info[2], index))
+                    outof += 1
         else:
-            messages.error(request, 'CSV file structure is incorrect, line %d' % index)
+            outof += 1
 
-    return HttpResponseRedirect(reverse_lazy('admin-students'))
+    totalrow = len(students_list)
+    request.session['totalrow'] = totalrow
+    request.session['successrow'] = totalrow - outof
+
+    print(request.session)
+    return HttpResponseRedirect(reverse_lazy('admin-csv-message-view'))
+
+
+class CsvImportMessageView(BaseAdminView, TemplateView):
+    template_name = 'admin/csv_import_message.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['totalrow'] = self.request.session['totalrow']
+        context['successrow'] = self.request.session['successrow']
+        print(context)
+        del self.request.session['totalrow']
+        del self.request.session['successrow']
+        return context
 
 
 @login_required
@@ -524,11 +571,6 @@ def admin_test(request, test_id):
         raise Http404
 
     test = get_object_or_404(TestInfo, id=test_id, author=request.user)
-
-    if test.questions.count() == 0:
-        question = Question.objects.create(test=test, question='Enter the question', is_multiple_choice=False)
-        Option.objects.create(question=question, option='Option 1', is_correct=False)
-        Option.objects.create(question=question, option='Option 2', is_correct=False)
 
     return render(request, 'admin/question_create.html', {'test': test, 'questions': test.questions.all()})
 

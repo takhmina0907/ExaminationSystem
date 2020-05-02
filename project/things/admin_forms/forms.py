@@ -195,11 +195,15 @@ class StudentCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(StudentCreateForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Enter student name'
         self.fields['first_name'].widget.attrs['autofocus'] = 'on'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Surname'
-        self.fields['id'].widget.attrs['placeholder'] = 'ID'
-        self.fields['speciality'].widget.attrs['placeholder'] = 'Group'
+        self.fields['first_name'].widget.attrs['class'] = 'form-control'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Enter student surname'
+        self.fields['last_name'].widget.attrs['class'] = 'form-control'
+        self.fields['id'].widget.attrs['placeholder'] = 'Enter student ID'
+        self.fields['id'].widget.attrs['class'] = 'form-control'
+        self.fields['speciality'].widget.attrs['placeholder'] = 'Enter or choose group'
+        self.fields['speciality'].widget.attrs['class'] = 'form-control'
         self.fields['speciality'].widget.attrs['autocomplete'] = 'off'
         self.fields['speciality'].widget.attrs['list'] = 'specialities'
 

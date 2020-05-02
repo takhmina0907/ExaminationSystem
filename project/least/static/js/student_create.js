@@ -42,3 +42,20 @@ $("#id_speciality").keypress(function () {
         },
     });
 });
+
+
+// Region form submit
+$(document).on('click', '.add', function() {
+    $('#student-form').submit();
+});
+// End region form submit
+
+
+// Region CSV import
+const csv_input = $("#files");
+
+csv_input.change(function() {
+    $('#csv-form').submit();
+    // console.log($(this).val())
+});
+// End region CSV import

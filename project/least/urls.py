@@ -28,7 +28,7 @@ from things.admin_views.views import (
     PreActivationView, ActivationView,
     StudentListView, StudentDetailView,
     StudentCreateView, StudentCreateSuccess,
-    StudentDeleteView, TestDeleteView,
+    StudentDeleteView, TestDeleteView, CsvImportMessageView,
     StudentEditView, TestEditView, AdminTestUpdateView,
     TestStudentAddView, TestEditStudentsView,
     copy_test, admin_question_delete, share_test,
@@ -77,6 +77,7 @@ urlpatterns = [
     path('admin/students/create/', StudentCreateView.as_view(), name='admin-create-student'),
     path('admin/students/create/csv/', student_csv_import, name='admin-create-student-csv'),
     path('admin/students/create/success/', StudentCreateSuccess.as_view(), name='admin-create-student-success'),
+    path('admin/students/csvimport/result/', CsvImportMessageView.as_view(), name='admin-csv-message-view'),
     path('admin/students/<int:student_id>/delete/', StudentDeleteView.as_view(), name='admin-delete-student'),
     path('admin/students/<int:student_id>/edit/', StudentEditView.as_view(), name='admin-edit-student'),
 
