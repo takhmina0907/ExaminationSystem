@@ -409,6 +409,13 @@ class StudentListView(BaseAdminView, ListView):
     template_name = 'admin/students.html'
     paginate_by = 12
 
+    def get(self, request, *args, **kwargs):
+        if request.session.get('stud_create_flag'):
+            del request.session['stud_create_flag']
+        elif request.session.get('stud_import_flag'):
+            del request.session['stud_import_flag']
+        return super().get(request, *args, **kwargs)
+
     # noinspection PyMethodMayBeStatic
     def colors(self):
         return [('#FFD058', '#F2AE00'),
@@ -418,10 +425,8 @@ class StudentListView(BaseAdminView, ListView):
     def get_queryset(self):
         try:
             name = self.request.GET['student']
-            print(name)
             if ' ' in name:
                 name = name.split(' ')
-            print(name)
         except KeyError:
             name = None
 
@@ -429,7 +434,6 @@ class StudentListView(BaseAdminView, ListView):
             queryset = Student.objects.filter(
                 Q(first_name__startswith=name[0]) | Q(last_name__startswith=name[1])
                 | Q(first_name__startswith=name[1]) | Q(last_name__startswith=name[0]))
-            print(queryset.query)
         elif name is not None and isinstance(name, str):
             queryset = Student.objects.filter(
                 Q(first_name__startswith=name) | Q(last_name__startswith=name))
@@ -462,6 +466,19 @@ class StudentCreateView(BaseAdminView, CreateView):
     form_class = StudentCreateForm
     template_name = 'admin/student_create.html'
 
+    def get(self, request, *args, **kwargs):
+        if request.session.get('stud_create_flag'):
+            del request.session['stud_create_flag']
+        elif request.session.get('stud_import_flag'):
+            del request.session['stud_import_flag']
+
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # noinspection PyAttributeOutsideInit
+        self.request.session['stud_create_flag'] = True
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('admin-create-student-success')
 
@@ -480,6 +497,11 @@ def check_speciality(request):
 class StudentCreateSuccess(BaseAdminView, TemplateView):
     template_name = 'admin/student_create_success.html'
 
+    def get(self, request, *args, **kwargs):
+        if not request.session.get('stud_create_flag'):
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
 
 class StudentDeleteView(BaseAdminView, DeleteView):
     model = Student
@@ -489,7 +511,7 @@ class StudentDeleteView(BaseAdminView, DeleteView):
     def delete(self, request, *args, **kwargs):
         student = self.get_object()
         messages.success(self.request, 'You have deleted %s %s successfully'
-                         % (student.first_name, student.last_name))
+                         % (student.last_name, student.first_name))
         return super(StudentDeleteView, self).delete(request, *args, **kwargs)
 
 
@@ -545,10 +567,12 @@ def student_csv_import(request):
             outof += 1
 
     totalrow = len(students_list)
+    del request.session['totalrow']
+    del request.session['successrow']
+    request.session['stud_import_flag'] = True
     request.session['totalrow'] = totalrow
     request.session['successrow'] = totalrow - outof
 
-    print(request.session)
     return HttpResponseRedirect(reverse_lazy('admin-csv-message-view'))
 
 
@@ -557,11 +581,15 @@ class CsvImportMessageView(BaseAdminView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['totalrow'] = self.request.session['totalrow']
-        context['successrow'] = self.request.session['successrow']
-        print(context)
-        del self.request.session['totalrow']
-        del self.request.session['successrow']
+        if not self.request.session.get('stud_import_flag'):
+            raise Http404
+
+        try:
+            context['totalrow'] = self.request.session['totalrow']
+            context['successrow'] = self.request.session['successrow']
+        except KeyError:
+            raise Http404
+
         return context
 
 
@@ -655,7 +683,6 @@ def admin_question_update(request, test_id, question_id):
 
             if changed:
                 option.save()
-        print(correct_count)
         if not question.is_multiple_choice and correct_count > 1:
             question.is_multiple_choice = True
             question_changed = True

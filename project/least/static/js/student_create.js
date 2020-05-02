@@ -56,6 +56,5 @@ const csv_input = $("#files");
 
 csv_input.change(function() {
     $('#csv-form').submit();
-    // console.log($(this).val())
 });
 // End region CSV import

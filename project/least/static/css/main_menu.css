@@ -50,10 +50,12 @@ h2{
 	margin-top: 10px;
 	margin-right: 16px;
 	border-radius: 8px;
+	border: none;
 }
 .rating-btn:hover{
 	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
 	border-radius: 8px;
+	border: none;
 }
 
 .scale-btn{
@@ -120,4 +122,7 @@ ul > :last-child {
   margin-top: auto;
 }
 */
-
+.form-control{
+	border: 1px solid #CDCDCD;
+    border-radius: 8px;
+}

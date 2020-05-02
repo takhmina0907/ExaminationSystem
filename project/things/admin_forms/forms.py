@@ -215,6 +215,7 @@ class StudentCreateForm(forms.ModelForm):
         speciality = self.cleaned_data['speciality']
         return speciality.strip().upper()
 
+    # noinspection DuplicatedCode
     def save(self, commit=True):
         student = super().save(commit=False)
         student.speciality = Speciality.objects.get_or_create(
@@ -229,12 +230,35 @@ class StudentEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(StudentEditForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs['placeholder'] = 'Name'
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Enter student name'
         self.fields['first_name'].widget.attrs['autofocus'] = 'on'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Surname'
-        self.fields['email'].widget.attrs['placeholder'] = 'Email'
-        self.fields['speciality'].widget.attrs['placeholder'] = 'Group'
+        self.fields['first_name'].widget.attrs['class'] = 'form-control'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Enter student surname'
+        self.fields['last_name'].widget.attrs['class'] = 'form-control'
+        self.fields['id'].widget.attrs['placeholder'] = 'Enter student ID'
+        self.fields['id'].widget.attrs['class'] = 'form-control'
+        self.fields['speciality'].widget.attrs['placeholder'] = 'Enter or choose group'
+        self.fields['speciality'].widget.attrs['class'] = 'form-control'
+        self.fields['speciality'].widget.attrs['autocomplete'] = 'off'
+        self.fields['speciality'].widget.attrs['list'] = 'specialities'
+        self.initial['speciality'] = self.instance.speciality
 
     class Meta:
         model = Student
-        fields = ('first_name', 'last_name', 'speciality', 'email')
+        fields = ('first_name', 'last_name', 'id')
+
+    speciality = forms.CharField()
+
+    def clean_speciality(self):
+        speciality = self.cleaned_data['speciality']
+        return speciality.strip().upper()
+
+    # noinspection DuplicatedCode
+    def save(self, commit=True):
+        student = super().save(commit=False)
+        student.speciality = Speciality.objects.get_or_create(
+            title=self.cleaned_data['speciality'])[0]
+        student.email = str(self.cleaned_data['id'])+'@stu.sdu.edu.kz'
+        if commit:
+            student.save()
+        return student
