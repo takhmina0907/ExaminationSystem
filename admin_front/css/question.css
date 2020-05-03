@@ -76,14 +76,28 @@
   margin-left: 16px;
 }
 
+/*
 .fixed-row-bottom { 
-  position: fixed; 
+	position: fixed; 
+	bottom: 0;
+	height: 85px;
+	width: 100%;
+	background: #FFFFFF;
+	box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+
+}*/
+#relative-layer {
+  position:relative;
+  margin-bottom: 20%;
+}
+
+#fixed-layer {
+  position: fixed;
   bottom: 0;
-  height: 85px;
-  width: 100%;
   background: #FFFFFF;
   box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
-
+  height: 85px;
+  width: 100%;
 }
 
 .ongoing{
