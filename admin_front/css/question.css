@@ -231,7 +231,7 @@ select + i.far {
   margin-bottom: 16px;
 }
 .test_selection{
-  width: 100%;
+  width: 95.5%;
   height: 48px;
   border: 1px solid #CDCDCD;
   box-sizing: border-box;
