@@ -24,7 +24,7 @@ $("#id_speciality").keypress(function () {
 
     $.ajax({
         type: 'GET',
-        url: `/admin/speciality?title=${speciality}`,
+        url: `/ajax/speciality?title=${speciality}`,
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);

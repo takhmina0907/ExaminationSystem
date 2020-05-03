@@ -72,7 +72,7 @@ urlpatterns = [
          name='admin-test-edit-students'),
     path('admin/tests/<int:test_id>/delete/', TestDeleteView.as_view(), name='admin-delete-test'),
     path('admin/tests/<int:test_id>/copy/', copy_test, name='admin-copy-test'),
-    path('admin/<int:user_id>/tests/<int:test_id>/result/<int:result_id>/', StudentResultDetailView.as_view(),
+    path('admin/tests/<int:test_id>/result/<int:result_id>/', StudentResultDetailView.as_view(),
          name='admin-student-result'),
     path('admin/students/', StudentListView.as_view(), name='admin-students'),
     path('admin/students/<int:student_id>/', StudentDetailView.as_view(), name='admin-student-details'),
@@ -87,8 +87,8 @@ urlpatterns = [
     path('questions/<int:question_id>/delete', admin_question_delete, name='admin-delete-question'),
     path('admin/tests/<int:test_id>/questions/<int:question_id>/update', admin_question_update,
          name='admin-question-update'),
-    path('admin/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
-    path('admin/speciality', check_speciality, name='admin-check-speciality'),
+    path('ajax/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
+    path('ajax/speciality', check_speciality, name='admin-check-speciality'),
 
     path('ajax/questions/create', ajax_question_create, name='ajax-question-create')
     # ajax

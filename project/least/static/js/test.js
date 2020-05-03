@@ -23,7 +23,6 @@ function csrfSafeMethod(method) {
 
 const sort_by = $('#sort-by');
 const test_id = sort_by.data('test-id');
-const user_id = sort_by.data('user-id');
 
 function request(url, success, error) {
     $.ajax({
@@ -43,8 +42,9 @@ function result_render(response) {
     let student_results = $('#student-result');
     student_results.empty();
     response = JSON.parse(response);
+    console.log(response);
     for(let i=0; i<response.length; i++) {
-        if(!response[i].result_id){
+        if(!response[i].points){
             student_results.append(
                 `<tr>
                     <td>${response[i].last_name} ${response[i].first_name}</td>
@@ -82,7 +82,7 @@ function result_render(response) {
                         </div>
                     </td>
                     <td>
-                        <a href="/admin/${user_id}/tests/${test_id}/result/${response[i].result_id}/"  class="view-res">View answers sheet <i class="far fa-angle-right"></i></a>
+                        <a href="/admin/tests/${test_id}/result/${response[i].result_id}/"  class="view-res">View answers sheet <i class="far fa-angle-right"></i></a>
                     </td>
                 </tr>`
             );
@@ -97,7 +97,7 @@ function error_render(response) {
 }
 
 sort_by.on('change', function() {
-    request(`/admin/tests/${test_id}/${this.value}`, result_render, error_render());
+    request(`/ajax/tests/${test_id}/${this.value}`, result_render, error_render());
 });
 
 sort_by.change();

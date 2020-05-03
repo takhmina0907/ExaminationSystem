@@ -86,7 +86,7 @@ class TestInfo(models.Model):
     duration = models.PositiveSmallIntegerField()
     is_visible = models.BooleanField(default=True)
     link = models.TextField(blank=True)
-    students = models.ManyToManyField(Student, related_name='tests', blank=True)
+    students = models.ManyToManyField(Student, related_name='tests', blank=True, through='TestResult')
 
     class TestState(enum.Enum):
         not_started = 'Not Started'
@@ -159,8 +159,8 @@ class Option(models.Model):
 class TestResult(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='results')
     test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='results')
-    grade = models.FloatField()
-    submitted_date = models.DateTimeField(auto_now_add=True, blank=True)
+    grade = models.FloatField(null=True)
+    submitted_date = models.DateTimeField(null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.test.title, self.student.id)

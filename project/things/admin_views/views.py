@@ -334,14 +334,25 @@ class TestEditStudentsView(BaseAdminView, FormView):
             new_specialities = specialities.difference(initial_specialities)
             students = Student.objects.filter(speciality__in=new_specialities)
             test.students.add(*students)
+            print(11)
         elif initial_specialities.issuperset(specialities):
             new_specialities = initial_specialities.difference(specialities)
             students = Student.objects.filter(speciality__in=new_specialities)
             test.students.remove(*students)
+            print(22)
         else:
-            students = Student.objects.filter(speciality__in=specialities)
-            test.students.clear()
-            test.students.add(*students)
+            remaining = initial_specialities.intersection(specialities)
+            if remaining:
+                toremove = initial_specialities.difference(specialities)
+                students = Student.objects.filter(speciality__in=toremove)
+                test.students.remove(*students)
+                toadd = specialities.difference(initial_specialities)
+                students = Student.objects.filter(speciality__in=toadd)
+                test.students.add(*students)
+            else:
+                students = Student.objects.filter(speciality__in=specialities)
+                test.students.clear()
+                test.students.add(*students)
 
         del self.request.session['edited_test_id']
 
