@@ -34,7 +34,8 @@ from things.admin_views.views import (
     copy_test, admin_question_delete, share_test,
     student_csv_import, admin_question_update, admin_test,
     filter_students, students_results, check_speciality,
-    admin_test_edit, questions_csv_import, ajax_question_create
+    admin_test_edit, questions_csv_import, ajax_question_create,
+    initial
 )
 
 urlpatterns = [
@@ -47,6 +48,7 @@ urlpatterns = [
     # path('notAvailable/<id>',views.no,name="notAvailable"),
     # path('Cannot/<id>',views.cannot,name="Cannot"),
 #----------------------------
+    path('', initial, name='admin-initial'),
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),
     path('admin/logout/', LogoutView.as_view(), name='admin-logout'),

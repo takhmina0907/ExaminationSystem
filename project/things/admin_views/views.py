@@ -94,6 +94,13 @@ class LoginView(BaseLoginView):
         return reverse_lazy('admin-home')
 
 
+def initial(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('admin-home'))
+    else:
+        return HttpResponseRedirect(reverse('admin-login'))
+
+
 class LogoutView(BaseLogoutView):
     def get_next_page(self):
         return reverse_lazy('admin-login')
