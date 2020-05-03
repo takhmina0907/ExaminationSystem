@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
 {% load static %}
+<html lang="en">
 <head>
-    <title>Share test</title>
-     <meta charset="utf-8">
+    <title>Finish students</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
@@ -44,20 +44,19 @@
             font-weight: bold;
         }
         .media-icon{
-          border: none;
-          background-color: #f8f8f8;
+            border: none;
+            background-color: #f8f8f8;
         }
         .img-row{
-          margin-top: 40px;
+            margin-top: 40px;
         }
         .btn-row{
-          margin-top: 60px;
+            margin-top: 60px;
         }
         .finish-content{
-          margin-top: 60px;/*замени*/
+            margin-top: 60px;/*замени*/
         }
     </style>
-
 </head>
 <body>
     <!--Start menu-->
@@ -96,57 +95,58 @@
                 </ul>
             </div>
             <br>
-            <!--End menu-->
-	        <div class="col-sm-2"></div>
-	        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 d-flex justify-content-center align-items-center finish-content">
-          		<div class="row"><!--justify-content-md-center-->
-  		        	<div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
+        <!--End menu-->
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 d-flex justify-content-center align-items-center finish-content">
+                <div class="row"><!--justify-content-md-center-->
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
-  				        <h1 class = "finish-title text-center">Congratulations!</h1>
-  				        <p class="finish-desc text-center">You have created the test! You can find it in the link:</p>
-          			</div>
-  			        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
-  		        </div>
+                        <h1 class = "finish-title text-center">Congratulations!</h1>
+                        <p class="finish-desc text-center">You have created the test! You can find it in the link:</p>
+
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2"></div>
+                </div>
 
                 <div class="row">
                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 justify-content-center align-items-center text-center">
-                        <p><a href="#" id="test-share-link" class="test-link">{{link}}</a></p>
+                        <p><a class="test-link">{{link}}</a></p>
                         <p class="finish-desc">To test the system you can login and check the test with your e-mail</p>
                     </div>
                     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                 </div>
 
-                <div class="row img-row">
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+                <div class="row img-row"><!--исправь-->
+                    <div class="col-xl-4 col-lg-4 col-md-2 col-sm-2 col-xs-2"></div>
 
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
-                        <button id="copy-link" data-clipboard-target="#test-share-link" class="media-icon"><img src="{% static 'img/copy.png' %}" alt=""></button>
+                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2 text-center">
+                        <button class="media-icon" id="copy-link" data-clipboard-target=".test-link"><img src="{% static 'img/copy.svg' %}" alt=""></button>
                         <p>Copy</p>
                     </div>
 
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2 text-center">
                         <a href="https://t.me/share/url?url={{link}}">
-                            <button class = "media-icon"><img src="{% static 'img/telega.png' %}" alt=""></button>
+                            <button class="media-icon"><img src="{% static 'img/telega.svg' %}" alt=""></button>
                         </a>
                         <p>Telegram</p>
                     </div>
 
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2 text-center">
                         <a href="https://web.whatsapp.com/send?text={{ link }}" data-action="share/whatsapp/share">
-                            <button class = "media-icon"><img src="{% static 'img/whatsup.png' %}" alt=""></button>
+                            <button class="media-icon"><img src="{% static 'img/whatsup.svg' %}" alt=""></button>
                         </a>
                         <p>WhatsApp</p>
                     </div>
 
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2 text-center">
                         <a href="mailto:?subject=Join the test&amp;body=Test link - {{link}}">
-                            <button class = "media-icon"><img src="{% static 'img/email.png' %}" alt=""></button>
+                            <button class = "media-icon"><img src="{% static 'img/email.svg' %}" alt=""></button>
                         </a>
                         <p>Mail</p>
                     </div>
 
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+                    <div class="col-xl-4 col-lg-4 col-md-2 col-sm-2 col-xs-2"></div>
                 </div>
 
                 <div class="row btn-row">
@@ -159,7 +159,6 @@
             </div>
         </div><!--section main end-->
     </div>
-
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

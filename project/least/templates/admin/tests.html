@@ -74,7 +74,7 @@
                         <!-- Search form -->
                         <form class="form-inline d-flex justify-content-center">
                             <i class="fa fa-search" aria-hidden="true"></i>
-                            <input type="text" name="title" class="search" placeholder="Type to search...">
+                            <input type="text" name="title" class="search" placeholder="Type to search..." {% if request.GET.title %} value="{{ request.GET.title }}" {% endif %}>
                         </form>
                     </div>
                     <div class="col-sm-1"></div>
@@ -97,46 +97,49 @@
                 <div class="row">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                        <div class="well about-block">
-                            <div class="row">
-                                <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                    <a href="{% url 'admin-test-details' test.id %}"><span class="title_exam">{{test.title}}</span></a>
-                                    {% if test.is_active == test_state.ongoing %}
-                                        <button class="status_exam ongoing">Ongoing</button>
-                                    {% elif test.is_active == test_state.not_started %}
-                                        <button class="status_exam ongoing">Not started</button>
-                                    {% elif test.is_active == test_state.finished %}
-                                        <button class="status_exam ongoing finished">Finished</button>
-                                    {% endif %}
-                                </div>
-                                <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
-                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
-                                    <span class="total">
-                                        {% if test.average_points %}
-                                            {{ test.average_points }}
-                                        {% else %}
-                                            --
+                        <a href="{% url 'admin-test-details' test.id %}" class="custom-card">
+                            <div class="well about-block">
+                                <div class="row">
+                                    <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                        <span class="title_exam">{{test.title}}</span>
+                                        {% if test.is_active == test_state.ongoing %}
+                                            <button class="status_exam ongoing">Ongoing</button>
+                                        {% elif test.is_active == test_state.not_started %}
+                                            <button class="status_exam ongoing">Not started</button>
+                                        {% elif test.is_active == test_state.finished %}
+                                            <button class="status_exam ongoing finished">Finished</button>
                                         {% endif %}
-                                    </span>
+                                    </div>
+                                    <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
+                                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                                        <span class="total">
+                                            {% if test.average_points %}
+                                                {{ test.average_points }}
+                                            {% else %}
+                                                --
+                                            {% endif %}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="row info">
-                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                                    <span class="info-text">Students: {{test.students.all|length}}</span>
-                                </div>
-                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                                    <span>Questions: {{test.questions.all|length}}</span>
-                                </div>
-                                <div class="col-sm-4">
-                                    <span>Date created {{test.created_date|date:"d.m.Y H:m" }}</span>
-                                </div>
-                                <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
-                                <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 average text-right">
-                                    average point
+                                <div class="row info">
+                                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                                        <span class="info-text"><i class="far fa-users icons"></i>
+                                        Students: {{test.students.all|length}}</span>
+                                    </div>
+                                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                                        <span class="info-text"><i class="far fa-clipboard-list icons"></i>Questions: {{test.questions.all|length}}</span>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <span class="info-text"><i class="far fa-calendar-alt icons"></i>Date created {{test.created_date|date:"d.m.Y H:m" }}</span>
+                                    </div>
+                                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 average text-right">
+                                        average point
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-sm-1"></div>
                 </div>
@@ -149,20 +152,20 @@
                         {% if page_obj.paginator.num_pages > 1 %}
                         <ul class="pagination">
                         {% if page_obj.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ page_obj.previous_page_number }}">
-                                <img src="{% static 'img/arrowback.png' %}"></a>
+                            <li class="page-item"><a class="page-link" href="?{% if request.GET.title %}title={{ request.GET.title }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                                <img src="{% static 'img/prev.svg' %}"></a>
                             </li>
                         {% endif %}
                         {% for num in page_obj.paginator.page_range %}
                             {% if page_obj.number == num %}
-                                <li class="active page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ num }}">{{ num }}</a></li>
+                                <li class="active page-item"><a class="page-link" href="?{% if request.GET.title %}title={{ request.GET.title }}&{% endif %}page={{ num }}">{{ num }}</a></li>
                             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <li class="page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ num }}">{{ num }}</a></li>
+                                <li class="page-item"><a class="page-link" href="?{% if request.GET.title %}title={{ request.GET.title }}&{% endif %}page={{ num }}">{{ num }}</a></li>
                             {% endif %}
                         {% endfor %}
                         {% if page_obj.has_next %}
-                            <li class="page-item"><a class="page-link" href="?title={{ request.GET.title }}&page={{ page_obj.next_page_number }}">
-                                <img src="{% static 'img/arrow.png' %}"></a>
+                            <li class="page-item"><a class="page-link" href="?{% if request.GET.title %}title={{ request.GET.title }}&{% endif %}page={{ page_obj.next_page_number }}">
+                                <img src="{% static 'img/next.svg' %}"></a>
                             </li>
                         {% endif %}
                         </ul>
