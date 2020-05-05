@@ -1,100 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
-{% load my_tags %}
-    <head>
-        <meta charset="UTF-8">
-        <title>Title</title>
-        <style>
-            .card{
-                border: 1px black solid;
-                padding: 10px;
-                margin-bottom: 10px;
-                width: 400px;
-            }
-            .question-title{
-                margin-bottom: 10px;
+<head>
+    <title>Create questions</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/question.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome-pro-5.3.1-web/css/all.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .info_question{
+            font-weight: 600;
+            font-size: 16px;
+            color: #373737;
+            /*overflow*/
+            display: block;
+            width: 130%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .type_of_exam{
+            width: 117px;
+            height: 25px;
+            background: rgba(69, 188, 255, 0.4);
+            margin-left: 16px;
+            text-align: center;
+            color: #009BF2;
+            border:none;
+        }
+        .check_icon{
+            padding-right: 6px;
+        }
+        .ans{
+            margin-right: 16px;
+            /*overflow*/
+            display: block;
+            width: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .answers{/*ans columns margin*/
+            margin-right: 16px;
+        }
+        .incorrect{
+            color: #373737;
+        }
+        .correct{
+            color: #119A48;
+        }
+        .trash, .edit{
+            border: none;
+            background-color: transparent;
+        }
+        .delete_q{
+            font-weight: bold;
+            font-size: 14px;
+            color: #392CD1;
+        }
+        .delete-title{
+            font-weight: bold;
+            font-size: 16px;
+            color: #392CD1;
+            padding-left: 9px;
+        }
+        .delete_header{
+            border-bottom: 1px solid #A4A4A4;
+            padding-left: 9px;
+            font-weight: 500;
+        }
+        .btn-delete{
+            width: 119px;
+            height: 35px;
+            background: #392CD1;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            color: #FFFFFF;
+        }
+        .btn-delete:hover{
+            color: #FFFFFF;
+        }
 
-            }
-            .badge{
-                border: 1px grey solid;
-                background-color: grey;
-                color: white;
-                padding-left: 4px;
-                padding-right: 4px;
-            }
-            .background {
-                display: none;
-            }
-            .foreground {
-                display: block;
-            }
-            .active{
-                color: #20c997;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="card">
-            <p>{{ test.title }}</p>
-            <p>{{ test.deadline }}</p>
-        </div>
-        <div id="question-card-rows">
-            <p id="request-status"></p>
-            {% for question in questions %}
-                <div id="card-{{ question.id }}" class="card {% if questions|length == forloop.counter %} foreground {% else %} background {% endif %}">
-                    <div class="question-title">
-                        <input type="text" class="question" name="question-{{ question.id }}" value="{{ question.question }}" data-question_id="{{ question.id }}"/>
-                        {% with correct=question|count_correct %}
-                            {% if correct > 0 %}
-                                <span class="badge badge-{{ question.id }}" data-correct-count="{{ correct }}">
-                                    {% if correct == 1 %}
-                                        Single-answer
-                                    {% elif correct > 1 %}
-                                        Multi-answer
-                                    {% endif %}
-                                </span>
-                            {% else %}
-                                <span class="badge badge-{{ question.id }} background" data-correct-count="{{ correct }}"></span>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                    <div id="question-{{ question.id }}-option">
-                        {% for option in question.options.all %}
-                            <div>
-                                <input type="checkbox" class="is-correct" name="question-{{ question.id }}-option" value="{{ option.id }}" {% if option.is_correct %} checked {% endif %} data-question-id="{{ question.id }}"/>
-                                <input type="text" class="option" name="question-{{ question.id }}-option-{{ option.id }}" value="{{ option.option }}" data-option-id="{{ option.id }}"/>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <button class="add-option" data-question-id="{{ question.id }}">+ add new option</button>
-                    <br>
-                    <button class="question-delete" data-question-id="{{ question.id }}">Delete</button>
-                    <button class="question-save" data-question-id="{{ question.id }}">Save</button>
-                </div>
-            {% endfor %}
-        </div>
-        <div id="question-switches" data-question-count="{{ questions|length }}">
-            {% for question in questions %}
-                <button class="question-switch {% if questions|length == forloop.counter %} active {% endif %}" data-question-id="{{ question.id }}">
-                    Question {{ forloop.counter }}
+        .btn-del-cancel{
+            width: 83px;
+            height: 35px;
+            background: #FFFFFF;
+            border: 1px dashed #A4A4A4;
+            box-sizing: border-box;
+            border-radius: 8px;
+            color: rgba(55, 55, 55, 0.7);
+            font-weight: 600;
+            font-size: 12px;
+        }
+        #relative-layer {
+            position:relative;
+            margin-bottom: 30%;
+        }
+
+        #fixed-layer {
+            position: fixed;
+            bottom: 0;
+            background: #FFFFFF;
+            box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+            height: 85px;
+            width: 100%;
+
+        }
+
+        .invalid{
+            border-color:#dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!--Start menu-->
+    <nav class="navbar navbar-default visible-xs">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
-            {% endfor %}
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{# TODO #}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
         </div>
-        <br>
-        <div>
-            <button id="question-add" data-question-count="{{ questions|length }}" data-test-id="{{ test.id }}">+ Add question</button>
-        </div>
-        <div>
-            <span>
-                <a href="{% url 'admin-test-details' test.id %}"><button type="button">Cancel</button></a>
-            </span>
-            <span><a href="{% url 'admin-edit-test' test.id %}">Step 1</a></span>
-            <span><a href="{% url 'admin-edit-questions' test.id %}"><b>Step 2</b></a></span>
-            <span><a href="{% url 'admin-test-edit-students' test.id %}">Step 3</a></span>
-            <a href="{% url 'admin-test-edit-students' test.id %}"><button>Next</button></a>
-        </div>
-    </body>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/question_create.js' %}"></script>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+                <h2 class="logo-text">LOGO</h2>
+                <ul class="nav flex-column">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{# TODO #}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
+            <br>
+            <!--End menu-->
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10" id="relative-layer">
+      		    <div class="row question-page">
+      		        <div class="col-xs-2 col-sm-2"></div>
+                    <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+  		    	        <p id="data-hold" class="title_test" data-test-id="{{ test.id }}" data-question-count="{{ questions|length }}">Questions</p>
+                    </div>
+                    <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                        <form id="csv-form" action="{% url 'admin-import-questions-csv' test.id %}" method="post" enctype="multipart/form-data">
+                            <label id="import-csv" for="files" class="btn add-question"><i class="fas fa-arrow-to-top"></i>Import CSV</label>
+                            <input id="csv-file" style="visibility:hidden;" type="file" name="questions" accept=".csv">
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+  		        </div>
+
+                <div class="row">
+                    <!-- Modal delete questions -->
+                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header delete_header">
+                                  <p class="delete-title text-left">Delete the question
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">
+                                        <i class="fal fa-times"></i>
+                                      </span><!--&times;-->
+                                    </button>
+                                  </p>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 text-left">
+                                            <p>Are you sure you want to delete this question and all the related data permanently?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="row">
+                                        <div class="col-xs-12 text-left">
+                                            <button id="question-delete" type="button" class="btn btn-delete">Yes, delete</button><!--если нужна будет форма напишите-->
+                                            <button type="button" class="btn btn-del-cancel" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                    <div id="delete-status" class="row text-left col-xs-12"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="question-row">
+                <!--Question cards-->
+                {% for question in questions %}
+                    <div id="card-{{ question.id }}" class="row">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8">
+                            <div class="well about-block">
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                        <span class="info_question"><span class="question-order" data-question-{{ question.id }}-order="{{ forloop.counter }}">Q{{ forloop.counter }}. </span><span data-question-id="{{ question.id }}" data-multiple-choice="{{ question.is_multiple_choice }}">{{ question.question }}</span></span>
+                                    </div>
+
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
+                                        <button class="type_of_exam">
+                                            {% if question.is_multiple_choice %}
+                                                Multi choice
+                                            {% else %}
+                                                Single choice
+                                            {% endif %}
+                                        </button>
+                                    </div>
+
+                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                                        <button data-toggle="modal" data-target="#editModal" data-question-id="{{ question.id }}" class="edit"><img src="{% static 'img/edit.svg' %}"></button>
+                                    </div>
+                                </div>
+
+                                <div class="row info">
+                                <!-- нет адаптивности в md sm xs -->
+                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                                        <div class="row">
+                                            {% for option in question.options.all %}
+                                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                                                    <span class="ans {% if option.is_correct %} correct {% else %} incorrect {% endif %}">
+                                                        <i class="far {% if option.is_correct %} fa-check {% else %} fa-times {% endif %} check_icon">
+                                                        </i><span class="question-{{ question.id }}-options" data-is-correct="{{ option.is_correct }}" data-option-id="{{option.id}}">{{option.option}}</span>
+                                                    </span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                                        <button type="button" class="trash" data-toggle="modal" data-target="#deleteModal" data-question-id="{{ question.id }}">
+                                            <img src="{% static 'img/trash.svg' %}">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                    </div>
+                {% endfor %}
+                <!-- End question card-->
+                </div>
+
+                <!--Add question modal -->
+                <div class="row button-row">
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <button id="question-add" type="button" class="q_btn" data-toggle="modal" data-target="#questionModal">Add question</button>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+                </div>
+                <div class="row">
+                    <!-- Modal add questions -->
+                    <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <p class="modal-title text-center title_test" id="questionModalLabel">New Question
+                                        <button id="create-modal-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">
+                                                <i class="fal fa-times"></i>
+                                            </span><!--&times;-->
+                                        </button>
+                                    </p>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                                            <!--inputs -->
+                                            <div class="reg_content align-items-center">
+                                                <div class="form_block">
+                                                    <form action="#">
+                                                        <select id="question-type" class="form-control input is-invalid">
+                                                            <option value="none" disabled selected> Select question type</option>
+                                                            <option value="single">Single Choice</option>
+                                                            <option value="multiple">Multiple Choice</option>
+                                                        </select>
+                                                        <i class="far fa-arrow-down"></i>
+
+                                                        <div class="error-title"></div>
+                                                        <textarea id="question-title" type="text" class="form-control" rows="3" placeholder="Enter problem statement" disabled></textarea>
+
+                                                        <label class="question-label">Question options</label>
+
+                                                        <div class="error-correct"></div>
+                                                        <div id="option-row"></div>
+
+                                                        <button type="button" id="option-add" class="add_option" disabled>+ Add new option</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                    </div>
+                                </div>
+                                <div id="request-status" class="text-center"></div>
+                                <div class="modal-footer">
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center">
+                                        <button type="button" id="question-save" class="btn btn-save" disabled>Save</button>
+                                    </div>
+
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <p class="modal-title text-center title_test" id="editModalLabel">Edit Question
+                                        <button id="create-modal-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">
+                                                <i class="fal fa-times"></i>
+                                            </span><!--&times;-->
+                                        </button>
+                                    </p>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                                            <!--inputs -->
+                                            <div class="reg_content align-items-center">
+                                                <div class="form_block">
+                                                    <form action="#">
+                                                        <select id="edit-question-type" class="form-control input is-invalid">
+                                                            <option value="none" disabled selected> Select question type</option>
+                                                            <option value="single">Single Choice</option>
+                                                            <option value="multiple">Multiple Choice</option>
+                                                        </select>
+                                                        <i class="far fa-arrow-down"></i>
+
+                                                        <div class="edit-error-title"></div>
+                                                        <textarea id="edit-question-title" type="text" class="form-control" rows="3" placeholder="Enter problem statement"></textarea>
+
+                                                        <label class="question-label">Question options</label>
+
+                                                        <div class="edit-error-correct"></div>
+                                                        <div id="edit-option-row"></div>
+
+                                                        <button type="button" id="edit-option-add" class="add_option">+ Add new option</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                    </div>
+                                </div>
+                                <div id="edit-request-status" class="text-center"></div>
+                                <div class="modal-footer">
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-center">
+                                        <button type="button" id="question-update" class="btn btn-save">Save</button>
+                                    </div>
+
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Bottom menu will change-->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center" id="fixed-layer">
+                        <div class="step-menu">
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                                <form method="POST" action="{% url 'admin-delete-test' test.id %}">
+                                   {% csrf_token %}<input type="submit" value="Cancel" class="test-cancel-btn">
+                                </form>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex text-center ">
+
+                                <div class="row">
+                                    <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 steps">
+                                        <a href="{% url 'admin-update-test' test.id %}" class="step"><p class="step">Step 1</p></a>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-33 steps">
+                                        <a href="{% url 'admin-test' test.id %}" class="step active"><p>Step 2</p></a>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 steps">
+                                        <a href="{% url 'admin-test-add-students' test.id %}" class="step"><p>Step 3</p></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-1"></div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
+                                <a href="{% url 'admin-test-add-students' test.id %}"><button type = "button" class="btn test-next-btn">Next</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--section main end-->
+    </div>
+    <script src="{% static 'js/test_question_create.js' %}"></script>
+</body>
 </html>

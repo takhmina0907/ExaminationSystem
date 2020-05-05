@@ -32,6 +32,7 @@
 	margin-bottom: 24px;
 	height: 48px;
 }
+/*
 .fixed-row-bottom {
 	position: fixed;
 	bottom: 0;
@@ -40,6 +41,19 @@
 	background: #FFFFFF;
 	box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
 
+}*/
+#relative-layer {
+  position:relative;
+  margin-bottom: 20%;
+}
+
+#fixed-layer {
+  position: fixed;
+  bottom: 0;
+  background: #FFFFFF;
+  box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+  height: 85px;
+  width: 100%;
 }
 
 .ongoing{

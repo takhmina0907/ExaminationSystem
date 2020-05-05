@@ -675,46 +675,36 @@ def admin_question_delete(request, question_id):
 
 
 @login_required
-def admin_question_update(request, test_id, question_id):
+def admin_question_update(request):
     if request.is_ajax() and request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        print(data)
         question = Question.objects.get(id=data['id'])
-        question_changed = False
-        if question.question != data['question']:
-            question.question = data['question']
-            question_changed = True
-
-        correct_count = 0
-        for opt in data['options']:
-            option = Option.objects.get(id=opt['id'])
-            changed = False
-            if option.option != opt['option']:
-                option.option = opt['option']
-                changed = True
-
-            if option.is_correct != opt['is_correct']:
-                option.is_correct = opt['is_correct']
-                changed = True
-
-            if opt['is_correct']:
-                correct_count += 1
-
-            if changed:
-                option.save()
-        if not question.is_multiple_choice and correct_count > 1:
-            question.is_multiple_choice = True
-            question_changed = True
-
-        if question.is_multiple_choice and correct_count < 2:
-            question.is_multiple_choice = False
-            question_changed = True
-
-        if question_changed:
-            question.save()
-
+        question.question = data['question']
+        question.is_multiple_choice = data['is_multiple_choice']
         question.save()
 
-        return JsonResponse({'response': 'Question was successfully saved'}, status=200)
+        options = list()
+        for opt in data['options']:
+            if 'id' in opt:
+                option = Option.objects.get(id=opt['id'])
+                option.option = opt['option']
+                option.is_correct = opt['is_correct']
+                option.save()
+            else:
+                option = Option.objects.create(
+                    option=opt['option'],
+                    is_correct=opt['is_correct'],
+                    question=question
+                )
+            options.append({
+                'id': option.id, 'option': option.option, 'is_correct': option.is_correct
+            })
+
+        response = {'id': question.id, 'question': question.question,
+                    'is_multiple_choice': question.is_multiple_choice, 'options': options}
+
+        return JsonResponse(json.dumps(response), status=200, safe=False)
 
     return JsonResponse({'error': 'ajax request is required'}, status=400)
 
@@ -742,7 +732,7 @@ def ajax_question_create(request):
                 'id': obj.id, 'option': obj.option, 'is_correct': obj.is_correct
             })
 
-        response = {'id': question.id, 'title': question.question,
+        response = {'id': question.id, 'question': question.question,
                     'is_multiple_choice': question.is_multiple_choice, 'options': options}
 
         return JsonResponse(json.dumps(response),

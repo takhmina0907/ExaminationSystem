@@ -84,13 +84,12 @@ urlpatterns = [
     path('admin/students/<int:student_id>/edit/', StudentEditView.as_view(), name='admin-edit-student'),
 
     # ajax
-    path('questions/<int:question_id>/delete', admin_question_delete, name='admin-delete-question'),
-    path('admin/tests/<int:test_id>/questions/<int:question_id>/update', admin_question_update,
+    path('ajax/questions/create', ajax_question_create, name='ajax-question-create'),
+    path('ajax/questions/<int:question_id>/delete', admin_question_delete, name='admin-delete-question'),
+    path('ajax/questions/update', admin_question_update,
          name='admin-question-update'),
     path('ajax/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
     path('ajax/speciality', check_speciality, name='admin-check-speciality'),
-
-    path('ajax/questions/create', ajax_question_create, name='ajax-question-create')
     # ajax
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
