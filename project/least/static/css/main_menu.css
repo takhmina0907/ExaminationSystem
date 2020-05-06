@@ -24,6 +24,7 @@ h2{
 .sidenav {
     box-shadow: 0px 0px 16px rgba(44, 44, 44, 0.1);
     height: 100vh;
+    position: fixed;
 }
 /*
     position: fixed;
@@ -36,7 +37,7 @@ h2{
 	position: absolute;
 	left: 20%;
     top: 0%;
-	
+
 
 }*//*fixed menu разберись!*/
 .rating-btn{
@@ -49,10 +50,12 @@ h2{
 	margin-top: 10px;
 	margin-right: 16px;
 	border-radius: 8px;
+	border: none;
 }
 .rating-btn:hover{
 	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
 	border-radius: 8px;
+	border: none;
 }
 
 .scale-btn{
@@ -119,4 +122,7 @@ ul > :last-child {
   margin-top: auto;
 }
 */
-
+.form-control{
+	border: 1px solid #CDCDCD;
+    border-radius: 8px;
+}

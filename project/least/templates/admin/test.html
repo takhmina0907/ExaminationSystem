@@ -1,111 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
 {% load static %}
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Test</title>
+    <title>{{ test.title }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about-test.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome-pro-5.3.1-web/css/all.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .icon-down{
+            border: none;
+            background-color: #f8f8f8;
+        }
+        .filter{
+            /*width: 218px;*/
+            height: 40px;
+            border: 1px solid #CDCDCD;
+            box-sizing: border-box;
+            border-radius: 8px;
+        }
+        select.filter {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -o-appearance: none;
+        }
+        select + i.far {
+            float: right;
+            margin-top: -27px;
+            pointer-events: none;
+            color: #392CD1;
+        }
+        .sorting{
+            font-size: 16px;
+        }
+        .filter-icon{
+            padding-right: 10px;
+        }
+        .poor-res{
+            background-color: #FFB9B9;
+        }
+    </style>
+
 </head>
 <body>
-    <div>
-        <span><b>{{test.title}}</b></span> ||
-        <span>
-            {% if test.is_active == test_state.ongoing %}
-                Ongoing
-            {% elif test.is_active == test_state.not_started %}
-                Not started
-            {% elif test.is_active == test_state.finished %}
-                Finished
-            {% endif %}
-        </span> ||
-        <span>
-            {% if average_points %}
-                <b>{{ average_points }}</b>
-            {% else %}
-                --
-            {% endif %}
-            average point
-        </span>
-    </div>
-    <div>
-        <span><a href="{% url 'admin-edit-test' test.id %}"><button>Edit</button></a></span> ||
-        <span><a href="{% url 'admin-copy-test' test.id %}"><button>Copy</button></a></span> ||
-        <span>
-            <form method="POST" action="{% url 'admin-delete-test' test.id %}">
-               {% csrf_token %}<input type="submit" value="Delete">
-            </form>
-        </span>
-    </div>
-    <br/>
-    <div><b>About the test</b></div>
-    <br/>
-    <div>Test link</div>
-    <div>https://www.makingitdone.kz/testid123456789</div>
-    <br/>
-    <div>Description</div>
-    <div>{{ test.description }}</div>
-    <br/>
-    <div>
-        <span>
-            Date created
-            <b>{{test.created_date|date:"d.m.Y" }}</b>
-        </span> ||
-        <span>
-            Students
-            <b>{{test.students.all|length}}</b>
-        </span> ||
-        <span>
-            Questions
-            <b>{{test.questions.all|length}}</b>
-        </span> ||
-        <span>
-            Test duration
-            <b>{{test.duration}} min</b>
-        </span> ||
-        <span>
-            Test availability
-            <b>{{test.start_date|date:"d.m.Y"}}</b>
-            <b>{{test.start_time|date:"H:i"}}</b> - <b>{{test.end_time|date:"H:i"}}</b>
-        </span>
-    </div>
-    <br/>
-    <div><b>Test statistics</b></div>
-    <br/>
-    <div><b>Students and grades</b></div>
-    <div>
-        <label>
-            Sort by:
-            <select id="sort-by" data-test-id="{{ test.id }}" data-user-id="{{ request.user.id }}">
-                <option value="student-name">
-                    Student name
-                </option>
-                <option value="student-group">
-                    Student group
-                </option>
-                <option value="student-point-ascending">
-                    Point(ascending)
-                </option>
-                <option value="student-point-descending">
-                    Point(descending)
-                </option>
-            </select>
-        </label>
-    </div>
-    <br/>
-    <table>
-        <thead>
-            <tr>
-                <td>Student name</td>
-                <td>Student ID</td>
-                <td>Group</td>
-                <td>Points</td>
-                <td>View answers</td>
-            </tr>
-        </thead>
-        <tbody id="student-result">
+    <!--Start menu-->
+    <nav class="navbar navbar-default visible-xs">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active"  href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{#TODO#}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-        </tbody>
-    </table>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+                <h2 class="logo-text">LOGO</h2>
+                <ul class="nav flex-column">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active"  href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{#TODO#}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
+            <br>
+            <!--End menu-->
+            <div class="col-sm-2"></div>
+            <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
+  		        <!--Main info about test-->
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 align-items-center">
+                        <h3 class="about-title">{{ test.title }}</h3>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 align-items-center">
+                        {% if test.is_active == test_state.ongoing %}
+                            <button class="ongoing">Ongoing</button>
+                        {% elif test.is_active == test_state.not_started %}
+                            <button class="ongoing">Not started</button>
+                        {% elif test.is_active == test_state.finished %}
+                            <button class="ongoing finished">Finished</button>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                        <h3 class="total text">
+                            {% if average_points %}
+                                {{ average_points }}
+                            {% else %}
+                                --
+                            {% endif %}
+                        </h3>
+                        <span class = "aveg">average point</span>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-7">
+                        <a href="{% url 'admin-edit-test' test.id %}"><button class="action-btn"><i class="far fa-edit"></i>Edit</button></a>
+                        <a href="{% url 'admin-copy-test' test.id %}"><button class="action-btn"><i class="far fa-copy"></i>Copy</button></a>
+                        <form method="post" action="{% url 'admin-delete-test' test.id %}" style="display: inline">
+                            {% csrf_token %}
+                            <button class="action-btn"><i class="far fa-trash-alt"></i>Delete</button>
+                        </form>
+                    </div>
+                </div>
+                <!--End-->
+
+                <div class="row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <h3 class="title-about">About the test</h3>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row info-row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <p class="test-title">Test link:</p>
+                        <p><span class="link_test">{{ test.link }}</span>
+                            <button id="copy-btn" data-clipboard-target=".link_test" class="copy-img"><img src="{% static 'img/copy.svg' %}"></button>
+                        </p>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row info-row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <p class="test-title">Description</p>
+                        <p class="link_desc">{{ test.description }}</p>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row info-row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <p class="test-title">Date created</p>
+                        <p class="test-info date">{{ test.created_date|date:"d.m.Y" }}</p>
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <p class="test-title">Students</p>
+                        <p class="test-info stud">{{ test.students.all|length }}</p>
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <p class="test-title">Questions</p>
+                        <p class="test-info ques">{{ test.questions.all|length }}</p>
+                    </div>
+                     <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <p class="test-title">Test duration</p>
+                        <p class="test-info duration">{{ test.duration }} min</p>
+                    </div>
+                     <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <p class="test-title">Test availability</p>
+                        <p class="test-info available">{{test.start_date|date:"d.m.Y"}} {{test.start_time|date:"H:i"}}-{{test.end_time|date:"H:i"}}</p>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row"><!--Collapse-->
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <h3 class="title-about">Test statistics
+                            <button class="icon-down" type="button" data-toggle="collapse" data-target="#test-stat">
+                                <i class="far fa-angle-down"></i>
+                            </button>
+                        </h3>
+                        <div id="test-stat" class="collapse">
+                        Coming soon...
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row"><!--Collapse-->
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <h3 class="title-about">Students and grades
+                            <button class="icon-down" type="button" data-toggle="collapse" data-target="#students">
+                                <i class="far fa-angle-down"></i>
+                            </button>
+                        </h3>
+
+                        <div id="students" class="collapse">
+                            <div class="row">
+                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                                    <span class="sorting">Sort by:</span>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                                    <div class="reg_content align-items-center">
+                                        <div class="form_block">
+                                            <form action="#">
+                                                <select class="form-control filter" id="sort-by" data-test-id="{{ test.id }}" data-user-id="{{ request.user.id }}">
+                                                    <option value="student-name">Student name</option>
+                                                    <option value="student-group">Student group</option>
+                                                    <option value="student-point-ascending">Point(ascending)</option>
+                                                    <option value="student-point-descending">Point(descending)</option>
+                                                </select>
+                                                <i class="far fa-arrow-down filter-icon"></i>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6"></div>
+                            </div>
+
+                            <div class="row table-row">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Student Name</th>
+                                            <th>Student ID</th>
+                                            <th>Group</th>
+                                            <th class="sss">Points</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="student-result">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/test.js' %}"></script>
 </body>
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/test.js' %}"></script>
 </html>

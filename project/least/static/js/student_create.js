@@ -24,7 +24,7 @@ $("#id_speciality").keypress(function () {
 
     $.ajax({
         type: 'GET',
-        url: `/admin/speciality?title=${speciality}`,
+        url: `/ajax/speciality?title=${speciality}`,
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -42,3 +42,19 @@ $("#id_speciality").keypress(function () {
         },
     });
 });
+
+
+// Region form submit
+$(document).on('click', '.add', function() {
+    $('#student-form').submit();
+});
+// End region form submit
+
+
+// Region CSV import
+const csv_input = $("#files");
+
+csv_input.change(function() {
+    $('#csv-form').submit();
+});
+// End region CSV import

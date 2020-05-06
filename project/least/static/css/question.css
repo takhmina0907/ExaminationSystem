@@ -1,0 +1,265 @@
+.question-page{
+  margin-top: 20px;
+}
+.add-question{
+  width: 144px;
+  height: 41px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px dashed #A4A4A4;
+  color: rgba(55, 55, 55, 0.7);
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  padding-top: 9px;
+}
+.q_list{
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #A4A4A4;
+}
+.q_btn{
+  width: 147px;
+  height: 41px;
+  background: rgba(57, 44, 209, 0.2);
+  border-radius: 8px;
+  color: #392CD1;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+}
+.q_btn:hover{
+  box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
+}
+.button-row{
+  margin-top: 10px;
+}
+
+/*Modal CSS*/
+.modal-header{
+  border-bottom: none;
+  margin-top: 15px;
+}
+.modal-footer{
+  border-top: none;
+}
+/*close button*/
+.icon{
+  width: 23px;
+  height: 36px;
+}
+.form_block select {
+    margin-bottom: 24px;
+    height: 48px;
+}
+.add-btn{
+  width: 119px;
+  height: 41px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px dashed #A4A4A4;
+  color: rgba(55, 55, 55, 0.7);
+  background-color: #f8f8f8;
+  border-radius: 8px;
+}
+/*
+.about-block:hover{
+      box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
+      border-radius: 8px;
+}*/
+.title_exam{
+  font-size: 20px;
+  font-weight: 600;
+  color: #373737;
+}
+.status_exam{
+  margin-left: 16px;
+}
+
+/*
+.fixed-row-bottom {
+	position: fixed;
+	bottom: 0;
+	height: 85px;
+	width: 100%;
+	background: #FFFFFF;
+	box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+
+}*/
+#relative-layer {
+  position:relative;
+  margin-bottom: 20%;
+}
+
+#fixed-layer {
+  position: fixed;
+  bottom: 0;
+  background: #FFFFFF;
+  box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+  height: 85px;
+  width: 100%;
+}
+
+.ongoing{
+  background: rgba(255, 208, 88, 0.4);
+  width: 95px;
+  height: 25px;
+  text-align: center;
+  color: #F2AE00;
+  border:none;
+
+}
+.finished{
+  background: rgba(59, 210, 119, 0.4);
+  color: #119A48;
+}
+.info{
+  margin-top: 10px;
+}
+.average{
+  font-weight: 600;
+  font-size: 18px;
+  color: #A4A4A4;
+}
+.total{
+  font-weight: 600;
+  font-size: 30px;
+  color: #392CD1;
+}
+.info-text{
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.pagination>.active>a{
+  color: #fff;
+  background-color: #392CD1 !important;
+  font-weight: bold;
+}
+
+.pagination>li>a, .pagination>li>span {
+    border: none !important;
+    background-color: #f8f8f8;
+    color: #373737;
+
+}
+
+.pagination>.active>span:hover, .pagination>.active>a:hover{
+  border: none !important;
+    background-color: #f8f8f8;
+    color: #392CD1 !important;
+}
+.title_test{
+  color: #392CD1;
+  font-weight: 600;
+  font-size: 24px;
+
+}
+label{
+  color: #373737;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+.new_test_block{
+  margin-top: 48px;
+}
+
+.test-cancel-btn{
+  width: 83px;
+  height: 35px;
+  background: #FFFFFF;
+
+  border: 1px dashed #A4A4A4;
+  box-sizing: border-box;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #A4A4A4;
+}
+.test-next-btn{
+  width: 82px;
+  height: 35px;
+  background: #392CD1;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+}
+.test-next-btn:hover{
+  color: #fff;
+}
+.steps{
+  padding-top: 7px;
+}
+.step-menu{
+  margin-top: 22px;
+}
+.steps a.active{
+  color: #392CD1;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+
+}
+.step{
+  font-size: 16px;
+  color: #373737;
+  text-decoration: none;
+}
+.step:hover{
+  color: #392CD1;
+  text-decoration: none;
+}
+/*modal*/
+.form_block textarea {
+  margin-bottom: 24px;
+}
+select.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+}
+select + i.far {
+  float: right;
+  margin-top: -55px;
+  pointer-events: none;
+  color: #392CD1;
+}
+.question-label{
+  font-weight: 600;
+  font-size: 16px;
+  color: #A4A4A4;
+  margin-bottom: 16px;
+}
+.test_selection{
+  width: 95.5%;
+  height: 48px;
+  border: 1px solid #CDCDCD;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding-left: 12px;
+  margin-bottom: 16px;
+}
+.add_option{
+  text-decoration-line: underline;
+  color: #392CD1;
+  border: none;
+  background-color: none;
+  font-weight: 600;
+  font-size: 16px;
+}
+.btn-save{
+  width: 158px;
+  height: 48px;
+  background: #392CD1;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+.btn-save:hover,.btn-save:active{
+  color: #FFFFFF;
+  box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
+}
+.test_selection{
+  border: 1px solid #CDCDCD;
+  border-radius: 8px;
+}

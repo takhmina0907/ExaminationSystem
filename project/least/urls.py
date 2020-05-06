@@ -28,14 +28,14 @@ from things.admin_views.views import (
     PreActivationView, ActivationView,
     StudentListView, StudentDetailView,
     StudentCreateView, StudentCreateSuccess,
-    StudentDeleteView, TestDeleteView,
+    StudentDeleteView, TestDeleteView, CsvImportMessageView,
     StudentEditView, TestEditView, AdminTestUpdateView,
     TestStudentAddView, TestEditStudentsView,
     copy_test, admin_question_delete, share_test,
     student_csv_import, admin_question_update, admin_test,
-    filter_students, admin_question_add, admin_option_add,
-    students_results, check_speciality, admin_test_edit,
-    questions_csv_import,
+    filter_students, students_results, check_speciality,
+    admin_test_edit, questions_csv_import, ajax_question_create,
+    initial
 )
 
 urlpatterns = [
@@ -49,6 +49,7 @@ urlpatterns = [
     path('notAvailable/',NotYet.as_view(),name="NotYet"),
     path('wasDone/',AlreadyDoneView.as_view(),name="wasDone"),
 #----------------------------
+    path('', initial, name='admin-initial'),
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),
     path('admin/logout/', LogoutView.as_view(), name='admin-logout'),
@@ -72,25 +73,25 @@ urlpatterns = [
          name='admin-test-edit-students'),
     path('admin/tests/<int:test_id>/delete/', TestDeleteView.as_view(), name='admin-delete-test'),
     path('admin/tests/<int:test_id>/copy/', copy_test, name='admin-copy-test'),
-    path('admin/<int:user_id>/tests/<int:test_id>/result/<int:result_id>/', StudentResultDetailView.as_view(),
+    path('admin/tests/<int:test_id>/result/<int:result_id>/', StudentResultDetailView.as_view(),
          name='admin-student-result'),
     path('admin/students/', StudentListView.as_view(), name='admin-students'),
     path('admin/students/<int:student_id>/', StudentDetailView.as_view(), name='admin-student-details'),
     path('admin/students/create/', StudentCreateView.as_view(), name='admin-create-student'),
     path('admin/students/create/csv/', student_csv_import, name='admin-create-student-csv'),
     path('admin/students/create/success/', StudentCreateSuccess.as_view(), name='admin-create-student-success'),
+    path('admin/students/csvimport/result/', CsvImportMessageView.as_view(), name='admin-csv-message-view'),
     path('admin/students/<int:student_id>/delete/', StudentDeleteView.as_view(), name='admin-delete-student'),
     path('admin/students/<int:student_id>/edit/', StudentEditView.as_view(), name='admin-edit-student'),
 
     # ajax
-    path('admin/tests/<int:test_id>/questions/create', admin_question_add, name='admin-question-add'),
-    path('questions/<int:question_id>/delete', admin_question_delete, name='admin-delete-question'),
-    path('admin/tests/<int:test_id>/questions/<int:question_id>/update', admin_question_update,
+    path('ajax/questions/create', ajax_question_create, name='ajax-question-create'),
+    path('ajax/questions/<int:question_id>/delete', admin_question_delete, name='admin-delete-question'),
+    path('ajax/questions/update', admin_question_update,
          name='admin-question-update'),
-    path('admin/tests/<int:test_id>/questions/<int:question_id>/options/create', admin_option_add,
-         name='admin-option-add'),
-    path('admin/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
-    path('admin/speciality', check_speciality, name='admin-check-speciality'),
+    path('ajax/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
+    path('ajax/speciality', check_speciality, name='admin-check-speciality'),
     # ajax
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -2,47 +2,196 @@
 <html lang="en">
 {% load static %}
 <head>
-    <meta charset="UTF-8">
     <title>Students</title>
-    <link rel="stylesheet" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/student.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome-pro-5.3.1-web/css/all.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .card{
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            margin-top: 24px;
+            padding: 24px 16px;
+            width: 162px;
+            height: 204px;
+        }
+        .card-title{
+            font-size: 14px;
+            font-weight: 600;
+            color: #373737;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 34px;
+        }
+        .card-title:hover{
+            overflow:visible;
+        }
+        .cards-row{
+            margin-left: 15px;/*only in this page*/
+        }
+        .card-text{
+            font-weight: 500;
+            font-size: 12px;
+            color: #A4A4A4;
+            margin-bottom: 8px;
+        }
+        .id-num{
+            float: right;
+        }
+    </style>
+
 </head>
 <body>
-    Students
-    <a href="{% url 'admin-create-student' %}"><button>+ Add new</button></a>
-    <form id="csv-form" action="{% url 'admin-create-student-csv' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <button id="import-csv" type="button">+ Import CSV</button>
-        <input id="csv-file" style="visibility:hidden;" name="students" type="file" accept=".csv">
-    </form>
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    {% for student in students %}
-        <div>
-            <div><a href="{% url 'admin-student-details' student.pk %}"><h1>{{ student.first_name }} {{ student.last_name }}</h1></a></div>
-            <div>ID {{ student.id }}</div>
-            <div>Group {{ student.speciality.title }}</div>
+    <!--Start menu-->
+    <nav class="navbar navbar-default visible-xs">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a class="active" href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{#TODO#}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
         </div>
-        <br/>
-    {% endfor %}
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+                <h2 class="logo-text">LOGO</h2>
+                <ul class="nav flex-column">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a class="active" href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{#TODO#}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
+            <br>
+            <!--End menu-->
+
+            <div class="col-sm-2"></div>
+            <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
+                <div class="row cards-row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 col-xl-3 menu_text">
+                        <p class="title_test"><img src="{% static 'img/student.svg' %}" alt="">Students</p>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-5 col-lg-5 col-xl-5">
+                        <a href="{% url 'admin-create-student' %}">
+                            <button type="button" class="add-btn">
+                                + Add new
+                            </button>
+                        </a>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
+                </div>
+
+                <div class="row search-row cards-row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 search">
+                        <!-- Search form -->
+                        <form class="form-inline d-flex justify-content-center">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <input type="text" name="student" class="search" placeholder="Type to search..." {% if request.GET.student %} value="{{ request.GET.student }} {% endif %}">
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    {% for message in messages %}
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 alert alert-success alert-dismissible show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    {% endfor %}
+                </div>
+
+                <!-- Cards -->
+                <div class="row cards-row">
+                    {% for student in students %}
+                    <div class="col-xs-4 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+                        <a href="{% url 'admin-student-details' student.id %}" class="custom-card">
+                            <div class="card text-center">
+                                {% with color=view.colors|random %}
+                                <svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" viewBox="0, 0, 100, 100" width="56" height="56" class="card-img-top">
+                                    <circle cx="50" cy="50" r="50" fill="{{ color.0 }}" stroke="#FFFFFF" stroke-width="0" fill-opacity="0.4"></circle>
+                                    <text x="50" y="63" font-family="Arial" font-size="35" font-weight="700" text-anchor="middle" fill="{{ color.1 }}">
+                                        {{ student.last_name | make_list | first }}{{ student.first_name | make_list | first }}
+                                    </text>
+                                </svg>
+                                {% endwith %}
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ student.last_name }} {{ student.first_name }}</h5>
+                                    <p class="card-text text-left">
+                                        ID: <span class="id-num">{{ student.id }}</span>
+                                    </p>
+                                    <p class="card-text text-left">
+                                        Group: <span class="id-num">{{ student.speciality.title }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!--Page number -->
+                <div class="row cards-row">
+                    <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9"></div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 text-right">
+                        {% if page_obj.paginator.num_pages > 1 %}
+                        <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link"
+                                                     href="?{% if request.GET.student %}student={{ request.GET.student }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                                <img src="{% static 'img/prev.svg' %}"></a>
+                            </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="active page-item"><a class="page-link"
+                                                                href="?{% if request.GET.student %}student={{ request.GET.student }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?{% if request.GET.student %}student={{ request.GET.student }}&{% endif %}page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link"
+                                                     href="?{% if request.GET.student %}student={{ request.GET.student }}&{% endif %}page={{ page_obj.next_page_number }}">
+                                <img src="{% static 'img/next.svg' %}"></a>
+                            </li>
+                        {% endif %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/student_create_csv.js' %}"></script>
 </html>

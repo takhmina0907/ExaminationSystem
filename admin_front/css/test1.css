@@ -1,6 +1,9 @@
 .question-page{
   margin-top: 20px;
 }
+.icons{
+    padding-right: 6px;
+}
 .add-btn{
 	width: 119px;
 	height: 41px;
@@ -13,8 +16,8 @@
 	margin-top: 12px;
 }
 .about-block:hover{
-      box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
-      border-radius: 8px;
+    box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
+    border-radius: 8px;
 }
 .title_exam{
 	font-size: 20px;
@@ -29,6 +32,7 @@
 	margin-bottom: 24px;
 	height: 48px;
 }
+/*
 .fixed-row-bottom { 
 	position: fixed; 
 	bottom: 0;
@@ -37,6 +41,19 @@
 	background: #FFFFFF;
 	box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
 
+}*/
+#relative-layer {
+  position:relative;
+  margin-bottom: 20%;
+}
+
+#fixed-layer {
+  position: fixed;
+  bottom: 0;
+  background: #FFFFFF;
+  box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+  height: 85px;
+  width: 100%;
 }
 
 .ongoing{
@@ -68,6 +85,7 @@
 .info-text{
 	font-weight: 500;
 	font-size: 14px;
+	color: #373737;
 }
 
 .search input{
@@ -86,9 +104,10 @@
 	margin-top: 10px;
 }
 .pagination>.active>a{
-  color: #fff; 
-  background-color: #392CD1 !important;
-  font-weight: bold;
+  color: #392CD1; 
+  /*background-color: #392CD1 !important;*/
+  background-color:#f8f8f8;
+  font-weight: bold !important;
 }
 
 .pagination>li>a, .pagination>li>span {
@@ -164,3 +183,7 @@ label{
 	text-decoration: none;
 }
 
+a.custom-card,a.custom-card:hover {
+  color: inherit;
+  text-decoration: none;
+}

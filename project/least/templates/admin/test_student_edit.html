@@ -2,13 +2,13 @@
 <html lang="en">
 {% load static %}
 <head>
-    <title>Add students</title>
+    <title>Edit students</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
     <link rel="stylesheet" href="{% static 'css/tests.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'fontawesome-pro-5.3.1-web/css/all.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -105,15 +105,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Logo</a>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fa fa-book"></i>Tests</a></li>
-                    <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
-                    <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
-                    <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{# TODO #}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
                 </ul>
             </div>
         </div>
@@ -124,16 +124,17 @@
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
                 <h2 class="logo-text">LOGO</h2>
                 <ul class="nav flex-column">
-                    <li><a href="{% url 'admin-home' %}"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fa fa-book"></i>Tests</a></li>
-                    <li><a href="{% url 'admin-students' %}"><i class="fa fa-users"></i>Students</a></li>
-                    <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
-                    <li><a href="{% url 'admin-logout' %}"><i class="fa fa-sign-out"></i>Log out</a></li>
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{# TODO #}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
                 </ul>
             </div>
             <br>
             <!--End menu-->
-            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10" id="relative-layer">
   		        <div class="row add-stud">
       		        <div class="col-sm-1"></div>
   		            <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
@@ -169,7 +170,7 @@
 
 		        <!--Bottom menu will change-->
 		        <div class="row fixed-row-bottom">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center" id="fixed-layer">
                         <div class="step-menu">
                             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 d-flex">
                                 <a href="{% url 'admin-test-details' test.id %}"><button type="button" class="test-cancel-btn">Cancel</button></a>

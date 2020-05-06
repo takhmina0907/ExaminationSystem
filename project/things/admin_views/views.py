@@ -94,6 +94,13 @@ class LoginView(BaseLoginView):
         return reverse_lazy('admin-home')
 
 
+def initial(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('admin-home'))
+    else:
+        return HttpResponseRedirect(reverse('admin-login'))
+
+
 class LogoutView(BaseLogoutView):
     def get_next_page(self):
         return reverse_lazy('admin-login')
@@ -327,14 +334,25 @@ class TestEditStudentsView(BaseAdminView, FormView):
             new_specialities = specialities.difference(initial_specialities)
             students = Student.objects.filter(speciality__in=new_specialities)
             test.students.add(*students)
+            print(11)
         elif initial_specialities.issuperset(specialities):
             new_specialities = initial_specialities.difference(specialities)
             students = Student.objects.filter(speciality__in=new_specialities)
             test.students.remove(*students)
+            print(22)
         else:
-            students = Student.objects.filter(speciality__in=specialities)
-            test.students.clear()
-            test.students.add(*students)
+            remaining = initial_specialities.intersection(specialities)
+            if remaining:
+                toremove = initial_specialities.difference(specialities)
+                students = Student.objects.filter(speciality__in=toremove)
+                test.students.remove(*students)
+                toadd = specialities.difference(initial_specialities)
+                students = Student.objects.filter(speciality__in=toadd)
+                test.students.add(*students)
+            else:
+                students = Student.objects.filter(speciality__in=specialities)
+                test.students.clear()
+                test.students.add(*students)
 
         del self.request.session['edited_test_id']
 
@@ -407,9 +425,41 @@ class StudentListView(BaseAdminView, ListView):
     model = Student
     context_object_name = 'students'
     template_name = 'admin/students.html'
+    paginate_by = 12
+
+    def get(self, request, *args, **kwargs):
+        if request.session.get('stud_create_flag'):
+            del request.session['stud_create_flag']
+        elif request.session.get('stud_import_flag'):
+            del request.session['stud_import_flag']
+        return super().get(request, *args, **kwargs)
+
+    # noinspection PyMethodMayBeStatic
+    def colors(self):
+        return [('#FFD058', '#F2AE00'),
+                ('#EF6363', '#EF6363'),
+                ('#3BD277', '#119A48')]
 
     def get_queryset(self):
-        return Student.objects.all()
+        try:
+            name = self.request.GET['student']
+            if ' ' in name:
+                name = name.split(' ')
+        except KeyError:
+            name = None
+
+        if name is not None and isinstance(name, list) and len(name) == 2:
+            queryset = Student.objects.filter(
+                Q(first_name__startswith=name[0]) | Q(last_name__startswith=name[1])
+                | Q(first_name__startswith=name[1]) | Q(last_name__startswith=name[0]))
+        elif name is not None and isinstance(name, str):
+            queryset = Student.objects.filter(
+                Q(first_name__startswith=name) | Q(last_name__startswith=name))
+        else:
+            queryset = Student.objects.all()
+
+        return queryset \
+            .order_by('-created_date')
 
 
 class StudentDetailView(BaseAdminView, DetailView):
@@ -434,6 +484,19 @@ class StudentCreateView(BaseAdminView, CreateView):
     form_class = StudentCreateForm
     template_name = 'admin/student_create.html'
 
+    def get(self, request, *args, **kwargs):
+        if request.session.get('stud_create_flag'):
+            del request.session['stud_create_flag']
+        elif request.session.get('stud_import_flag'):
+            del request.session['stud_import_flag']
+
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # noinspection PyAttributeOutsideInit
+        self.request.session['stud_create_flag'] = True
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('admin-create-student-success')
 
@@ -452,6 +515,11 @@ def check_speciality(request):
 class StudentCreateSuccess(BaseAdminView, TemplateView):
     template_name = 'admin/student_create_success.html'
 
+    def get(self, request, *args, **kwargs):
+        if not request.session.get('stud_create_flag'):
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
 
 class StudentDeleteView(BaseAdminView, DeleteView):
     model = Student
@@ -461,7 +529,7 @@ class StudentDeleteView(BaseAdminView, DeleteView):
     def delete(self, request, *args, **kwargs):
         student = self.get_object()
         messages.success(self.request, 'You have deleted %s %s successfully'
-                         % (student.first_name, student.last_name))
+                         % (student.last_name, student.first_name))
         return super(StudentDeleteView, self).delete(request, *args, **kwargs)
 
 
@@ -483,6 +551,7 @@ def student_csv_import(request):
     students = request.FILES['students'].read().decode('UTF-8')
     students_textual = io.StringIO(students)
     students_list = list(csv.reader(students_textual, delimiter=','))
+    outof = 0
     for index in range(len(students_list)):
         stud_info = students_list[index]
         if len(stud_info) == 4:
@@ -490,14 +559,14 @@ def student_csv_import(request):
 
             if not stud_info[0].replace(' ', '').isalpha() or \
                     not stud_info[1].replace(' ', '').isalpha():
-                correct = False
-                messages.error(request, 'Student name and surname are invalid, line %d' % index)
+                outof += 1
+                continue
             if not stud_info[2].isdigit():
-                correct = False
-                messages.error(request, 'Student id is invalid, line %d' % index)
+                outof += 1
+                continue
             if not stud_info[3]:
-                correct = False
-                messages.error(request, 'Speciality is invalid, line %d' % index)
+                outof += 1
+                continue
 
             if correct:
                 try:
@@ -511,11 +580,35 @@ def student_csv_import(request):
                         email=stud_info[2] + '@stu.sdu.edu.kz'
                     )
                 except IntegrityError:
-                    messages.error(request, 'Student with %s already exists, line %d' % (stud_info[2], index))
+                    outof += 1
         else:
-            messages.error(request, 'CSV file structure is incorrect, line %d' % index)
+            outof += 1
 
-    return HttpResponseRedirect(reverse_lazy('admin-students'))
+    totalrow = len(students_list)
+    del request.session['totalrow']
+    del request.session['successrow']
+    request.session['stud_import_flag'] = True
+    request.session['totalrow'] = totalrow
+    request.session['successrow'] = totalrow - outof
+
+    return HttpResponseRedirect(reverse_lazy('admin-csv-message-view'))
+
+
+class CsvImportMessageView(BaseAdminView, TemplateView):
+    template_name = 'admin/csv_import_message.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not self.request.session.get('stud_import_flag'):
+            raise Http404
+
+        try:
+            context['totalrow'] = self.request.session['totalrow']
+            context['successrow'] = self.request.session['successrow']
+        except KeyError:
+            raise Http404
+
+        return context
 
 
 @login_required
@@ -524,11 +617,6 @@ def admin_test(request, test_id):
         raise Http404
 
     test = get_object_or_404(TestInfo, id=test_id, author=request.user)
-
-    if test.questions.count() == 0:
-        question = Question.objects.create(test=test, question='Enter the question', is_multiple_choice=False)
-        Option.objects.create(question=question, option='Option 1', is_correct=False)
-        Option.objects.create(question=question, option='Option 2', is_correct=False)
 
     return render(request, 'admin/question_create.html', {'test': test, 'questions': test.questions.all()})
 
@@ -576,36 +664,6 @@ def questions_csv_import(request, test_id):
 
 
 @login_required
-def admin_question_add(request, test_id):
-    test = get_object_or_404(TestInfo, id=test_id, author=request.user)
-
-    if request.is_ajax() and request.method == 'POST':
-        question = Question.objects.create(test=test, question='Enter the question', is_multiple_choice=False)
-        option_1 = Option.objects.create(question=question, option='Option 1', is_correct=False)
-        option_2 = Option.objects.create(question=question, option='Option 2', is_correct=False)
-        return JsonResponse(json.dumps({
-            'id': question.id,
-            'question': question.question,
-            'options': [
-                {
-                    'id': option_1.id,
-                    'option': option_1.option,
-                    'is_correct': option_1.is_correct,
-                },
-                {
-                    'id': option_2.id,
-                    'option': option_2.option,
-                    'is_correct': option_2.is_correct,
-                }
-            ]
-        }),
-            safe=False,
-            status=200)
-
-    return JsonResponse({'error': 'ajax request is required'}, status=400)
-
-
-@login_required
 def admin_question_delete(request, question_id):
     if request.is_ajax() and request.method == 'POST':
         question = get_object_or_404(Question, id=question_id)
@@ -617,65 +675,67 @@ def admin_question_delete(request, question_id):
 
 
 @login_required
-def admin_question_update(request, test_id, question_id):
+def admin_question_update(request):
     if request.is_ajax() and request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        print(data)
         question = Question.objects.get(id=data['id'])
-        question_changed = False
-        if question.question != data['question']:
-            question.question = data['question']
-            question_changed = True
-
-        correct_count = 0
-        for opt in data['options']:
-            option = Option.objects.get(id=opt['id'])
-            changed = False
-            if option.option != opt['option']:
-                option.option = opt['option']
-                changed = True
-
-            if option.is_correct != opt['is_correct']:
-                option.is_correct = opt['is_correct']
-                changed = True
-
-            if opt['is_correct']:
-                correct_count += 1
-
-            if changed:
-                option.save()
-        print(correct_count)
-        if not question.is_multiple_choice and correct_count > 1:
-            question.is_multiple_choice = True
-            question_changed = True
-
-        if question.is_multiple_choice and correct_count < 2:
-            question.is_multiple_choice = False
-            question_changed = True
-
-        if question_changed:
-            question.save()
-
+        question.question = data['question']
+        question.is_multiple_choice = data['is_multiple_choice']
         question.save()
 
-        return JsonResponse({'response': 'Question was successfully saved'}, status=200)
+        options = list()
+        for opt in data['options']:
+            if 'id' in opt:
+                option = Option.objects.get(id=opt['id'])
+                option.option = opt['option']
+                option.is_correct = opt['is_correct']
+                option.save()
+            else:
+                option = Option.objects.create(
+                    option=opt['option'],
+                    is_correct=opt['is_correct'],
+                    question=question
+                )
+            options.append({
+                'id': option.id, 'option': option.option, 'is_correct': option.is_correct
+            })
+
+        response = {'id': question.id, 'question': question.question,
+                    'is_multiple_choice': question.is_multiple_choice, 'options': options}
+
+        return JsonResponse(json.dumps(response), status=200, safe=False)
 
     return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
 @login_required
-def admin_option_add(request, test_id, question_id):
+def ajax_question_create(request):
     if request.is_ajax() and request.method == 'POST':
-        question = get_object_or_404(Question, id=question_id)
-        option = Option.objects.create(
-            question=question,
-            option='Option {}'.format(question.options.count() + 1),
-            is_correct=False
+        data = json.loads(request.body.decode('utf-8'))
+        test = get_object_or_404(TestInfo, author=request.user,
+                                 id=data['test_id'])
+        question = Question.objects.create(
+            question=data['question'],
+            is_multiple_choice=data['is_multiple_choice'],
+            test=test
         )
-        return JsonResponse(json.dumps({'id': option.id,
-                                        'question_id': question.id,
-                                        'option': option.option,
-                                        'is_correct': option.is_correct,
-                                        }),
+
+        options = list()
+        for option in data['options']:
+            obj = Option.objects.create(
+                question=question,
+                option=option['option'],
+                is_correct=option['is_correct']
+            )
+            options.append({
+                'id': obj.id, 'option': obj.option, 'is_correct': obj.is_correct
+            })
+
+        response = {'id': question.id, 'question': question.question,
+                    'is_multiple_choice': question.is_multiple_choice, 'options': options}
+
+        return JsonResponse(json.dumps(response),
                             safe=False,
                             status=200)
 
