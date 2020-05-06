@@ -3,6 +3,7 @@ var elements
 var numbers
 var questions=[]
 window.onload = function(){
+    $( "#r" ).trigger( "click" );
     elements = document.getElementsByClassName("question_cart");
     this.CloseTab(elements) //close all question
     //make array of random number
@@ -21,76 +22,6 @@ window.onload = function(){
     display = document.querySelector('#time');
 	startTimer(minutes, display);
 }
-
-
-// Region CSRF
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        let cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-let csrftoken = getCookie('csrftoken');
-function csrfSafeMethod(method) {
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-// End region CSRF
-
-
-// Region Requests
-let status_line = $(`#request-status`);
-$(function() {
-    $.ajaxSetup({
-        error: function(jqXHR, exception) {
-            if (jqXHR.status === 0) {
-                status_line.html('Not connected. Please verify your network.');
-            } else if (jqXHR.status === 403) {
-                status_line.html('You are not authorized');
-            } else if (jqXHR.status === 404) {
-                status_line.html('Requested url not found');
-            } else if (jqXHR.status === 500) {
-                status_line.html('Internal Server Error');
-            } else if (exception === 'parsererror') {
-                status_line.html('Requested JSON parse failed');
-            } else if (exception === 'timeout') {
-                status_line.html('Request time out error');
-            } else if (exception === 'abort') {
-                status_line.html('Ajax request aborted');
-            } else {
-                status_line.html('Request didn\'t succeed. Please try again');
-            }
-        }
-    });
-});
-function request_with_data(url, data, loading_message) {
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: JSON.stringify(data),
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-            status_line.html(loading_message);
-        },
-        success: function () {
-            window.location.href=url
-            status_line.empty()
-        },
-        error: function (response) {
-            status_line.html('Request didn\'t succeed. Please try again');
-        },
-    });
-}
-
 
 //for shuffle elements of array
 function shuffle(o) {
@@ -161,7 +92,8 @@ $('.prev').click(function() {
     }else{
         UpdateClassDisplay(-1)
     }
-  
+    
+    // document.getElementById("r").click()
 });
 
 //functioon for timer 
@@ -185,7 +117,23 @@ $(".next-btn" ).click(function(){
     console.log(13)
     index = elements.length-1
     saveAnswer()
-    request_with_data('result/',questions,'Send to check');
+    $.ajax({
+        type: 'POST',
+        url: 'result/',
+        data: JSON.stringify(questions),
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            status_line.html('Send to check');
+        },
+        success: function () {
+            status_line.empty()
+        },
+        error: function (response) {
+            status_line.html('Request didn\'t succeed. Please try again');
+        },
+    });
 });
 function myFunction() {
     var min = 5*60,

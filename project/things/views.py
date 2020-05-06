@@ -7,7 +7,7 @@ import json
 import numpy as np
 import os
 import random
-from datetime import date
+import datetime
 from django.views.generic import View,TemplateView
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.core.exceptions import ValidationError
@@ -78,24 +78,39 @@ class StudentLoginView(View):
         return render(request,'reg1.html',{"form":bound_form})      
 
 
+class AlreadyDoneView(TemplateView):
+    template_name = "Done.html"
 
-# def no(request,id):
-#     return render(request,'not_available.html',{'id':id})
+class NotYet(TemplateView):
+    template_name = "not_available.html"
 
-# def cannot(request,id):
-#     return render(request,'done.html',{'id':id})
 
 class TestInfoView(TemplateView):
     template_name = "reg3.html"
+  
 
 class TestView(TemplateView):
     template_name = "new_student_section.html"
     def get(self,request,user_id):
-        test = get_object_or_404(TestInfo, id=32)
+        test = get_object_or_404(TestInfo, id=65)
+        student= get_object_or_404(Student, id=user_id)
+        if TestResult.objects.filter(test=test,student=student).count() != 0:
+            return redirect('wasDone')
+        if not  test.is_active == TestInfo.TestState.ongoing:
+            return redirect("NotYet")
+        print(test.is_active)
+        # if (datetime.datetime(test.end_time) - datatime.date.today).total_seconds()> test.duration*60:
+        #     duration = test.duration * 60
+        # elif (datetime.datetime(test.end_time) - datatime.date.today).total_seconds() < test.duration*60:
+        #     duration = (datetime.datetime(test.end_time) - datatime.date.today).total_seconds()
+        # else:
+        #     duration = 0
         return render(request,"new_student_section.html", {'questions': test.questions.all(),'duration':test.duration,'user_id' :user_id })
 
 def result(request,user_id):
     point = 0
+    test = get_object_or_404(TestInfo, id=65)
+    student= get_object_or_404(Student, id=user_id)
     if request.is_ajax() and request.method == 'POST':
         json_data = json.loads(request.body.decode('utf-8'))
         print(json_data)
@@ -103,21 +118,20 @@ def result(request,user_id):
             question = Question.objects.get(id = data['id'])
             print(question)
             answers = Option.objects.filter(question = question)
-            print(answers)
-            if question.is_multiple_choice and data['options'].length > 1:
+            if question.is_multiple_choice and len(data['options']) > 1:
                 for option in data['options']:
+                    print(option)
+                    print(answers)
                     if option in answers:
                         point += 1
-            elif (not question.is_multiple_choice )and data['options'].count == 1:
-                if option in answers:
+            elif (not question.is_multiple_choice )and len(data['options']) == 1:
+                if str(data['options'][0]) == str(answers[0].id):
                         point += 1
 
         print(point)
-        student = Student.objects.get(id = user_id)
-        test = TestInfo.objects.get(id = 32)
-        result = TestResult(student = student,test=test,grade=point,submitted_date = date.today )
-        result.save
-        return redirect('reg1')
+        result = TestResult(student = student,test=test,grade=point,submitted_date = datatime.date.today )
+        print(result)
+        result.save()
     return render(request, 'result.html')
 
 def checkStudent(request,user_id):
@@ -125,8 +139,8 @@ def checkStudent(request,user_id):
     if not facedect(user.photo.url):
         report = CheatingReport()
         report.student = user
-        report.test = TestInfo.objects.get(id=32)
-        report.cheating_date = date.today
+        report.test = TestInfo.objects.get(id=65)
+        report.cheating_date = datatime.date.today
         report.reason = "Not the same person"
         report.save()
     elif  facedect(user.photo.url):
@@ -135,4 +149,15 @@ def checkStudent(request,user_id):
     return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
+
+def cheatingReport(request,user_id):
+    if request.is_ajax() and request.method == 'POST':
+        user = Student.objects.get(id = user_id)
+        report = CheatingReport()
+        report.student = user
+        report.test = TestInfo.objects.get(id=65)
+        report.cheating_date = datatime.date.today
+        report.reason = json.loads(request.body.decode('utf-8'))
+        report.save()
+        return JsonResponse({'response': 'Student was successfully identificated'}, status=200)
 

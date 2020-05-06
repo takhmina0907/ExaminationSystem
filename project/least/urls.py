@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
-from things.views import StudentLoginView,TestInfoView,TestView
+from things.views import StudentLoginView,TestInfoView,TestView,AlreadyDoneView,NotYet
 
 import things.views as views
 
@@ -42,11 +42,12 @@ urlpatterns = [
     path('superuser/', admin.site.urls),
     path('Test/<int:user_id>/result/',views.result, name='res'),
     path('Test/<int:user_id>/identification/',views.checkStudent, name='check'),
+    path('Test/<int:user_id>/cheat/',views.cheatingReport, name='cheating'),
     path('Test/<int:user_id>/',TestView.as_view(),name='test'),
     path('',StudentLoginView.as_view(),name="reg1"),
     path('TestInfo/<id>',TestInfoView.as_view(),name='reg3'),
-    # path('notAvailable/<id>',views.no,name="notAvailable"),
-    # path('Cannot/<id>',views.cannot,name="Cannot"),
+    path('notAvailable/',NotYet.as_view(),name="NotYet"),
+    path('wasDone/',AlreadyDoneView.as_view(),name="wasDone"),
 #----------------------------
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),
