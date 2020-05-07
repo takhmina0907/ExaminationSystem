@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'face_recognition',
-    # 'cv2'
+    'cv2'
 ]
 
 AUTH_USER_MODEL = 'things.User'
