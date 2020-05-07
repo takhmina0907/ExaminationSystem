@@ -42,9 +42,8 @@ function result_render(response) {
     let student_results = $('#student-result');
     student_results.empty();
     response = JSON.parse(response);
-    console.log(response);
     for(let i=0; i<response.length; i++) {
-        if(!response[i].points){
+        if(response[i].points === null){
             student_results.append(
                 `<tr>
                     <td>${response[i].last_name} ${response[i].first_name}</td>
@@ -90,7 +89,7 @@ function result_render(response) {
     }
 }
 
-function error_render(response) {
+function error_render() {
     let student_results = $('#student-result');
     student_results.empty();
     student_results.append('Something went wrong')

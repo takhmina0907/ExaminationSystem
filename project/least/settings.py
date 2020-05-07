@@ -34,7 +34,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Questionnaire System"
 
-ALLOWED_HOSTS = ['questionnairesystem.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'questionnairesystem.pythonanywhere.com']
 
 
 # Application definition
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'face_recognition',
-    'cv2'
+    # 'cv2'
 ]
 
 AUTH_USER_MODEL = 'things.User'

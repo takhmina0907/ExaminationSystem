@@ -184,12 +184,6 @@ class StudentTestAddForm(forms.Form):
                                                   queryset=Speciality.objects.all())
 
 
-class StudentTestEditForm(forms.Form):
-    specialities = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                                  queryset=Speciality.objects.all(),
-                                                  required=False)
-
-
 class StudentCreateForm(forms.ModelForm):
     speciality = forms.CharField()
 

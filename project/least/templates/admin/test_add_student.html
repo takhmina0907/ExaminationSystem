@@ -143,7 +143,7 @@
   		        </div>
   		        <div class="row">
   			        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
-  			        <form method="post" class="col-sm-6 col-md-6 col-lg-6 col-xl-6 add-info">
+  			        <form id="group-add-form" method="post" class="col-sm-6 col-md-6 col-lg-6 col-xl-6 add-info">
 	  			        <p class="check_title" >Add students from</p>
                         {% csrf_token %}
                         {% if form.non_field_errors %}
@@ -157,10 +157,15 @@
                         {% endfor %}
                         {% for field in form.specialities.field.choices %}
                             <label class="main">{{ field.1 }}
-                                <input type="checkbox" name="specialities" value="{{ field.0 }}">
+                                {% if field.0 in checked %}
+                                    <input type="checkbox" name="specialities" value="{{ field.0 }}" checked>
+                                {% else %}
+                                    <input type="checkbox" name="specialities" value="{{ field.0 }}">
+                                {% endif %}
                                 <span class="geekmark"></span>
                             </label>
                         {% endfor %}
+                        <input type="hidden" name="destination"/>
 			        </form>
 		        </div>
 
@@ -177,13 +182,13 @@
                                 <div class="row">
                                     <div class="col-sm-1"></div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-update-test' test.id %}" class="step"><p>Step 1</p></a>
+                                        <a data-reverse="{% url 'admin-update-test' test.id %}" class="step"><p>Step 1</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-test' test.id %}" class="step"><p>Step 2</p></a>
+                                        <a data-reverse="{% url 'admin-test' test.id %}" class="step"><p>Step 2</p></a>
                                     </div>
                                     <div class="col-xs-3 steps">
-                                        <a href="{% url 'admin-test-add-students' test.id %}" class="step active"><p>Step 3</p></a>
+                                        <a data-reverse="{% url 'admin-test-add-students' test.id %}" class="step active"><p>Step 3</p></a>
                                     </div>
                                 </div>
                             </div>

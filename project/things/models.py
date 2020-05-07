@@ -159,8 +159,8 @@ class Option(models.Model):
 class TestResult(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='results')
     test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='results')
-    grade = models.FloatField(null=True)
-    submitted_date = models.DateTimeField(null=True)
+    grade = models.FloatField(null=True, blank=True)
+    submitted_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return '{} - {}'.format(self.test.title, self.student.id)
