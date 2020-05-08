@@ -72,6 +72,10 @@ function saveAnswer(){
     checkbox.each(function () {
         question.options.push($(this).val());
     });
+    if ($(`input[name|="${question_id}"][type="radio"]:checked`).val() != null){
+        question.options.push($(`input[name|="${question_id}"][type="radio"]:checked`).val());
+    }
+
     // console.log(questions[index])
     if (typeof questions !== 'undefined' && questions.length > 0) {
         // console.log(questions[index].id)
@@ -128,6 +132,7 @@ $(".next-btn" ).click(function(){
             status_line.html('Send to check');
         },
         success: function () {
+            window.location.href='result/'
             status_line.empty()
         },
         error: function (response) {
@@ -149,4 +154,3 @@ function myFunction() {
   }
   
 myFunction()
-

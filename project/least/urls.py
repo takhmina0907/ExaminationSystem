@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
-from things.views import StudentLoginView,TestInfoView,TestView,AlreadyDoneView,NotYet
+from things.views import StudentLoginView,TestInfoView,TestView,NotYet
 
 import things.views as views
 
@@ -40,14 +40,13 @@ from things.admin_views.views import (
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
-    path('Test/<int:user_id>/result/',views.result, name='res'),
-    path('Test/<int:user_id>/identification/',views.checkStudent, name='check'),
-    path('Test/<int:user_id>/cheat/',views.cheatingReport, name='cheating'),
-    path('Test/<int:user_id>/',TestView.as_view(),name='test'),
-    path('',StudentLoginView.as_view(),name="reg1"),
-    path('TestInfo/<id>',TestInfoView.as_view(),name='reg3'),
+    path('Test/<uidb64>/<uidb64_student>/result/',views.result, name='res'),
+    path('Test/<uidb64>/<uidb64_student>/identification/',views.checkStudent, name='check'),
+    path('Test/<uidb64>/<uidb64_student>/cheat/',views.cheatingReport, name='cheating'),
+    path('Test/<uidb64>/<uidb64_student>/',TestView.as_view(),name='test'),
+    path('Test/<uidb64>/',StudentLoginView.as_view(),name="reg1"),
+    path('TestInfo/<uidb64>/<uidb64_student>/',TestInfoView.as_view(),name='reg3'),
     path('notAvailable/',NotYet.as_view(),name="NotYet"),
-    path('wasDone/',AlreadyDoneView.as_view(),name="wasDone"),
 #----------------------------
     path('', initial, name='admin-initial'),
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),

@@ -34,10 +34,16 @@
 								{% for option in question.options.all  %}
 									<div class="radio">
 										<label class="d-flex">
+										{% if question.is_multiple_choice %}
 											<input type="checkbox" name="{{question.id}}" value = {{option.id}}>
 											<i></i>
+										{% else %}
+											<input type="radio" name="{{question.id}}" value = {{option.id}}>
+											<i></i>
+										{% endif %}
+
 											<div class="radio_text">
-												{{ option }}
+												{{ option.option }}
 											</div>
 										</label>
 									</div>

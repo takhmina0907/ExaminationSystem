@@ -1,3 +1,8 @@
+window.onbeforeunload = function(e) {
+    // Turning off the event
+    console.log(13)
+    e.preventDefault();
+}
 // document.addEventListener('click', function (event) {
 // 	// Ignore clicks that weren't on the toggle button
 // 	if (!event.target.hasAttribute('data-tid')) return;
@@ -93,7 +98,7 @@ function request_with_data(url, data, loading_message) {
 
 history.pushState(null, null, location.href);
 window.onpopstate = function () {
-	history.go(1);
+	history.go(0);
 };
 window.onblur = function () {
 // do some stuff after tab was changed e.g.

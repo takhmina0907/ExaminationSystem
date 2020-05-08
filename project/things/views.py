@@ -1,14 +1,17 @@
 from django.shortcuts import *
 from .forms import StudentLoginForm
 from .models import Student,TestInfo,CheatingReport,Question,Option,TestResult
+from .mixin import TestLinkMixin
 import face_recognition
 import cv2
 import json
 import numpy as np
 import os
 import random
-import datetime
+import datetime 
 from django.views.generic import View,TemplateView
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.core.exceptions import ValidationError
 
@@ -58,59 +61,66 @@ def create_photo(id):
             cv2.imwrite(image,roi_gray)
             return image_item 
 
-class StudentLoginView(View):
-    def get(self,request):
+class StudentLoginView(TestLinkMixin,View):
+    login_url = "notAvailable/404"
+    def get(self,request,uidb64):
         form = StudentLoginForm()
-        return render(request,'reg1.html',{"form":form})
+        return render(request,'reg1.html',{"form":form,"uidb64":uidb64})
     
-    def post(self,request):
+    def post(self,request,uidb64):
         bound_form = StudentLoginForm(request.POST)
-        # print(bound_form)
+        test_id = force_text(urlsafe_base64_decode(uidb64))
+        test = TestInfo.objects.get(id=test_id)
         if bound_form.is_valid() :
             user = Student.objects.get(id = bound_form.cleaned_data['id'])
-            if user.photo != "":
-                if not facedect(user.photo.url):
-                    raise ValidationError("Are you sure you are {}'s user?".format(user.id))
-            else:
-                user.photo = create_photo(user.id)
-                user.save()
-            return redirect('reg3',bound_form.cleaned_data['id'])
-        return render(request,'reg1.html',{"form":bound_form})      
+            if user in test.students.all():
+                if user.photo != "":
+                    if not facedect(user.photo.url):
+                        message = "Are you sure you are {}'s user?".format(user.id)
+                        return render(request,'reg1.html',{"form":bound_form,"message":message,"uidb64":uidb64})  
+                else:
+                    user.photo = create_photo(user.id)
+                    user.save()
+                uidb64_student=urlsafe_base64_encode(force_bytes(bound_form.cleaned_data['id']))
+                return redirect('reg3',uidb64,uidb64_student)
+            return render(request,'reg1.html',{"form":bound_form,"message":"You are not alloweded to pass test","uidb64":uidb64})  
+        return render(request,'reg1.html',{"form":bound_form,"uidb64":uidb64})  
 
 
-class AlreadyDoneView(TemplateView):
-    template_name = "Done.html"
 
 class NotYet(TemplateView):
     template_name = "not_available.html"
+
 
 
 class TestInfoView(TemplateView):
     template_name = "reg3.html"
   
 
-class TestView(TemplateView):
+class TestView(TestLinkMixin,TemplateView):
     template_name = "new_student_section.html"
-    def get(self,request,user_id):
-        test = get_object_or_404(TestInfo, id=65)
-        student= get_object_or_404(Student, id=user_id)
-        if TestResult.objects.filter(test=test,student=student).count() != 0:
-            return redirect('wasDone')
-        if not  test.is_active == TestInfo.TestState.ongoing:
-            return redirect("NotYet")
-        print(test.is_active)
+    def get(self,request,uidb64,uidb64_student):
+        student_id = force_text(urlsafe_base64_decode(uidb64_student))
+        test_id = force_text(urlsafe_base64_decode(uidb64))
+        test = get_object_or_404(TestInfo, id=test_id)
+        student= get_object_or_404(Student, id=student_id)
+        testResult = TestResult.objects.get(test=test,student=student)
+        if testResult.grade is not None:
+            redirect("NotYet")
         # if (datetime.datetime(test.end_time) - datatime.date.today).total_seconds()> test.duration*60:
         #     duration = test.duration * 60
         # elif (datetime.datetime(test.end_time) - datatime.date.today).total_seconds() < test.duration*60:
         #     duration = (datetime.datetime(test.end_time) - datatime.date.today).total_seconds()
         # else:
         #     duration = 0
-        return render(request,"new_student_section.html", {'questions': test.questions.all(),'duration':test.duration,'user_id' :user_id })
+        return render(request,"new_student_section.html", {'questions': test.questions.all(),'duration':test.duration,'uidb64_student' :uidb64_student })
 
-def result(request,user_id):
+def result(request,uidb64_student,uidb64):
     point = 0
-    test = get_object_or_404(TestInfo, id=65)
-    student= get_object_or_404(Student, id=user_id)
+    test_id = force_text(urlsafe_base64_decode(uidb64))
+    student_id = force_text(urlsafe_base64_decode(uidb64_student))
+    test = get_object_or_404(TestInfo, id=test_id)
+    student= get_object_or_404(Student, id=student_id)
     if request.is_ajax() and request.method == 'POST':
         json_data = json.loads(request.body.decode('utf-8'))
         print(json_data)
@@ -129,18 +139,24 @@ def result(request,user_id):
                         point += 1
 
         print(point)
-        result = TestResult(student = student,test=test,grade=point,submitted_date = datatime.date.today )
-        print(result)
+        result = TestResult.objects.get(test=test,student=student)
+        result.grade = point
+        print(datetime.date.today())
+        result.submitted_date = datetime.datetime.now()
+        #  = TestResult(student = student,test=test,grade=point,submitted_date = datetime.date.today )
+        print(1234)
         result.save()
     return render(request, 'result.html')
 
-def checkStudent(request,user_id):
-    user = Student.objects.get(id = user_id)
+def checkStudent(request,uidb64_student,uidb64):
+    student_id = force_text(urlsafe_base64_decode(uidb64_student))
+    user = Student.objects.get(id = student_id)
+    test_id = force_text(urlsafe_base64_decode(uidb64))
     if not facedect(user.photo.url):
         report = CheatingReport()
         report.student = user
-        report.test = TestInfo.objects.get(id=65)
-        report.cheating_date = datatime.date.today
+        report.test = TestInfo.objects.get(id=test_id)
+        report.cheating_date = datetime.date.today
         report.reason = "Not the same person"
         report.save()
     elif  facedect(user.photo.url):
@@ -150,13 +166,15 @@ def checkStudent(request,user_id):
 
 
 
-def cheatingReport(request,user_id):
+def cheatingReport(request,uidb64_student,uidb64):
+    student_id = force_text(urlsafe_base64_decode(uidb64_student))
+    test_id = force_text(urlsafe_base64_decode(uidb64))
     if request.is_ajax() and request.method == 'POST':
-        user = Student.objects.get(id = user_id)
+        user = Student.objects.get(id = student_id)
         report = CheatingReport()
         report.student = user
-        report.test = TestInfo.objects.get(id=65)
-        report.cheating_date = datatime.date.today
+        report.test = TestInfo.objects.get(id=test_id)
+        report.cheating_date = datetime.date.today
         report.reason = json.loads(request.body.decode('utf-8'))
         report.save()
         return JsonResponse({'response': 'Student was successfully identificated'}, status=200)

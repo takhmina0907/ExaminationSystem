@@ -135,7 +135,8 @@ class AdminTestCreateView(BaseAdminView, CreateView):
         self.object.save()
         encoded_id = urlsafe_base64_encode(force_bytes(self.object.id))
         domain = get_current_site(self.request)
-        url = reverse('admin-filter-students', kwargs={'uidb64': encoded_id,'is_teacher':True})
+        # url = reverse('admin-filter-students', kwargs={'uidb64': encoded_id,'is_teacher':True})
+        url = reverse('admin-filter-students', kwargs={'uidb64': encoded_id})
         self.object.link = 'http://{}{}'.format(domain, url)
 
         self.request.session['test_id'] = self.object.id

@@ -25,11 +25,18 @@
 									<p>Dear student, we are glad that you joined out test for CSS 103 Software Engineering subject at SDU. Please fill in the form to proceed with your exam</p>
 									<div class="form_block">
 									{% for field in form %}
-										<form action="{% url 'reg1'  %}"  method="post" class="{% if field.errors %} ? novalidate :  was-validated {% endif %}">
+										<form action="{% url 'reg1' uidb64  %}"  method="post" class="{% if field.errors or message %} ? novalidate :  was-validated {% endif %}">
 										{% csrf_token %}
 											<input type="number" name='id' class="form-control" id="id_id" placeholder="Your ID" required>
 											<div class="invalid-feedback valid_feed">
-									         {{ field.errors }}
+									          {% if message %}
+												{{message}}
+											{% else %}
+												{{ field.errors }}
+											{% endif %}
+									         
+									        </div>
+											
 									        </div>
 											<button type="submit" class="next">
 												Next<img src={% static 'img/3-layers.png' %}  alt="" class="next_img">
@@ -53,7 +60,7 @@
 			<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
 		</div>
 	</div>
-	{% comment %} <script>
+	<script>
 	// Example starter JavaScript for disabling form submissions if there are invalid fields
 	(function() {
 	  'use strict';
@@ -72,7 +79,7 @@
 	    });
 	  }, false);
 	})();
-	</script> {% endcomment %}
+	</script> 
 	
 		
 	
