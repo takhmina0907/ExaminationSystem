@@ -534,7 +534,7 @@ $(document).on('click', '#question-update', function() {
 
     if(correct_flag){
         status_line = $(`#edit-request-status`);
-        request_with_data(`ajax/questions/update`, question, question_update_render,'Updating question')
+        request_with_data(`/ajax/questions/update`, question, question_update_render,'Updating question')
     }
 });
 

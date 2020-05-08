@@ -34,7 +34,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Questionnaire System"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'questionnairesystem.pythonanywhere.com']
 
 
 # Application definition

@@ -1,0 +1,111 @@
+.about-title{
+  font-weight: bold;
+  font-size: 30px;
+  color: #373737;
+}
+.far{
+  padding-right: 6px;
+}
+p{
+  color: #373737;
+}
+
+.title-about{
+  color: #392CD1;
+  font-weight: 600;
+  margin-top: 40px;
+  margin-bottom: 32px;
+}
+.test-title{
+  font-weight: 600;
+  font-size: 16px;
+  color: #A4A4A4;
+}
+.last{
+  border-bottom: 2px solid #A4A4A4;
+  opacity: 0.3;
+  margin-top: 30px;
+}
+.aveg{
+  color: #A4A4A4;
+  font-weight: 600;
+  font-size: 18px;
+}
+.name_of_test{
+  font-weight: 600;
+  font-size: 24px;
+  color: #392CD1;
+}
+.cheat_test{
+  width: 95px;
+  height: 25px;
+  background: rgba(255, 208, 88, 0.4);
+  border: none;
+  font-weight: 600;
+  font-size: 12px;
+  color:  #F2AE00;
+  margin-left: 24px;
+}
+
+.alert-danger{
+  color:  #EF6363;
+  background: rgba(239, 99, 99, 0.2);
+  border-radius: 4px;
+  border: none;
+}
+.alert-success{
+  color: #119A48;
+  background: rgba(59, 210, 119, 0.4);
+  border-radius: 4px;
+  border: none;
+}
+
+.info_question{
+      font-weight: 600;
+      font-size: 16px;
+      color: #373737;
+      /*overflow*/
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .type_of_exam{
+      width: 117px;
+      height: 25px;
+      background: rgba(69, 188, 255, 0.4);
+      margin-left: 16px;
+      text-align: center;
+      color: #009BF2;
+      border:none;
+    }
+    .check_icon{
+      padding-right: 6px;
+    }
+    .ans{
+      margin-right: 16px;
+      /*overflow*/
+      display: block;
+      width: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .answers{/*ans columns margin*/
+      margin-right: 16px;
+    }
+    .incorrect{
+      color: #373737;
+    }
+    .correct{
+      color: #119A48;
+    }
+.card-question{
+  margin-top: 24px;
+}
+
+
+
+
