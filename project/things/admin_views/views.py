@@ -607,8 +607,6 @@ def student_csv_import(request):
             outof += 1
 
     totalrow = len(students_list)
-    del request.session['totalrow']
-    del request.session['successrow']
     request.session['stud_import_flag'] = True
     request.session['totalrow'] = totalrow
     request.session['successrow'] = totalrow - outof
