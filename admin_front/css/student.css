@@ -5,7 +5,7 @@
   text-align: center;
   border: 1px dashed #A4A4A4;
   color: rgba(55, 55, 55, 0.7);
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   border-radius: 8px;
   padding-top: 9px;
 }
@@ -28,7 +28,7 @@
   border: none;
 }
 .cancel{
-  background: #f8f8f8;
+  background: #ffffff;
   border: 1px dashed #A4A4A4;
   box-sizing: border-box;
   border-radius: 8px;
