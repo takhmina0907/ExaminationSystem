@@ -8,7 +8,7 @@
   text-align: center;
   border: 1px dashed #A4A4A4;
   color: rgba(55, 55, 55, 0.7);
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   border-radius: 8px;
   padding-top: 9px;
 }
@@ -52,6 +52,12 @@
     margin-bottom: 24px;
     height: 48px;
 }
+
+.form-control:focus {
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  border-color: #ffffff;
+}
 .add-btn{
   width: 119px;
   height: 41px;
@@ -59,7 +65,7 @@
   text-align: center;
   border: 1px dashed #A4A4A4;
   color: rgba(55, 55, 55, 0.7);
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   border-radius: 8px;
 }
 /*
@@ -75,15 +81,14 @@
 .status_exam{
   margin-left: 16px;
 }
-
 /*
 .fixed-row-bottom {
-	position: fixed;
-	bottom: 0;
-	height: 85px;
-	width: 100%;
-	background: #FFFFFF;
-	box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
+  position: fixed;
+  bottom: 0;
+  height: 85px;
+  width: 100%;
+  background: #FFFFFF;
+  box-shadow: 16px 0px 16px rgba(44, 44, 44, 0.1);
 
 }*/
 #relative-layer {
@@ -139,14 +144,14 @@
 
 .pagination>li>a, .pagination>li>span {
     border: none !important;
-    background-color: #f8f8f8;
+    background-color: #ffffff;
     color: #373737;
 
 }
 
 .pagination>.active>span:hover, .pagination>.active>a:hover{
   border: none !important;
-    background-color: #f8f8f8;
+    background-color: #ffffff;
     color: #392CD1 !important;
 }
 .title_test{
@@ -243,7 +248,7 @@ select + i.far {
   text-decoration-line: underline;
   color: #392CD1;
   border: none;
-  background-color: none;
+  background-color: transparent;
   font-weight: 600;
   font-size: 16px;
 }
@@ -263,3 +268,4 @@ select + i.far {
   border: 1px solid #CDCDCD;
   border-radius: 8px;
 }
+

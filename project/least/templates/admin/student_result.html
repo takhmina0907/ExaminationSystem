@@ -1,49 +1,290 @@
+{#    {% for answer in result.answers.all %}#}
+{#        <div style="background-color:{% if answer.answer.is_correct %} skyblue {% elif not answer.answer.is_correct %} grey {% endif %}">#}
+{#            <div>#}
+{#                <span>Q{{ forloop.counter }} {{ answer.question.question }}</span> ||#}
+{#                <span>#}
+{#                    {% if not answer.question.is_multiple_choice %}#}
+{#                        Single-answer#}
+{#                    {% else %}#}
+{#                        Multiple-answer#}
+{#                    {% endif %}#}
+{#                </span>#}
+{#            </div>#}
+{#            {{ answer.answer.is_correct }}#}
+{#            <div>#}
+{#                ||#}
+{#                {% for option in answer.question.options.all %}#}
+{#                    {% if option.is_correct %}#}
+{#                        <span style="color:greenyellow;">{{ option.option }} ✓</span> ||#}
+{#                    {% else %}#}
+{#                        {% if answer.answer == option %}#}
+{#                            <span style="color:red">{{ option.option }} ✕</span> ||#}
+{#                        {% else %}#}
+{#                            <span>{{ option.option }} ✕</span> ||#}
+{#                        {% endif %}#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endfor %}#}
+{#</body>#}
+{#</html>#}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ result.student.last_name }} {{ result.student.first_name }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/main_menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cheating.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome-pro-5.3.1-web/css/all.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .icon-down{
+            border: none;
+            background-color: #ffffff;
+        }
+        .filter{
+            /*width: 218px;*/
+            height: 40px;
+            border: 1px solid #CDCDCD;
+            box-sizing: border-box;
+            border-radius: 8px;
+        }
+        select.filter {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -o-appearance: none;
+        }
+        select + i.far {
+            float: right;
+            margin-top: -27px;
+            pointer-events: none;
+            color: #392CD1;
+        }
+        .sorting{
+            font-size: 16px;
+        }
+        .filter-icon{
+            padding-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <span><b>{{ result.student.first_name }} {{ result.student.last_name }}</b></span>
-        <span><b>{{ result.grade }} points</b></span>
-    </div>
-    <br/>
-    <div>{{ result.test.title }}</div>
-    <br/>
-    <div><b>No cheating detected</b></div>
-    <br/>
-    <div><b>Student's answers</b></div>
-    <br/>
-    {% for answer in result.answers.all %}
-        <div style="background-color:{% if answer.answer.is_correct %} skyblue {% elif not answer.answer.is_correct %} grey {% endif %}">
-            <div>
-                <span>Q{{ forloop.counter }} {{ answer.question.question }}</span> ||
-                <span>
-                    {% if not answer.question.is_multiple_choice %}
-                        Single-answer
-                    {% else %}
-                        Multiple-answer
-                    {% endif %}
-                </span>
+    <!--Start menu-->
+    <nav class="navbar navbar-default visible-xs">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
             </div>
-            {{ answer.answer.is_correct }}
-            <div>
-                ||
-                {% for option in answer.question.options.all %}
-                    {% if option.is_correct %}
-                        <span style="color:greenyellow;">{{ option.option }} ✓</span> ||
-                    {% else %}
-                        {% if answer.answer == option %}
-                            <span style="color:red">{{ option.option }} ✕</span> ||
-                        {% else %}
-                            <span>{{ option.option }} ✕</span> ||
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{#TODO#}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
             </div>
         </div>
-    {% endfor %}
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
+                <h2 class="logo-text">LOGO</h2>
+                <ul class="nav flex-column">
+                    <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
+                    <li><a href="{% url 'admin-students' %}"><i class="fas fa-users"></i>Students</a></li>
+                    <li><a href="{#TODO#}"><i class="fas fa-cog"></i>Settings</a></li>
+                    <li><a href="{% url 'admin-logout' %}"><i class="fas fa-sign-out"></i>Log out</a></li>
+                </ul>
+            </div>
+            <br>
+            <!--End menu-->
+            <div class="col-sm-2"></div>
+            <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
+  		        <!--Main info about test-->
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 align-items-center">
+                        <h3 class="about-title">{{ result.student.last_name }} {{ result.student.first_name }}</h3>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
+                        <h3 class="total text">{{ result.grade }}</h3>
+                        <span class = "aveg">point{{ result.grade|pluralize:'s' }}</span>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <span class="name_of_test">{{ result.test.title }}</span>
+                        <button class="cheat_test">
+                            {% if result.test.is_active == test_state.ongoing %}
+                                Ongoing
+                            {% elif result.test.is_active == test_state.not_started %}
+                                Not started
+                            {% elif result.test.is_active == test_state.finished %}
+                                Finished
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+                <!--End-->
+
+                <div class="row"><!--Collapse-->
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <h3 class="title-about">Cheating
+                            <button class="icon-down" type="button" data-toggle="collapse" data-target="#test-stat">
+                                <i class="far fa-angle-down"></i>
+                            </button>
+                        </h3>
+
+                        <div id="test-stat" class="collapse">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    {% if cheatings %}
+                                    <div class="alert alert-danger" role="alert">
+                                        <strong>{{ cheatings|length }} cheating</strong>  tr{{ cheatings|length|pluralize:'y,ies' }} detected
+                                    </div>
+                                    {% else %}
+                                    <div class="alert alert-success" role="alert">
+                                        <strong>No cheating</strong>  detected
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                                <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                                    {% for cheat in cheatings %}
+                                        <p><strong>{{ cheat.cheating_date|date:'H:m' }}</strong> - {{ cheat.reason }}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row"><!--Collapse-->
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                        <h3 class="title-about">Students and grades
+                            <button class="icon-down" type="button" data-toggle="collapse" data-target="#students">
+                                <i class="far fa-angle-down"></i>
+                            </button>
+                        </h3>
+
+                        <div id="students" class="collapse">
+                            <!--Question cards-->
+                            {% for answer in result.answers.all %}
+                            <div class="row card-question">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    <div class="well about-block">
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="info_question">Q{{ forloop.counter }}. {{ answer.question.question }}</span>
+                                            </div>
+
+                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-left">
+                                                <button class="type_of_exam">
+                                                    {% if not answer.question.is_multiple_choice %}
+                                                        Single choice
+                                                    {% else %}
+                                                        Multi choice
+                                                    {% endif %}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row info">
+                                            <!-- нет адаптивности в md sm xs -->
+                                            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                                                <div class="row">
+                                                    {% for option in answer.question.options.all %}
+                                                        {% if option.is_correct %}
+                                                            {% if option.id in selected_options %}
+                                                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                                                                    <span class="ans correct">
+                                                                        <i class="far fa-check check_icon"></i>{{ option.option }}
+                                                                    </span>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                                                                    <span class="ans">
+                                                                        <i class="far fa-check check_icon"></i>{{ option.option }}
+                                                                    </span>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {% if option.id in selected_options %}
+                                                                <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                                                                    <span class="ans correct">
+                                                                        <i class="far fa-times check_icon"></i>{{ option.option }}
+                                                                    </span>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class=" col-sm-2 col-md-2 col-lg-2 col-xl-2 answers">
+                                                                    <span class="ans">
+                                                                        <i class="far fa-times check_icon"></i>{{ option.option }}
+                                                                    </span>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+{#                                                {{ answer.selected_options.all }}#}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <!-- End question card-->
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div><!--Line-->
+                    <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 last"></div>
+                    <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/student_result.js' %}"></script>
 </body>
 </html>

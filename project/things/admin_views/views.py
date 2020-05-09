@@ -291,7 +291,7 @@ class AdminTestDetailView(BaseAdminView, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['average_points'] = self.get_object().results.aggregate(Avg('grade')).get('grade__avg')
+        context['average_points'] = self.get_object().results.aggregate(grade_avg=Round(Avg('grade'), 2)).get('grade_avg')
         context['test_state'] = TestInfo.TestState.__members__
         return context
 
@@ -419,6 +419,15 @@ class StudentResultDetailView(BaseAdminView, DetailView):
     pk_url_kwarg = 'result_id'
     template_name = 'admin/student_result.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['test_state'] = TestInfo.TestState.__members__
+        context['cheatings'] = self.get_object().student.cheating.all()
+        context['selected_options'] = self.get_object().answers \
+                .annotate(selected_option=F('selected_options__option')) \
+                .values_list('selected_option', flat=True)
+        return context
+
     def get_queryset(self):
         test = get_object_or_404(TestInfo, author=self.request.user,
                                  id=self.kwargs['test_id'])
@@ -474,7 +483,10 @@ class StudentDetailView(BaseAdminView, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tests'] = self.object.tests.all().annotate(point=F('results__grade')) \
+        context['tests'] = self.object.tests.all() \
+            .annotate(point=F('results__grade')) \
+            .annotate(result_id=F('results__id')) \
+            .annotate(cheatings=Count(F('students__cheating'))) \
             .annotate(question_rate=Count('results__answers', filter=Q(results__answers__answer__is_correct=True)))
         context['test_state'] = TestInfo.TestState.__members__
         return context

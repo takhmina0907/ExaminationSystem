@@ -6,6 +6,7 @@
         <title>Sign up</title>
         <link rel="stylesheet" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}">
 	    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+        <link rel="stylesheet" href="{% static 'fontawesome-pro-5.3.1-web/css/all.css' %}">
     </head>
     <body>
         <div class="container-fluid">
@@ -44,6 +45,7 @@
                                     <p>{{ error }}</p>
                                 {% endfor %}
                                 {{ form.password }}
+                                <span toggle="#id_password" class="far fa-eye field-icon toggle-password"></span>
                             </div>
                             <div class="form-next">
                                 <button type="submit" class="signup-btn" value="">Sign up</button>
@@ -57,5 +59,21 @@
                 <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 admin"></div>
 			</div>
 		</div>
-    </body>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script>
+		$(".toggle-password").click(function() {
+
+		    $(this).toggleClass("fa-eye fa-eye-slash");
+		    var input = $($(this).attr("toggle"));
+		    if (input.attr("type") === "password") {
+		        input.attr("type", "text");
+		    } else {
+		        input.attr("type", "password");
+		    }
+		});
+	</script>
+</body>
 </html>

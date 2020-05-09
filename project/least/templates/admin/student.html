@@ -24,7 +24,7 @@
             height: 35px;
         }
         .edit,.del{
-            background: #f8f8f8;
+            background: #ffffff;
             border: 1px dashed #A4A4A4;
             box-sizing: border-box;
             border-radius: 8px;
@@ -36,7 +36,7 @@
 
         .icon-down{
             border: none;
-            background-color: #f8f8f8;
+            background-color: #ffffff;
         }
         .on{
             width: 95px;
@@ -178,7 +178,7 @@
                             {% for test in tests %}
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                    <a href="{% url 'admin-test-details' test.id %}" class="custom-card">
+                                    <a href="{% url 'admin-student-result' test.id test.result_id %}" class="custom-card">
                                         <div class="well about-block">
                                             <div class="row">
                                                 <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5">
@@ -194,7 +194,7 @@
                                                 <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5"></div>
                                                 <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 text-right">
                                                     <span class="total">
-                                                        {% if test.point %}
+                                                        {% if test.point != None %}
                                                             {{ test.point }}
                                                         {% else %}
                                                             --
@@ -208,8 +208,8 @@
                                                     <span class="info-text"><i class="far fa-clipboard-list icons"></i>
                                                     Questions rate: <span class="overall">
                                                             {% with all=test.questions.all|length %}
-                                                                    {% if test.point %}
-                                                                        {{ test.question_rate }} / {{ all }}
+                                                                    {% if test.point != None %}
+                                                                        {{ test.question_rate }}/{{ all }}
                                                                     {% else %}
                                                                         --
                                                                     {% endif %}
@@ -218,7 +218,16 @@
                                                     </span>
                                                 </div>
                                                 <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                                                    <span class="info-text"><i class="far fa-clipboard-list icons"></i>Cheating: <span class="overall">Not detected</span></span>
+                                                    <span class="info-text">
+                                                        <i class="far fa-clipboard-list icons"></i>Cheating:
+                                                        <span class="overall">
+                                                            {% if test.cheatings %}
+                                                                Cheating detected
+                                                            {% else %}
+                                                                Not detected
+                                                            {% endif %}
+                                                        </span>
+                                                    </span>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <span class="info-text"><i class="far fa-calendar-alt icons"></i>Date created <span class="overall">{{test.created_date|date:"d.m.Y" }}</span></span>

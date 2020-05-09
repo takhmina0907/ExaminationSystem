@@ -12,6 +12,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        input.filter {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -o-appearance: none;
+        }
+        input + i.far {
+            float: right;
+            margin-top: -53px;
+            pointer-events: none;
+            color: #392CD1;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-default visible-xs">
@@ -90,10 +103,12 @@
                                     {% endfor %}
                                     <label class="test-label">Test availability</label>
                                     {{ form.start_date }}
+                                    <i class="far fa-calendar-alt"></i>
                                     {% for error in form.start_time.errors %}
                                         <p>{{ error }}</p>
                                     {% endfor %}
                                     {{ form.start_time }}
+                                    <i class="far fa-arrow-down"></i>
                                 </div>
                             </div>
                         </div>

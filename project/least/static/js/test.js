@@ -65,7 +65,7 @@ function result_render(response) {
 
             student_results.append(
                 `<tr>
-                    <td>${response[i].first_name} ${response[i].last_name}</td>
+                    <td>${response[i].last_name} ${response[i].first_name}</td>
                     <td>${response[i].id}</td>
                     <td>${response[i].speciality_title}</td>
                     <td>
