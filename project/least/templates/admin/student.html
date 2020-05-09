@@ -207,13 +207,11 @@
                                                 <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                                                     <span class="info-text"><i class="far fa-clipboard-list icons"></i>
                                                     Questions rate: <span class="overall">
-                                                            {% with all=test.questions.all|length %}
-                                                                    {% if test.point != None %}
-                                                                        {{ test.question_rate }}/{{ all }}
-                                                                    {% else %}
-                                                                        --
-                                                                    {% endif %}
-                                                            {% endwith %}
+                                                            {% if test.point != None %}
+                                                                {{ test.question_rate_denom }}/{{ test.question_rate_num }}
+                                                            {% else %}
+                                                                --
+                                                            {% endif %}
                                                         </span>
                                                     </span>
                                                 </div>
