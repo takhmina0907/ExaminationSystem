@@ -6,7 +6,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
-from .directionOfFile import student_photo_upload,photo_upload
+from .directionOfFile import student_photo_upload, photo_upload
 
 
 class UserManager(BaseUserManager):
@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     place_of_work = models.CharField(max_length=256)
     is_email_confirmed = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'place_of_work']
@@ -61,14 +62,15 @@ class Student(models.Model):
     email = models.EmailField(max_length=100)
     speciality = models.ForeignKey(Speciality, on_delete=models.SET_NULL, null=True)
     created_date = models.DateTimeField(auto_now_add=True, blank=True)
-    photo = models.ImageField(upload_to=photo_upload,default='',blank=True) # на время потом если будем вводить Deep Learning надо убрать
+    photo = models.ImageField(upload_to=photo_upload, default='', blank=True) # на время потом если будем вводить Deep Learning надо убрать
 
     def __str__(self):
         return '{} - {} - {}'.format(self.id, self.first_name, self.speciality)
 
+
 class StudentImage(models.Model):
-    student =  models.ForeignKey(Student,on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=student_photo_upload,default='',blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=student_photo_upload, default='', blank=True)
     
     def __str__(self):
         return '{} - {}'.format(self.student.id, self.student.email)
@@ -169,17 +171,24 @@ class TestResult(models.Model):
 class Answer(models.Model):
     test = models.ForeignKey(TestResult, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    answer = models.ForeignKey(Option, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '{} - {}'.format(self.question.question, self.answer.option)
+        return '{} - {}'.format(self.test.test.title, self.question.question)
+
+
+class SelectedOption(models.Model):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='selected_options')
+    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.answer.test.test.title, self.option.option)
+
 
 class CheatingReport(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='cheating')
     test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='cheating')
-    reason = models.CharField(max_length=1024, null=False, blank=False,default="No reason")
+    reason = models.CharField(max_length=1024, null=False, blank=False, default="No reason")
     cheating_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.student.id,self.test.title)
-    
+        return '{} - {}'.format(self.student.id, self.test.title)

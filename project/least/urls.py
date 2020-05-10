@@ -16,8 +16,9 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-from things.views import StudentLoginView,TestInfoView,TestView,NotYet
+from django.contrib.auth import views as auth_views
+from django.urls import path, reverse_lazy
+from things.views import StudentLoginView, TestInfoView, TestView, NotYet
 
 import things.views as views
 
@@ -40,6 +41,7 @@ from things.admin_views.views import (
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
+<<<<<<< HEAD
     path('test/<uidb64>/<uidb64_student>/result/',views.result, name='res'),
     path('test/<uidb64>/<uidb64_student>/identification/',views.checkStudent, name='check'),
     path('test/<uidb64>/<uidb64_student>/cheat/',views.cheatingReport, name='cheating'),
@@ -48,6 +50,16 @@ urlpatterns = [
     path('testInfo/<uidb64>/<uidb64_student>/',TestInfoView.as_view(),name='reg3'),
     path('notAvailable/',NotYet.as_view(),name="NotYet"),
 #----------------------------
+=======
+    path('Test/<uidb64>/<uidb64_student>/result/', views.result, name='res'),
+    path('Test/<uidb64>/<uidb64_student>/identification/', views.checkStudent, name='check'),
+    path('Test/<uidb64>/<uidb64_student>/cheat/', views.cheatingReport, name='cheating'),
+    path('Test/<uidb64>/<uidb64_student>/', TestView.as_view(), name='test'),
+    path('Test/<uidb64>/', StudentLoginView.as_view(), name="reg1"),
+    path('TestInfo/<uidb64>/<uidb64_student>/', TestInfoView.as_view(), name='reg3'),
+    path('notAvailable/', NotYet.as_view(), name="NotYet"),
+    # ----------------------------
+>>>>>>> c1169ee01da21036aac5cfc48e85c2ff76acadc0
     path('', initial, name='admin-initial'),
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),
@@ -91,6 +103,21 @@ urlpatterns = [
     path('ajax/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
     path('ajax/speciality', check_speciality, name='admin-check-speciality'),
     # ajax
+
+    path('password_reset/', auth_views.PasswordResetView.as_view(
+        success_url=reverse_lazy('password_reset_done'),
+        template_name='admin/password_reset_form.html',
+        email_template_name='admin/password_reset_email.html',
+        subject_template_name='admin/password_reset_subject.txt'),
+         name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(
+        template_name='admin/password_reset_d.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        success_url=reverse_lazy('password_reset_complete'), template_name='admin/password_reset_confirm.html'),
+         name='password_reset_confirm'),
+    path('reset/done/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='admin/password_reset_complete.html'),
+         name='password_reset_complete'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
