@@ -93,7 +93,7 @@ class NotYet(TemplateView):
 
 
 
-class TestInfoView(TemplateView):
+class TestInfoView(TestLinkMixin,TemplateView):
     template_name = "reg3.html"
   
 
@@ -127,7 +127,7 @@ def result(request,uidb64_student,uidb64):
         for data in json_data:
             question = Question.objects.get(id = data['id'])
             print(question)
-            answers = Option.objects.filter(question = question)
+            answers = Option.objects.filter(question = question,is_correct=True)
             if question.is_multiple_choice and len(data['options']) > 1:
                 for option in data['options']:
                     print(option)
@@ -135,6 +135,7 @@ def result(request,uidb64_student,uidb64):
                     if option in answers:
                         point += 1
             elif (not question.is_multiple_choice )and len(data['options']) == 1:
+                print(str(data['options'][0]),str(answers[0].id))
                 if str(data['options'][0]) == str(answers[0].id):
                         point += 1
 

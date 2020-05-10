@@ -40,12 +40,12 @@ from things.admin_views.views import (
 
 urlpatterns = [
     path('superuser/', admin.site.urls),
-    path('Test/<uidb64>/<uidb64_student>/result/',views.result, name='res'),
-    path('Test/<uidb64>/<uidb64_student>/identification/',views.checkStudent, name='check'),
-    path('Test/<uidb64>/<uidb64_student>/cheat/',views.cheatingReport, name='cheating'),
-    path('Test/<uidb64>/<uidb64_student>/',TestView.as_view(),name='test'),
-    path('Test/<uidb64>/',StudentLoginView.as_view(),name="reg1"),
-    path('TestInfo/<uidb64>/<uidb64_student>/',TestInfoView.as_view(),name='reg3'),
+    path('test/<uidb64>/<uidb64_student>/result/',views.result, name='res'),
+    path('test/<uidb64>/<uidb64_student>/identification/',views.checkStudent, name='check'),
+    path('test/<uidb64>/<uidb64_student>/cheat/',views.cheatingReport, name='cheating'),
+    path('test/<uidb64>/<uidb64_student>/',TestView.as_view(),name='test'),
+    path('test/<uidb64>/',StudentLoginView.as_view(),name="reg1"),
+    path('testInfo/<uidb64>/<uidb64_student>/',TestInfoView.as_view(),name='reg3'),
     path('notAvailable/',NotYet.as_view(),name="NotYet"),
 #----------------------------
     path('', initial, name='admin-initial'),
