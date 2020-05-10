@@ -23,18 +23,28 @@
 									</h2>
 									<p>Dear student, we are glad that you joined out test for CSS 103 Software Engineering subject at SDU. Please fill in the form to proceed with your exam</p>
 									<div class="form_block">
-										<form action="#">
-											<input type="text" class="form-control" placeholder="Your ID">
+										<form action = "new2.html"
+										class="needs-validation" novalidate>
+											<input type="text" class="form-control" id="validationCustom03" placeholder="Your ID" required>
+											<div class="invalid-feedback valid_feed">
+									          Incorrect ID.
+									        </div>
 											<input type="text" class="form-control" placeholder="Fullname">
+
+											<button type="submit" class="next">
+												Next<img src="img/3-layers.png" alt="" class="next_img">
+											</button>
+											
 											
 										</form>
 									</div>
 									
-									<a href="new2.html">
+									<!--<a href="new2.html">
+									
 										<button type="submit" class="next">
 										Next<img src="img/3-layers.png" alt="" class="next_img">
 										</button>
-									</a>
+									</a>-->
 									
 								</div>
 								
@@ -52,6 +62,26 @@
 			<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
 		</div>
 	</div>
+	<script>
+	// Example starter JavaScript for disabling form submissions if there are invalid fields
+	(function() {
+	  'use strict';
+	  window.addEventListener('load', function() {
+	    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+	    var forms = document.getElementsByClassName('needs-validation');
+	    // Loop over them and prevent submission
+	    var validation = Array.prototype.filter.call(forms, function(form) {
+	      form.addEventListener('submit', function(event) {
+	        if (form.checkValidity() === false) {
+	          event.preventDefault();
+	          event.stopPropagation();
+	        }
+	        form.classList.add('was-validated');
+	      }, false);
+	    });
+	  }, false);
+	})();
+	</script>
 	
 		
 	
