@@ -14,9 +14,10 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.http import HttpResponseRedirect, JsonResponse, Http404, HttpResponse
 from django.core.exceptions import ValidationError
+from least.settings import BASE_DIR
 
-path = "/Users/infinity/Desktop/important/questionnaire/project/"
-image_path = path + "media/students/"
+path = BASE_DIR
+image_path = path + "/media/students/"
 # Create your views here.
 # для того что бы сравнить фото с видео 
 def facedect(loc):

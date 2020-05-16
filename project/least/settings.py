@@ -34,7 +34,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Questionnaire System"
 
-ALLOWED_HOSTS = ['127.0.0.1', 'questionnairesystem.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'questionnairesystem.pythonanywhere.com', '0.0.0.0', 'localhost']
 
 
 # Application definition
@@ -133,10 +133,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "/home/questionnairesystem/project/questionnaire/project/least/static"),
+    os.path.join(BASE_DIR, BASE_DIR+"/least/static"),
     #'/var/www/static/',
 ]
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 LOGIN_URL = '/admin/login'

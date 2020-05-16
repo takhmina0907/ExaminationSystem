@@ -1,2 +1,6 @@
-﻿Django
+﻿Django==2.2
+gunicorn==19.8.1
 django-widget-tweaks
+Pillow
+face-recognition
+opencv-python

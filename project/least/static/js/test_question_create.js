@@ -166,12 +166,12 @@ function question_render(response) {
 
         let is_correct_css = 'incorrect';
         let is_correct_symbol = 'fa-times';
-        let is_correct_flag = 'True';
+        let is_correct_flag = 'False';
 
         if (option.is_correct) {
             is_correct_css = 'correct';
             is_correct_symbol = 'fa-check';
-            is_correct_flag = 'False';
+            is_correct_flag = 'True';
         }
 
         option_row += `
