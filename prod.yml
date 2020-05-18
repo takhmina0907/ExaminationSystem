@@ -14,14 +14,12 @@ services:
       - ./static:/static
 
   nginx:
-    build:
-      ./nginx/prod
+    image: "nginx"
+    container_name: nginx
     restart: always
-    env_file:
-      - nginx/prod/.env
-    ports:
-      - "80:80"
-      - "443:433"
     volumes:
+      - ./nginx/prod/config/app.conf/:/etc/nginx/conf.d
       - ./nginx/prod/examinationsystem_me:/ssl
-      - ./static:/static
+    ports:
+      - 80:80
+      - 443:433
