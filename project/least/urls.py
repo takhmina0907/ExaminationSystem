@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, reverse_lazy
-from things.views import StudentLoginView, TestInfoView, TestView, NotYet
+from things.views import StudentLoginView, TestInfoView, TestView, NotYet,UploadPhoto
 
 import things.views as views
 
@@ -43,26 +43,14 @@ urlpatterns = [
     path('superuser/', admin.site.urls),
     path('test/<uidb64>/<uidb64_student>/result/',views.result, name='res'),
     path('test/<uidb64>/<uidb64_student>/identification/',views.checkStudent, name='check'),
-    path('test/<uidb64>/<uidb64_student>/cheat/',views.cheatingReport, name='cheating'),
+    path('test/<uidb64>/<uidb64_student>/cheat/',views.saveCheatingReport, name='cheating'),
     path('test/<uidb64>/<uidb64_student>/',TestView.as_view(),name='test'),
     path('test/<uidb64>/',StudentLoginView.as_view(),name="reg1"),
+    path('test/<uidb64>/<uidb64_student>/uploadPhoto',UploadPhoto.as_view(),name="uploadPhoto"),
     path('testInfo/<uidb64>/<uidb64_student>/',TestInfoView.as_view(),name='reg3'),
     path('notAvailable/',NotYet.as_view(),name="NotYet"),
-<<<<<<< HEAD
+    
 #----------------------------
-=======
-
-
-    path('Test/<uidb64>/<uidb64_student>/result/', views.result, name='res'),
-    path('Test/<uidb64>/<uidb64_student>/identification/', views.checkStudent, name='check'),
-    path('Test/<uidb64>/<uidb64_student>/cheat/', views.cheatingReport, name='cheating'),
-    path('Test/<uidb64>/<uidb64_student>/', TestView.as_view(), name='test'),
-    path('Test/<uidb64>/', StudentLoginView.as_view(), name="reg1"),
-    path('TestInfo/<uidb64>/<uidb64_student>/', TestInfoView.as_view(), name='reg3'),
-    path('notAvailable/', NotYet.as_view(), name="NotYet"),
-
-
->>>>>>> 0ab19a019f9743b373742f66872395404429d33d
     path('', initial, name='admin-initial'),
     path('admin/register/', RegistrationView.as_view(), name='admin-registration'),
     path('admin/login/', LoginView.as_view(), name='admin-login'),

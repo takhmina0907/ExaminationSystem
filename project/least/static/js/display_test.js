@@ -3,6 +3,10 @@ var elements
 var numbers
 var questions=[]
 window.onload = function(){
+    time = document.getElementById('time').dataset.time
+    console.log(time)
+    display = document.querySelector('#time');
+	startTimer(parseInt(time), display);
     $( "#r" ).trigger( "click" );
     elements = document.getElementsByClassName("question_cart");
     this.CloseTab(elements) //close all question
@@ -16,11 +20,7 @@ window.onload = function(){
     elements[numbers[0]].classList.toggle("foreground");
     console.log(index)
     //set timer
-    time = document.getElementById('time').textContent
-    console.log(time.textContent)
-    var minutes = (60 *  parseInt(time))-1
-    display = document.querySelector('#time');
-	startTimer(minutes, display);
+    
 }
 
 //for shuffle elements of array
@@ -103,6 +103,7 @@ $('.prev').click(function() {
 //functioon for timer 
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
+    console.log(timer)
     setInterval(function () {
         minutes = parseInt(timer / 60, 10)
         seconds = parseInt(timer % 60, 10);
@@ -141,7 +142,7 @@ $(".next-btn" ).click(function(){
     });
 });
 function myFunction() {
-    var min = 5*60,
+    var min = 12*60,
       max = 10*60;
     var rand = Math.floor(Math.random() * (max - min + 1) + min); //Generate Random number between 5 - 10
     $.ajax({
