@@ -423,7 +423,7 @@ class StudentResultDetailView(BaseAdminView, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['test_state'] = TestInfo.TestState.__members__
-        context['cheatings'] = self.get_object().student.cheating.all()
+        context['cheatings'] = self.get_object().student.cheating.filter(test=self.object.test)
         context['selected_options'] = self.get_object().answers \
             .annotate(selected_option=F('selected_options__option')) \
             .values_list('selected_option', flat=True)
@@ -484,16 +484,17 @@ class StudentDetailView(BaseAdminView, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tests'] = self.object.tests.all() \
+        context['tests'] = self.object.tests.filter(author=self.request.user) \
             .annotate(point=F('results__grade')) \
             .annotate(result_id=F('results__id')) \
             .annotate(cheatings=Count(F('students__cheating'))) \
             .annotate(question_rate_denom=Count('results__answers__selected_options__option',
-                                          filter=Q(results__answers__selected_options__option__is_correct=True),
-                                          distinct=True)) \
+                                                filter=Q(results__answers__selected_options__option__is_correct=True),
+                                                distinct=True)) \
             .annotate(question_rate_num=Count('results__answers__question__options',
                                               filter=Q(results__answers__question__options__is_correct=True),
                                               distinct=True))
+        context['assigned_tests'] = context['tests'].count()
         context['test_state'] = TestInfo.TestState.__members__
         return context
 
