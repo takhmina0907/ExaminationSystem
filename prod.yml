@@ -3,7 +3,7 @@ version: '3.1'
 services:
   app:
     build: .
-    command: bash -c "python /project/manage.py collectstatic -v0 --noinput && python /project/manage.py migrate --noinput && python /project/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python /project/manage.py collectstatic -v0 --noinput && python /project/manage.py migrate --noinput && cd /project && gunicorn least.wsgi --bind=0.0.0.0:8000 --workers=3"
     stdin_open: true
     tty: true
     restart: always
@@ -15,11 +15,12 @@ services:
 
   nginx:
     build:
-      ./nginx/dev
+      ./nginx/prod
     restart: always
     env_file:
-      - nginx/dev/.env
+      - nginx/prod/.env
     ports:
-      - "${NGINX_OUT_PORT}:80"
+      - "80:80"
+      - "443:433"
     volumes:
       - ./static:/static

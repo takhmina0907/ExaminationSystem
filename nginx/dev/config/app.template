@@ -1,5 +1,5 @@
 server {
-        server_name ${NGINX_HOST} 127.0.0.1 0.0.0.0 www.examinationsystem.me examinationsystem.me 134.122.91.38;
+        server_name ${NGINX_HOST} 127.0.0.1 0.0.0.0;
 
         client_max_body_size 32m;
 
