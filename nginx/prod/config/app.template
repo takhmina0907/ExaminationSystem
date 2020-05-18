@@ -1,4 +1,6 @@
 server {
+        listen 80;
+
         server_name www.examinationsystem.me examinationsystem.me 134.122.91.38;
 
         client_max_body_size 32m;
