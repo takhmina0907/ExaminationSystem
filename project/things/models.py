@@ -162,6 +162,7 @@ class TestResult(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='results')
     test = models.ForeignKey(TestInfo, on_delete=models.CASCADE, related_name='results')
     grade = models.FloatField(null=True, blank=True)
+    started_time = models.DateTimeField(null=True, blank=True)
     submitted_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

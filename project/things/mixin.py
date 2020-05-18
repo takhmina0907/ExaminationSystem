@@ -39,11 +39,8 @@ class TestLinkMixin(UserPassesTestMixin):
             except (TypeError, ValueError, OverflowError, TestResult.DoesNotExist,Student.DoesNotExist, ValidationError):
                 correct_student = False
          #------------------------------------------------------------
-        print(correct_test and status == TestInfo.TestState.ongoing)
-        print(isStudentLink)
-        print(status)
+     
         if correct_test and status == TestInfo.TestState.ongoing:
-            print(1234)
             if isStudentLink and correct_student and testResult.grade is None:
                 return True
             elif not isStudentLink :

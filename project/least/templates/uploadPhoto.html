@@ -6,24 +6,6 @@
 	<title>Document</title>
 	<link rel="stylesheet" href= {% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}>
 	<link rel="stylesheet" href={% static 'css/new1.css' %}>
-	<script>
-	
-	var successCallback = function(error) {
-		document.getElementsByClassName('next')[0].style.display = 'inline';
-	};
-	var errorCallback = function(error) {
-	if (error.name == 'NotAllowedError') {
-		document.getElementsByClassName('next')[0].style.display = 'block';
-		// user denied access to camera
-	}
-	};
-	var constraints = {
-      video: true,
-      audio: true
-   	};
-	navigator.mediaDevices.getUserMedia(constraints)
-	.then(successCallback, errorCallback);
-    </script>
 </head>
 
 <body>
@@ -40,29 +22,17 @@
 									<h2 class="reg_title">
 										Welcome!
 									</h2>
-									<p>Dear student, we are glad that you joined out test {{test.title}}  at SDU. {{test.description}}</p>
+									<p>Dear student, because of some problem with server,you should upload your photo manually.Remember it must be you or you will fail test</p>
 									<div class="form_block">
-									
-									{% for field in form %}
-										<form action="{% url 'reg1' uidb64  %}"  method="post" class="{% if field.errors or message %} ? novalidate :  was-validated {% endif %}">
+										<form enctype="multipart/form-data" action="{% url 'uploadPhoto' uidb64 uidb64_student  %}"  method="post">
 										{% csrf_token %}
-											<input type="number" name='id' class="form-control" id="id_id" placeholder="Your ID" required>
-											<div class="invalid-feedback valid_feed">
-									          {% if message %}
-												{{message}}
-											{% else %}
-												{{ field.errors }}
-											{% endif %}
-									         
-									        </div>
-											
-									        </div>
+												{{ form.as_p }}
+											</div>
 											<button type="submit" class="next">
-												Next<img src={% static 'img/3-layers.png' %}  alt="" class="next_img">
+												Upload and Next<img src={% static 'img/3-layers.png' %}  alt="" class="next_img">
 											</button>
-										</form>
-										{% endfor %} 
 									</div>
+									</form>
 								</div>
 								
 							<div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 justify-content-center img__container d-none d-lg-block">

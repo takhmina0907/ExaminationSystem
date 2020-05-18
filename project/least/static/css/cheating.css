@@ -96,11 +96,14 @@ p{
     .answers{/*ans columns margin*/
       margin-right: 16px;
     }
-    .incorrect{
+    .not-choosen{
       color: #373737;
     }
     .correct{
       color: #119A48;
+    }
+    .incorrect{
+      color: #EF6363;
     }
 .card-question{
   margin-top: 24px;

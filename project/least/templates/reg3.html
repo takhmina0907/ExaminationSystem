@@ -6,22 +6,7 @@
 	<title>Document</title>
 	<link rel="stylesheet" href={% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %} >
 	<link rel="stylesheet" href={% static 'new1.css' %}>
-	<script>
-		history.pushState(null, null, location.href);
-    window.onpopstate = function () {
-        history.go(1);
-    };
-        var successCallback = function(error) {
-            document.getElementByClassName('next').style.display = 'inline';
-        };
-        var errorCallback = function(error) {
-            if (error.name == 'NotAllowedError') {
-                document.getElementByClassName('next').style.display = 'block';
-                // user denied access to camera
-            }
-        };
-         navigator.mediaDevices.getUserMedia(constraints).then(successCallback, errorCallback);
-    </script>
+	
 </head>
 <style>
 	body{

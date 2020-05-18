@@ -9,6 +9,10 @@
 	<link rel="stylesheet" href={% static 'css/pop.css' %}>
 	<script src={% static 'js/jquery.min.js' %}></script>
 	<script src={% static 'js/restrictions.js' %}></script>
+	<script>
+	window.onbeforeunload = function() {return "Your work will be lost."; };
+</script>
+
 </head>
 <body onload="startTimer()">
 	<section class="Section1">
@@ -85,7 +89,7 @@
 				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
 					<img src={% static 'img/chronometer.svg' %} class="time_svg">
 
-					<p class="time_text"><span id="time">{{duration}}:00</span></p>
+					<p class="time_text"><span id="time"  data-time="{{ duration }}">{{minuts}}:{{seconds}}</span></p>
 				</div>
 				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
 				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
@@ -111,7 +115,7 @@
 								</div>
 								<div class="col"></div>
 								<div class="col">
-									<button type="submit" class="btn btn-header next-btn">Finish test
+									<button type="submit"class="btn btn-header next-btn">Finish test
 								</div>
 							</div>
 		              	</div>
@@ -123,6 +127,7 @@
 	</section>
 	<!--Modal form js -->
     <script>
+
       var modal = document.getElementById('myModal');
 
       var btn = document.getElementById("myBtn");

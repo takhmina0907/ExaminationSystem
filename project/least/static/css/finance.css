@@ -1,7 +1,7 @@
 
 body{
     font-family: 'Geometria', sans-serif;
-    src: url(Geometria/Geometria.ttf);
+    src: url(static/Geometria/Geometria.ttf);
 	background-color: #f8f8f8;
 }
 
@@ -283,4 +283,10 @@ input:checked+i:before {
 .category:hover{
 	text-decoration: none;
 	color: #4a4a4a;
+}
+.background{
+	display: none;
+} 
+.foreground{
+	display: inline;
 }
