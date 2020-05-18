@@ -1,6 +1,6 @@
 from django.shortcuts import *
 from .forms import StudentLoginForm
-from .models import Student,TestInfo,CheatingReport,Question,Option,TestResult
+from .models import Student,TestInfo,CheatingReport,Question,Option,TestResult,Answer,SelectedOption
 from .mixin import TestLinkMixin
 import face_recognition
 import cv2
@@ -54,6 +54,8 @@ def create_photo(id):
         for (x,y,w,h) in faces:
             cv2.rectangle(img,(x+1000,y+1000),(x+w+1000,y+h+1000),(255,0,0),2)
             roi_gray = gray[y:y+h, x:x+w]
+            print(image_path + str(id))
+            print(os.path.isfile(image_path + str(id)))
             if not os.path.isfile(image_path + str(id)):# надо сделать что то с тем если папка существует
                 os.makedirs(image_path + str(id))
             image = image_path + str(id)+ "/image.png"
@@ -65,7 +67,9 @@ class StudentLoginView(TestLinkMixin,View):
     login_url = "notAvailable/404"
     def get(self,request,uidb64):
         form = StudentLoginForm()
-        return render(request,'reg1.html',{"form":form,"uidb64":uidb64})
+        test_id = force_text(urlsafe_base64_decode(uidb64))
+        test = TestInfo.objects.get(id=test_id)
+        return render(request,'reg1.html',{"form":form,"test":test,"uidb64":uidb64})
     
     def post(self,request,uidb64):
         bound_form = StudentLoginForm(request.POST)
@@ -105,6 +109,7 @@ class TestView(TestLinkMixin,TemplateView):
         test = get_object_or_404(TestInfo, id=test_id)
         student= get_object_or_404(Student, id=student_id)
         testResult = TestResult.objects.get(test=test,student=student)
+        print(testResult.grade)
         if testResult.grade is not None:
             redirect("NotYet")
         # if (datetime.datetime(test.end_time) - datatime.date.today).total_seconds()> test.duration*60:
@@ -121,32 +126,40 @@ def result(request,uidb64_student,uidb64):
     student_id = force_text(urlsafe_base64_decode(uidb64_student))
     test = get_object_or_404(TestInfo, id=test_id)
     student= get_object_or_404(Student, id=student_id)
+    testResult = TestResult.objects.get(test=test,student=student)
+    totalQuestions =  Question.objects.filter(test = test).count()
     if request.is_ajax() and request.method == 'POST':
         json_data = json.loads(request.body.decode('utf-8'))
         print(json_data)
         for data in json_data:
             question = Question.objects.get(id = data['id'])
             print(question)
-            answers = Option.objects.filter(question = question,is_correct=True)
+            correct = Option.objects.filter(question = question,is_correct=True)
+            answer = Answer(test = testResult,question=question)
+            answer.save()
             if question.is_multiple_choice and len(data['options']) > 1:
-                for option in data['options']:
-                    print(option)
-                    print(answers)
-                    if option in answers:
+                for options in data['options']:
+                    option = Option.objects.get(id = options,question = question)
+                    record = SelectedOption(answer = answer,option=option)
+                    if options in correct:
                         point += 1
+                    record.save()
             elif (not question.is_multiple_choice )and len(data['options']) == 1:
-                print(str(data['options'][0]),str(answers[0].id))
-                if str(data['options'][0]) == str(answers[0].id):
+                print(str(data['options'][0]),str(correct[0].id))
+                option = Option.objects.get(id = int(data['options'][0]),question = question)
+                record = SelectedOption(answer = answer,option=option)
+                if str(data['options'][0]) == str(correct[0].id):
                         point += 1
+                record.save()
 
         print(point)
-        result = TestResult.objects.get(test=test,student=student)
-        result.grade = point
+        
+        testResult.grade = (point/totalQuestions)*33
         print(datetime.date.today())
-        result.submitted_date = datetime.datetime.now()
-        #  = TestResult(student = student,test=test,grade=point,submitted_date = datetime.date.today )
+        testResult.submitted_date = datetime.datetime.now()
+        #  = TesttestResult(student = student,test=test,grade=point,submitted_date = datetime.date.today )
         print(1234)
-        result.save()
+        testResult.save()
     return render(request, 'result.html')
 
 def checkStudent(request,uidb64_student,uidb64):

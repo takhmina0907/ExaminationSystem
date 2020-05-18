@@ -11,6 +11,17 @@
     window.onpopstate = function () {
         history.go(1);
     };
+		var successCallback = function(error) {
+		document.getElementByClassName('next').style.display = 'inline';
+	};
+	var errorCallback = function(error) {
+	if (error.name == 'NotAllowedError') {
+		document.getElementByClassName('next').style.display = 'block';
+		// user denied access to camera
+	}
+	};
+	navigator.mediaDevices.getUserMedia(constraints)
+	.then(successCallback, errorCallback);
     </script>
 </head>
 <style>

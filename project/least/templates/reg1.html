@@ -22,7 +22,7 @@
 									<h2 class="reg_title">
 										Welcome!
 									</h2>
-									<p>Dear student, we are glad that you joined out test for CSS 103 Software Engineering subject at SDU. Please fill in the form to proceed with your exam</p>
+									<p>Dear student, we are glad that you joined out test {{test.title}}  at SDU. {{test.description}}</p>
 									<div class="form_block">
 									{% for field in form %}
 										<form action="{% url 'reg1' uidb64  %}"  method="post" class="{% if field.errors or message %} ? novalidate :  was-validated {% endif %}">

@@ -1,8 +1,8 @@
 body{
-	font-family: 'Montserrat', sans-serif;
+    font-family: 'Geometria', sans-serif;
+    src: url(../Geomxetria/Geometria.ttf);
 	background-color: #f8f8f8;
 }
-
 ul, li {
 	display: block;
 	margin: 0;
