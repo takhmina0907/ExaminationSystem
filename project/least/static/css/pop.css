@@ -1,5 +1,6 @@
 body{
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Geometria', sans-serif;
+    src: url(Geometria/Geometria.ttf);
 }
 /* The Modal (background) */
 .modal {
@@ -23,7 +24,3 @@ body{
     border: 1px solid #888;
     width: 40%;
 }
-
-
-
-

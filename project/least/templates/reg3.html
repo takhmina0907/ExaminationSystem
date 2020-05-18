@@ -11,6 +11,7 @@
     window.onpopstate = function () {
         history.go(1);
     };
+<<<<<<< HEAD
 		var successCallback = function(error) {
 		document.getElementByClassName('next').style.display = 'inline';
 	};
@@ -22,6 +23,18 @@
 	};
 	navigator.mediaDevices.getUserMedia(constraints)
 	.then(successCallback, errorCallback);
+=======
+        var successCallback = function(error) {
+            document.getElementByClassName('next').style.display = 'inline';
+        };
+        var errorCallback = function(error) {
+            if (error.name == 'NotAllowedError') {
+                document.getElementByClassName('next').style.display = 'block';
+                // user denied access to camera
+            }
+        };
+         navigator.mediaDevices.getUserMedia(constraints).then(successCallback, errorCallback);
+>>>>>>> 0ab19a019f9743b373742f66872395404429d33d
     </script>
 </head>
 <style>
