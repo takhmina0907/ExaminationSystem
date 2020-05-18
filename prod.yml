@@ -18,8 +18,8 @@ services:
     container_name: nginx
     restart: always
     volumes:
-      - ./nginx/prod/config/app.conf/:/etc/nginx/conf.d/
-      - ./nginx/prod/examinationsystem_me:/ssl/
+      - ./nginx/prod/config/app.conf/:/etc/nginx/conf.d/default.conf/
+      - ./nginx/prod/examinationsystem_me/:/ssl/
     ports:
       - 80:80
       - 443:433
