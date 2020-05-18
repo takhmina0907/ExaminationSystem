@@ -23,4 +23,5 @@ services:
       - "80:80"
       - "443:433"
     volumes:
+      - /home/ellms/examinationsystem_me:/ssl
       - ./static:/static

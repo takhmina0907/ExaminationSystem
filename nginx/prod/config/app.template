@@ -7,8 +7,8 @@ server {
 server {
     listen 443 ssl;
 
-    ssl_certificate /etc/ssl/certs/examinationsystem_me_cert_chain.crt;
-    ssl_certificate_key /etc/ssl/private/examinationsystem.key;
+    ssl_certificate /ssl/examinationsystem_me_cert_chain.crt;
+    ssl_certificate_key /ssl/examinationsystem.key;
 
     server_name www.examinationsystem.me examinationsystem.me 134.122.91.38;
 
