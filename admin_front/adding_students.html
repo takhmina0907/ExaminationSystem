@@ -14,21 +14,21 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <style>
     .add-question{
-      width: 144px;
-      height: 41px;
+      width: 169px;
+      height: 45px;
       font-size: 14px;
       text-align: center;
       border: 1px dashed #A4A4A4;
       color: rgba(55, 55, 55, 0.7);
       background-color: #ffffff;
       border-radius: 8px;
-      padding-top: 9px;
+      padding-top: 11px;
     }
     .or{
       color:#A4A4A4;
       font-weight: 600;
       font-size: 24px;
-      margin-left: 20px;
+      margin-left: 10px;
     }
     .add{
       width: 133px;
@@ -111,10 +111,11 @@
   		<div class="row question-page">
           <div class="col-sm-3"></div>
           <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <span class="title_test">New student</span>
+            <span class="subtitle_test">New student</span>
             <span class="or">or</span>
           </div>
-          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+
+          <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 col-xl-3 text-right">
 
             <form id="csv-form" action="#" method="post">
                 <label for="files" class="btn add-question">
@@ -123,7 +124,9 @@
             </form>
 
           </div>
-          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+
+
+
       </div>
 
       <div class="row">
@@ -152,13 +155,13 @@
 
       <div class="row">
         <div class="col-sm-3"></div>
-        <div class="col-sm-2">
+        <div class="col-xs-2 col-sm-2">
           <a href="students.html">
             <button class="cancel">Cancel</button>
           </a>
         </div>
         <div class="col-sm-2"></div>
-        <div class="col-sm-2 text-right">
+        <div class="col-xs-2 col-sm-2 text-right">
           <a href="final_add_student.html">
             <button class="add">Add student</button>
           </a>
