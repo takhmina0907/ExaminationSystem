@@ -11,7 +11,51 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    .filter-icon{
+      padding-right: 0;
+      margin-left: 33px;
+      color: #392CD1;
+    }
+    /*Nav Bar with buttons*/
+    .navbar {
+      overflow: hidden;
+      margin-top: 24px; 
+      background-color: #fff;
+      width: 100%;
+      box-shadow: inset 0px -2px 0px rgba(164, 164, 164, 0.3);
+    }
 
+    .navbar a {
+      float: left;
+      display: block;
+      font-weight: 500;
+      font-size: 16px;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: #373737;
+      padding: 18px 32px;
+    }
+
+    .navbar a:hover {
+      background: rgba(57, 44, 209, 0.15);
+      color: #392CD1;
+    }
+    
+    .navbar a:active{
+      background: rgba(57, 44, 209, 0.4);
+      color: #392CD1;
+    }
+
+    .navbar a.active {
+      background: rgba(57, 44, 209, 0.15);
+      color: #392CD1;
+      font-weight: 600;
+      font-size: 16px;
+      box-shadow: inset 0px -2px 0px #392CD1;
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar navbar-default visible-xs">
@@ -72,12 +116,12 @@
 		</div>
 		<div class="row">
     		<div class="col-sm-1"></div>
-		    <div class="col-sm-2 menu_text">
-		    	<h4><img src="images/home.svg">Home</h4>
+		    <div class="col-sm-4 menu_text">
+		    	<p class="title_home"><img src="images/home.svg">Home</p>
 		    </div>
 		    <div class="col-sm-1"></div>
 		</div>
-      <div class="row">
+      <div class="row main_info">
       	<div class="col-sm-1"></div>
         <div class="col-sm-2">
           <div class="well">
@@ -114,15 +158,17 @@
         <div class="col-sm-1"></div>
         
       </div>
+
       <div class="row">
       	<div class="col-sm-1"></div>
-        <div class="col-sm-6">
-          <div class="well">
+        <div class="col-sm-10">
+          <div class="stat_row">
           
         			<div class="dropdown">
-        				<span>Statistics for</span>
+        				<span class="stat_for_title">Statistics for</span>
         			    <button class="btn dropdown-toggle courses" type="button" data-toggle="dropdown">FLAT CSS 2018 MID II
-        			    <span class="caret"></span></button>
+                  <span><i class="far fa-arrow-down filter-icon"></i></span>
+        			    </button>
         			    <ul class="dropdown-menu">
         			      <li><a href="#">Advanced Algorithms CSS 2019</a></li>
         			      <li><a href="#">Python CSS 2020</a></li>
@@ -130,7 +176,7 @@
         			    </ul>
         			 </div>
                     
-                    
+              <!--     
         			<a href="#">
         				<button type="button" class="rating-btn">
         						Students Rating
@@ -139,14 +185,20 @@
         				<button type="button" class="scale-btn">
         					Grades Scale
         				</button></a>
-			
+			         -->
+               <!--Nav bar with buttons -->
+               <div class="navbar">
+                <a href="#rating" class="active">Students Performance</a>
+                <a href="#grades">Grades Average</a>
+              </div>
+
           </div>
         </div>
        </div>
 
       <div class="row">
       	<div class="col-sm-1"></div>
-        <div class="col-sm-8">
+        <div class="col-sm-10">
           <div class="well">
             <p>Some Statistics</p> 
           </div>
