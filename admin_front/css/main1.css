@@ -10,36 +10,34 @@ ul, li {
 }
 
 button:active, button:focus {
-  outline: none;
+  outline: none !important;
 }
 
 button::-moz-focus-inner {
   border: 0;
 }
 h2{
-	color: #373737
+	color: #373737;
+	font-weight: bold;
+}
+h4{
+	font-weight: bold;
 }
     
-
+.logo-text{
+	margin-bottom: 40px;
+}
+.title_home{
+	font-weight: bold;
+	font-size: 24px;
+	color: #373737;
+}
 .sidenav {
     box-shadow: 0px 0px 16px rgba(44, 44, 44, 0.1);
     height: 100vh;
     position: fixed;
 }
-/*
-    position: fixed;
 
-    left: 0%;
-    top: 0%;
-
-}
-.main-content{
-	position: absolute;
-	left: 20%;
-    top: 0%;
-	
-
-}*//*fixed menu разберись!*/
 .rating-btn{
 	width: 165px;
 	height: 41px;
@@ -47,15 +45,22 @@ h2{
 	font-size: 14px;
 	text-align: center;
 	color: #392CD1;
-	margin-top: 10px;
+	margin-top: 20px;
 	margin-right: 16px;
 	border-radius: 8px;
 	border: none;
 }
-.rating-btn:hover{
-	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+.rating-btn:hover, .first_test_add:hover, .q_btn:hover, .btn-save:hover,
+.test-next-btn:hover, .btn-delete:hover, .add:hover{
+	background: #675ED0;
 	border-radius: 8px;
 	border: none;
+	color: #FFFFFF;
+}
+.rating-btn:active, .first_test_add:active, .q_btn:active, .btn-save:active,
+.test-next-btn:active, .btn-delete:active, .add:active{
+	background: #1C1298;
+	color: #FFFFFF;
 }
 
 .scale-btn{
@@ -68,10 +73,24 @@ h2{
 	border-radius: 8px;
 
 }
+
+.scale-btn:hover, .add-question:hover, .test-cancel-btn:hover,
+.btn-del-cancel:hover, .edit:hover, .del:hover, .action-btn:hover, 
+.stud_list:hover, .cancel:hover{
+	background: rgba(55, 55, 55, 0.15);
+}
+.scale-btn:active, .add-question:active, .test-cancel-btn:active,
+.btn-del-cancel:active, .edit:active, .del:active, .action-btn:active,
+.stud_list:active, .cancel:active{
+	background: rgba(55, 55, 55, 0.4);
+	color: #ffffff;
+}
+
 i{
 	padding-right: 16px;
 
 }
+
 .well{
     background: #FFFFFF;
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
@@ -85,9 +104,16 @@ i{
 }
 
 .courses{
-	text-decoration:underline;
-    text-decoration-color: #392CD1
+	background: #FFFFFF;
+	border: 1px solid #CDCDCD;
+	box-sizing: border-box;
+	border-radius: 8px;
+	padding: 12px 16px 12px 16px;
+	font-weight: 500;
+	font-size: 16px;
+	color: #070058; 
 }
+
 .lines1{
 	border-left: 4px solid  #FFD058;
 }
@@ -110,13 +136,37 @@ li a.active{
 }
 li a:hover{
 	color: #392CD1;
+	background: rgba(57, 44, 209, 0.15) !important;
 }
+
+li a:active{
+	background: rgba(57, 44, 209, 0.4) !important;
+}
+
 li a{
 	color: #373737;
 }
 /*Dropdown caret*/
 .caret{
-	color: #392CD1
+	color: #392CD1;
+
+}
+.dropdown-menu{
+	border: none;
+	background: #FFFFFF;
+	box-shadow: none;
+}
+.dropdown-menu li a:hover{
+	background: #392CD115;
+	color: #392CD1;
+	font-weight: 500;
+	font-size: 14px;
+}
+.dropdown-menu li a:active{
+	background: #392CD1;
+	font-weight: 500;
+	font-size: 14px;
+	color: #FFFFFF;
 }
 /*Menu
 ul > :last-child {
@@ -128,8 +178,44 @@ ul > :last-child {
 	border: 0.5px solid #CDCDCD70;
     border-radius: 8px;
 }
-.form-control:focus {
+.form-control:focus, .courses:focus {
 	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     border-color: #ffffff;
+}
+
+.stat_for_title{
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 24px;
+	margin-right: 16px;
+}
+
+.stat_row{
+	margin-top: 30px;
+	margin-bottom: 24px;
+}
+.main_info{
+	margin-top: 20px;
+}
+/*for start page*/
+.starter_stat{
+	margin-top: 30px;
+}
+.first_test_text{
+	font-weight: 600;
+	font-size: 20px;
+	color: #A4A4A4;
+}
+.first_test_add{
+	width: 160px;
+	height: 56px;
+	background: rgba(57, 44, 209, 0.15);
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 18px;
+	color: #392CD1;
+	border: none;
+	margin-bottom: 34px;
+	margin-top: 20px;
 }
