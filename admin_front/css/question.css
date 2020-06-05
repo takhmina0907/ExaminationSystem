@@ -1,16 +1,19 @@
+input:active, input:focus {
+  outline: none !important;
+}
 .question-page{
   margin-top: 20px;
 }
 .add-question{
-  width: 144px;
-  height: 41px;
+  width: 169px;
+  height: 45px;
   font-size: 14px;
   text-align: center;
   border: 1px dashed #A4A4A4;
   color: rgba(55, 55, 55, 0.7);
   background-color: #ffffff;
   border-radius: 8px;
-  padding-top: 9px;
+  padding-top: 11px;
 }
 .q_list{
   font-weight: 500;
@@ -19,18 +22,16 @@
   color: #A4A4A4;
 }
 .q_btn{
-  width: 147px;
-  height: 41px;
+  width: 223px;
+  height: 56px;
   background: rgba(57, 44, 209, 0.2);
   border-radius: 8px;
   color: #392CD1;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 18px;
   border: none;
 }
-.q_btn:hover{
-  box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
-}
+
 .button-row{
   margin-top: 10px;
 }
@@ -58,16 +59,7 @@
   border-radius: 8px;
   border-color: #ffffff;
 }
-.add-btn{
-  width: 119px;
-  height: 41px;
-  font-size: 14px;
-  text-align: center;
-  border: 1px dashed #A4A4A4;
-  color: rgba(55, 55, 55, 0.7);
-  background-color: #ffffff;
-  border-radius: 8px;
-}
+
 /*
 .about-block:hover{
       box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
@@ -154,11 +146,10 @@
     background-color: #ffffff; 
     color: #392CD1 !important;
 }
-.title_test{
-  color: #392CD1;
+.subtitle_test{
   font-weight: 600;
   font-size: 24px;
-
+  color: #392CD1;
 }
 label{
   color: #373737;
@@ -189,8 +180,9 @@ label{
   color: #fff;
   font-size: 12px;
 }
-.test-next-btn:hover{
-  color: #fff;
+.btn.disabled{
+  background: #A4A4A4;
+  color: #FFFFFF;
 }
 .steps{
   padding-top: 7px;
@@ -238,12 +230,20 @@ select + i.far {
 .test_selection{
   width: 95.5%;
   height: 48px;
-  border: 1px solid #CDCDCD;
+  border: 0.5px solid #CDCDCD70;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 8px;
   padding-left: 12px;
   margin-bottom: 16px;
+  background: #ffffff;
 }
+
+.test_selection:focus{
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  border-color: #ffffff;
+}
+
 .add_option{
   text-decoration-line: underline;
   color: #392CD1;
@@ -260,12 +260,3 @@ select + i.far {
   font-size: 16px;
   color: #FFFFFF;
 }
-.btn-save:hover,.btn-save:active{
-  color: #FFFFFF;
-  box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
-}
-.test_selection{
-  border: 1px solid #CDCDCD;
-  border-radius: 8px;
-}
-
