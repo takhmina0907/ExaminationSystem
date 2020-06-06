@@ -235,7 +235,13 @@ class TestStudentAddView(BaseGroupsView):
 def share_test(request, test_id):
     test = get_object_or_404(TestInfo, author=request.user,
                              id=test_id)
-    return render(request, 'admin/test_invite.html', {'link': test.link})
+    return render(request, 'admin/test_invite.html', {'link': test.link, 'test': test,})
+
+
+@login_required
+def demo_test(request, test_id):
+    test = get_object_or_404(TestInfo, author=request.user, id=test_id)
+    return render(request, 'admin/demo_test.html', {'questions': test.questions.all()})
 
 
 def filter_students(request, uidb64):
@@ -411,6 +417,17 @@ def students_results(request, test_id, sort_by):
         for result in results.values():
             context.append(result)
         return JsonResponse(json.dumps(context, cls=DjangoJSONEncoder), safe=False, status=200)
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
+
+
+@login_required
+def grades_average(request, test_id):
+    if request.is_ajax() and request.method == 'POST':
+
+        test = get_object_or_404(TestInfo, author=request.user.id,
+                                 id=test_id)
+        average = test.results.aggregate(grade_avg=Round(Avg('grade'), 2)).get('grade_avg')
+        return JsonResponse({'average': average}, status=200)
     return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 

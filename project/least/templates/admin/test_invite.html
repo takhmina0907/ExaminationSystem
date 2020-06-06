@@ -34,12 +34,12 @@
             color: #392CD1;
         }
         .finish-next{
-            width: 165px;
-            height: 42px;
+            width: 224px;
+            height: 56px;
             background: rgba(57, 44, 209, 0.2);
             border-radius: 8px;
             border: none;
-            font-size: 14px;
+            font-size: 18px;
             color: #392CD1;
             font-weight: bold;
         }
@@ -68,7 +68,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Examination</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
@@ -85,7 +85,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
-                <h2 class="logo-text">LOGO</h2>
+                <h2 class="logo-text">Examination</h2>
                 <ul class="nav flex-column">
                     <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
                     <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
@@ -152,7 +152,7 @@
                 <div class="row btn-row">
                     <div class="col-xs-5 col-xl-5 col-lg-5 col-md-5 col-sm-5"></div>
                     <div class="col-xs-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 text-center">
-                        <a href="{# TODO #}"><button class="finish-next">Go to test page</button></a>
+                        <a href="{% url 'admin-demo-test' test.id %}"><button class="finish-next">Go to test page</button></a>
                     </div>
                     <div class="col-xs-5 col-xl-5 col-lg-5 col-md-5 col-sm-5"></div>
                 </div>

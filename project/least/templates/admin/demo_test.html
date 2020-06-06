@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+	<meta charset="UTF-8">
+	<title>Test</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href={% static 'css/finance.css' %}>
+	<link rel="stylesheet" href={% static 'css/pop.css' %}>
+	<script src={% static 'js/jquery.min.js' %}></script>
+	<script>
+</script>
+
+</head>
+<body>
+	<section class="Section1">
+		<div class="container cn">
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="test_title" id = "index">
+					</h1>
+				</div>
+			</div>
+			{% for question  in questions %}
+			<div class="row question_cart" data-id="{{ question.id }}">
+				<div class="col-md-12">
+					<div class="q_block">
+						<div class="question d-flex">
+							<p class="question_title">
+								{{question.question}}
+							</p>
+						</div>
+						<div class="answer">
+							<div class="block_radio">
+								{% for option in question.options.all  %}
+									<div class="radio">
+										<label class="d-flex">
+										{% if question.is_multiple_choice %}
+											<input type="checkbox" name="{{question.id}}" value = {{option.id}}>
+											<i></i>
+										{% else %}
+											<input type="radio" name="{{question.id}}" value = {{option.id}}>
+											<i></i>
+										{% endif %}
+
+											<div class="radio_text">
+												{{ option.option }}
+											</div>
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			<div class="row">
+				<div class="next_q">
+					<button type="button" class="next">
+						Next question<img src={% static 'img/3-layers.png' %} alt="" class="next_img">
+					</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="prev_q">
+					<button type="button" class="prev">
+						<img src={% static 'img/prev.png' %} alt="" class="prev_img">Previous question
+					</button>
+				</div>
+			</div>
+        </div>
+		</div>
+	</section>
+	<section class="Section2">
+		<div class="container align-items-center">
+			<div class="row">
+				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
+                    <p></p>
+				</div>
+				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
+				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex">
+					<span class="num_of_q" id = "progress">45 out of 100</span>
+				</div>
+				<div class="col-sm-2 col-md-3 col-lg-3 col-xl-3 d-flex"></div>
+
+				<div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
+					<button class="btn btn-header" href="#" data-target="#loginModal" data-toggle="modal" id="myBtn">Finish test
+					</button>
+					<!-- The Modal -->
+            		<div id="myModal" class="modal">
+
+              		<!-- Modal content -->
+	              		<div class="modal-content">
+			                <p class="reg_par">
+								Are you sure you want to complete the test?
+							</p>
+							<div class="row">
+								<div class="col">
+									<button class="btn btn-header skip-btn">Cancel
+									</button><!--с ссылки на button-->
+								</div>
+								<div class="col"></div>
+								<div class="col">
+                                    <a href="{% url 'admin-tests' %}"><button type="submit"class="btn btn-header next-btn">Finish test</button></a>
+								</div>
+							</div>
+		              	</div>
+
+            		</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--Modal form js -->
+    <script>
+
+      var modal = document.getElementById('myModal');
+
+      var btn = document.getElementById("myBtn");
+
+	  var cancelBtn = document.getElementsByClassName("skip-btn")[0];
+
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the modal
+      btn.onclick = function() {
+          modal.style.display = "block";
+      };
+	  cancelBtn.onclick = function() {
+          modal.style.display = "none";
+      };
+
+      span.onclick = function() {
+          modal.style.display = "none";
+      };
+
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+
+    </script>
+
+    <script src={% static 'js/demo_test.js' %}></script>
+
+</body>
+</html>

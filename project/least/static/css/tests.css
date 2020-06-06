@@ -1,3 +1,7 @@
+
+input:active, input:focus {
+  outline: none !important;
+}
 .question-page{
   margin-top: 20px;
 }
@@ -5,8 +9,8 @@
     padding-right: 6px;
 }
 .add-btn{
-	width: 119px;
-	height: 41px;
+	width: 169px;
+	height: 45px;
 	font-size: 14px;
 	text-align: center;
 	border: 1px dashed #A4A4A4;
@@ -15,6 +19,14 @@
 	border-radius: 8px;
 	margin-top: 12px;
 }
+.add-btn:hover{
+	background: rgba(55, 55, 55, 0.15);
+}
+
+.add-btn:active{
+	background: rgba(55, 55, 55, 0.4);
+}
+
 .about-block:hover{
     box-shadow: 0px 0px 18px rgba(57, 44, 209, 0.13);
     border-radius: 8px;
@@ -74,6 +86,10 @@
 	background: rgba(59, 210, 119, 0.4);
 	color: #119A48;
 }
+.ready{
+	background: rgba(69, 188, 255, 0.4);
+	color: #009BF2;
+}
 .info{
 	margin-top: 10px;
 }
@@ -128,10 +144,14 @@
     color: #392CD1 !important;
 }
 .title_test{
-	color: #392CD1;
 	font-weight: 600;
 	font-size: 24px;
 
+}
+.subtitle_test{
+	font-weight: 600;
+	font-size: 24px;
+	color: #392CD1;
 }
 label{
 	color: #373737;
@@ -192,5 +212,3 @@ a.custom-card,a.custom-card:hover {
   color: inherit;
   text-decoration: none;
 }
-
-
