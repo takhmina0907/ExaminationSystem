@@ -6,6 +6,7 @@
 	<title>Document</title>
 	<link rel="stylesheet" href= {% static 'bootstrap-4.4.1-dist/css/bootstrap.min.css' %}>
 	<link rel="stylesheet" href={% static 'css/new1.css' %}>
+	
 	<script>
 	
 	var successCallback = function(error) {
@@ -24,6 +25,13 @@
 	navigator.mediaDevices.getUserMedia(constraints)
 	.then(successCallback, errorCallback);
     </script>
+
+	<style>
+		@font-face {
+			font-family: 'Geometria', sans-serif;
+			src:local("/project/least/static/Geometria/Geometria.woff);
+		}
+	</style>
 </head>
 
 <body>
