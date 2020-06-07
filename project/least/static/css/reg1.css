@@ -1,6 +1,10 @@
+@font-face { 
+    font-family: Geometria; 
+    src: local("Geometria"),
+        url(../Geometria/Geometria.woff);
+} 
 body{
-    font-family: 'Geometria', sans-serif;
-    src: url(../Geomxetria/Geometria.ttf);
+	font-family: "Geometria", sans-serif;
 	background-color: #f8f8f8;
 }
 ul, li {

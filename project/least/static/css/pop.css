@@ -1,6 +1,10 @@
+@font-face { 
+    font-family: Geometria; 
+    src: local("Geometria"),
+        url(../Geometria/Geometria.woff);
+} 
 body{
-    font-family: 'Geometria', sans-serif;
-    src: url(Geometria/Geometria.ttf);
+	font-family: "Geometria", sans-serif;
 }
 /* The Modal (background) */
 .modal {

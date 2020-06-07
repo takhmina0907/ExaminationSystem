@@ -207,6 +207,7 @@ input:checked+i:before {
 	background-color: #4505b3;
 	font-size: 16px;
 	text-align: center;
+	
 	color: #ffffff;
 }
 
@@ -214,12 +215,14 @@ input:checked+i:before {
     color: #4505b3;
 	border: none;
 	float: right;
+	background: none;
 	text-decoration:none;
 	font-weight: 500;
 }
 .prev{
    	color: #4a4a4a;
 	border: none;
+	background: none;
 	text-decoration:none;
 	font-weight: 500;
 }
