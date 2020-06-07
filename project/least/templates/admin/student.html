@@ -73,7 +73,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Examination</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
@@ -90,7 +90,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
-                <h2 class="logo-text">LOGO</h2>
+                <h2 class="logo-text">Examination</h2>
                 <ul class="nav flex-column">
                     <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
                     <li><a href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
@@ -153,7 +153,7 @@
 
                     <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2">
                         <p class="test-title">Assigned tests</p>
-                        <p class="test-info">{{ student.tests.all|length }}</p>
+                        <p class="test-info">{{ assigned_tests }}</p>
                     </div>
 
                     <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
@@ -186,7 +186,7 @@
                                                     {% if test.is_active == test_state.ongoing %}
                                                         <button class="status_exam on">Ongoing</button>
                                                     {% elif test.is_active == test_state.not_started %}
-                                                        <button class="status_exam on">Not started</button>
+                                                        <button class="status_exam ongoing ready">Ready</button>
                                                     {% elif test.is_active == test_state.finished %}
                                                         <button class="status_exam on fin">Finished</button>
                                                     {% endif %}

@@ -36,7 +36,7 @@ from things.admin_views.views import (
     student_csv_import, admin_question_update, admin_test,
     filter_students, students_results, check_speciality,
     admin_test_edit, questions_csv_import, ajax_question_create,
-    initial
+    initial, demo_test, grades_average
 )
 
 urlpatterns = [
@@ -66,6 +66,7 @@ urlpatterns = [
     path('admin/tests/<int:test_id>/groups/', TestStudentAddView.as_view(),
          name='admin-test-add-students'),
     path('admin/tests/<int:test_id>/share/', share_test, name='admin-share-test'),
+    path('admin/tests/<int:test_id>/demo/', demo_test, name='admin-demo-test'),
     path('test/<uidb64>/', filter_students, name='admin-filter-students'),
     path('admin/tests/<int:test_id>/', AdminTestDetailView.as_view(),
          name='admin-test-details'),
@@ -92,6 +93,7 @@ urlpatterns = [
     path('ajax/questions/update', admin_question_update,
          name='admin-question-update'),
     path('ajax/tests/<int:test_id>/<str:sort_by>', students_results, name='admin-details-students'),
+    path('ajax/tests/average/<int:test_id>', grades_average, name='admin-grades-average'),
     path('ajax/speciality', check_speciality, name='admin-check-speciality'),
     # ajax
 

@@ -143,8 +143,12 @@ class TestCreateForm(forms.ModelForm):
         self.fields['duration'].widget.attrs['class'] = 'form-control'
         self.fields['start_date'].widget.attrs['placeholder'] = 'Choose the date'
         self.fields['start_date'].widget.attrs['class'] = 'form-control'
+        self.fields['start_date'].widget.attrs['onfocus'] = "(this.type='date')"
+        self.fields['start_date'].widget.attrs['onblur'] = "(this.type='text')"
         self.fields['start_time'].widget.attrs['placeholder'] = 'Choose the time'
         self.fields['start_time'].widget.attrs['class'] = 'form-control'
+        self.fields['start_time'].widget.attrs['onfocus'] = "(this.type='time')"
+        self.fields['start_time'].widget.attrs['onblur'] = "(this.type='text')"
 
     class Meta:
         model = TestInfo
@@ -156,11 +160,11 @@ class TestCreateForm(forms.ModelForm):
 
     start_date = forms.DateField(
         widget=forms.DateInput(
-            attrs={'type': 'date'}
+            attrs={'type': 'text'}
         ))
     start_time = forms.TimeField(
         widget=forms.TimeInput(
-            attrs={'type': 'time'}
+            attrs={'type': 'text'}
         ))
 
     def save(self, commit=True):

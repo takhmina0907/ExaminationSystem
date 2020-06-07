@@ -14,11 +14,24 @@
 
   <style>
 
-    input.filter {
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
       -webkit-appearance: none;
-      -moz-appearance: none;
-      -o-appearance: none;
+      margin: 0;
     }
+
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      -webkit-appearance: none;
+      opacity: 0;
+    }
+
+    /* Firefox */
+    input[type=time], input[type=date] {
+      -moz-appearance: none;
+    }
+
     input + i.far {
       float: right;
       margin-top: -53px;
@@ -85,7 +98,7 @@
   		<div class="row question-page">
           <div class="col-sm-1"></div>
           <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 text-center">
-            <p class="title_test">New Test</p>
+            <p class="subtitle_test">New Test</p>
           </div>
       </div>
 
@@ -101,13 +114,16 @@
 
                   <input type="text" class="form-control" placeholder="Enter test description">
 
-                  <input type="time" class="form-control" placeholder="Enter test duration">
+                  <input type="text" class="form-control" placeholder="Enter test duration h/m" onfocus="(this.type='time')"
+                  onblur="(this.type='text')">
 
                   <label class="test-label">Test availability</label>
-                  <input type="date" class="form-control filter" placeholder="Choose the date">
+                  <input type="text" class="form-control filter" placeholder="Choose the date" onfocus="(this.type='date')"
+                  onblur="(this.type='text')">
                   <i class="far fa-calendar-alt"></i>
 
-                  <input type="time" class="form-control filter" placeholder="Choose the time">
+                  <input type="text" class="form-control filter" placeholder="Choose the time" onfocus="(this.type='time')"
+                  onblur="(this.type='text')">
                   <i class="far fa-arrow-down"></i>
                   
 

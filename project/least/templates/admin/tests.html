@@ -23,7 +23,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Examination</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
@@ -40,7 +40,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
-                <h2 class="logo-text">LOGO</h2>
+                <h2 class="logo-text">Examination</h2>
                 <ul class="nav flex-column">
                     <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
                     <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
@@ -55,19 +55,21 @@
             <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 main-content">
                 <div class="row">
                     <div class="col-xs-1 col-sm-1"></div>
-                    <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 menu_text">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3 col-xl-3 menu_text">
                         <p class="title_test"><img src="{% static 'img/tests.svg' %}" alt="">Tests</p>
                     </div>
-                    <div class="col-xs-3 col-sm-3 col-md-5 col-lg-5 col-xl-5">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3"></div>
+                    <div class="col-xs-3 col-sm-3 col-md-4 col-lg-4 col-xl-4 text-right">
                         <a href="{% url 'admin-create-test' %}">
                             <button type="button" class="add-btn">
                                 + Add new
                             </button>
                         </a>
                     </div>
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                    <div class="col-xs-1 col-sm-1"></div>
                 </div>
 
+                {% if tests %}
                 <div class="row search-row">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-10 col-md-10 col-lg-10 col-xl-10 search">
@@ -79,6 +81,7 @@
                     </div>
                     <div class="col-sm-1"></div>
                 </div>
+                {% endif %}
 
                 <div class="row">
                     {% for message in messages %}
@@ -105,7 +108,7 @@
                                         {% if test.is_active == test_state.ongoing %}
                                             <button class="status_exam ongoing">Ongoing</button>
                                         {% elif test.is_active == test_state.not_started %}
-                                            <button class="status_exam ongoing">Not started</button>
+                                            <button class="status_exam ongoing ready">Ready</button>
                                         {% elif test.is_active == test_state.finished %}
                                             <button class="status_exam ongoing finished">Finished</button>
                                         {% endif %}
@@ -143,6 +146,25 @@
                     </div>
                     <div class="col-sm-1"></div>
                 </div>
+                {% empty %}
+                    <div class="row start_illustration">
+                       <div class="col-sm-3"></div>
+                       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 d-flex justify-content-center align-items-center">
+                            <div class="text-center">
+                              <img src="{% static 'img/Tests 1.svg' %}" alt="">
+                            </div>
+                       </div>
+                        <div class="col-sm-3"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 text-center">
+                          <p class="first_test_text">There are no tests yet. Let’s add the first one!</p>
+                          <a href="{% url 'admin-create-test' %}"><button class="first_test_add">Add test</button></a>
+                        </div>
+                        <div class="col-sm-3"></div>
+                    </div>
                 {% endfor %}
 
                 <!--Page number -->

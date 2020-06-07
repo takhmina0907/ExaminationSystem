@@ -86,7 +86,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+                <a class="navbar-brand" href="{% url 'admin-home' %}">Examination</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
@@ -103,7 +103,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
-                <h2 class="logo-text">LOGO</h2>
+                <h2 class="logo-text">Examination</h2>
                 <ul class="nav flex-column">
                     <li><a href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
                     <li><a class="active" href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
@@ -138,7 +138,7 @@
                             {% if result.test.is_active == test_state.ongoing %}
                                 Ongoing
                             {% elif result.test.is_active == test_state.not_started %}
-                                Not started
+                                Ready
                             {% elif result.test.is_active == test_state.finished %}
                                 Finished
                             {% endif %}

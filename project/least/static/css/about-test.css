@@ -22,7 +22,7 @@
 .action-btn{
   width: 109px;
   height: 35px;
-  background: #f8f8f8;
+  background: #ffffff;
   border: 1px dashed #A4A4A4;
   box-sizing: border-box;
   border-radius: 8px;
@@ -70,6 +70,7 @@ img{
 table{
   border: 1px solid #a4a4a450;
 }
+
 .table-row{
   margin-top: 24px;
 }

@@ -11,7 +11,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .filter-icon{
+            padding-right: 0;
+            margin-left: 33px;
+            color: #392CD1;
+        }
+        /*Nav Bar with buttons*/
+        .navbar {
+            overflow: hidden;
+            margin-top: 24px;
+            background-color: #fff;
+            width: 100%;
+            box-shadow: inset 0px -2px 0px rgba(164, 164, 164, 0.3);
+        }
 
+        .navbar a {
+            float: left;
+            display: block;
+            font-weight: 500;
+            font-size: 16px;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            color: #373737;
+            padding: 18px 32px;
+        }
+
+        .navbar a:hover {
+            background: rgba(57, 44, 209, 0.15);
+            color: #392CD1;
+        }
+
+        .navbar a:active{
+            background: rgba(57, 44, 209, 0.4);
+            color: #392CD1;
+        }
+
+        .navbar a.active {
+            background: rgba(57, 44, 209, 0.15);
+            color: #392CD1;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: inset 0px -2px 0px #392CD1;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-default visible-xs">
@@ -22,7 +66,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'admin-home' %}">Logo</a>
+                <a class="navbar-brand" href="{% url 'admin-home' %}"><Examination></Examination></a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
@@ -39,7 +83,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 sidenav hidden-xs">
-                <h2 class="logo-text">LOGO</h2>
+                <h2 class="logo-text">Examination</h2>
                     <ul class="nav flex-column">
                         <li><a class="active" href="{% url 'admin-home' %}"><i class="fas fa-home"></i>Home</a></li>
                         <li><a href="{% url 'admin-tests' %}"><i class="fas fa-books"></i>Tests</a></li>
@@ -62,12 +106,12 @@
                 </div>
 		        <div class="row">
     		        <div class="col-sm-1"></div>
-		            <div class="col-sm-2 menu_text">
-		    	        <h4><img src="{% static 'img/home.svg' %}">Home</h4>
+		            <div class="col-sm-4 menu_text">
+		    	        <p class="title_home"><img src="{% static 'img/home.svg' %}">Home</p>
 		            </div>
 		            <div class="col-sm-1"></div>
 		        </div>
-                <div class="row">
+                <div class="row main_info">
                     <div class="col-sm-1"></div>
                     <div class="col-sm-2">
                         <div class="well">
@@ -105,55 +149,74 @@
                     </div>
                     <div class="col-sm-1"></div>
                 </div>
+
+                {% if request.user.tests.all %}
                 <div class="row">
       	            <div class="col-sm-1"></div>
-                    <div class="col-sm-6">
-                        <div class="well">
+                    <div class="col-sm-10">
+                        <div class="start_row">
                             <div class="dropdown">
-                                <span>Statistics for</span>
+                                <span class="stat_for_title">Statistics for</span>
                                 <button class="btn dropdown-toggle courses" type="button" data-toggle="dropdown">
-                                    {% if request.user.tests.all %}
-                                        {{ request.user.tests.all.0.title }}
-                                    {% else %}
-                                        --
-                                    {% endif %}
-                                    <span class="caret"></span>
+                                    <span id="course-title" data-test-id="{{ request.user.tests.all.0.id }}">{{ request.user.tests.all.0.title }}</span>
+                                    <span><i class="far fa-arrow-down filter-icon"></i></span>
                                 </button>
                                 <ul class="dropdown-menu">
                                     {% for test in request.user.tests.all %}
-                                        <li id="{{ test.id }}"><a>{{ test.title }}</a></li>
-                                    {% empty %}
-                                        <li><a>No available tests</a></li>
+                                        <li class="tests" data-test-id="{{ test.id }}"><a>{{ test.title }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
-                            <a href="#">
-                                <button type="button" class="rating-btn">
-                                    Students Rating
-                                </button>
-                            </a>
-                            <a href="#">
-                                <button type="button" class="scale-btn">
-                                    Grades Scale
-                                </button>
-                            </a>
+                            <div class="navbar">
+                                <a id="first-stat-tab" class="active" href="#rating">Students Performance</a>
+                                <a id="last-stat-tab" href="#grades">Grades Average</a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
       	            <div class="col-sm-1"></div>
-                    <div class="col-sm-8">
-                        <div class="well">
-                            <p>Some Statistics</p>
+                    <div class="col-sm-10">
+                        <div id="stat-content" class="well">
                         </div>
                     </div>
                 </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10 starter_stat">
+                        <span class="stat_for_title">Statistics</span>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+
+                <div class="row start_illustration">
+                    <div class="col-sm-3"></div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 d-flex justify-content-center align-items-center">
+                        <div class="text-center">
+                            <img src="{% static 'img/Flying Statistics 1.svg' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 text-center">
+                        <p class="first_test_text">There are no tests yet. Let’s add the first one!</p>
+                        <a href="{% url 'admin-create-test' %}"><button class="first_test_add">Add test</button></a>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/home.js' %}"></script>
 </body>
 </html>

@@ -235,7 +235,13 @@ class TestStudentAddView(BaseGroupsView):
 def share_test(request, test_id):
     test = get_object_or_404(TestInfo, author=request.user,
                              id=test_id)
-    return render(request, 'admin/test_invite.html', {'link': test.link})
+    return render(request, 'admin/test_invite.html', {'link': test.link, 'test': test,})
+
+
+@login_required
+def demo_test(request, test_id):
+    test = get_object_or_404(TestInfo, author=request.user, id=test_id)
+    return render(request, 'admin/demo_test.html', {'questions': test.questions.all()})
 
 
 def filter_students(request, uidb64):
@@ -414,6 +420,17 @@ def students_results(request, test_id, sort_by):
     return JsonResponse({'error': 'ajax request is required'}, status=400)
 
 
+@login_required
+def grades_average(request, test_id):
+    if request.is_ajax() and request.method == 'POST':
+
+        test = get_object_or_404(TestInfo, author=request.user.id,
+                                 id=test_id)
+        average = test.results.aggregate(grade_avg=Round(Avg('grade'), 2)).get('grade_avg')
+        return JsonResponse({'average': average}, status=200)
+    return JsonResponse({'error': 'ajax request is required'}, status=400)
+
+
 class StudentResultDetailView(BaseAdminView, DetailView):
     model = TestResult
     context_object_name = 'result'
@@ -423,7 +440,7 @@ class StudentResultDetailView(BaseAdminView, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['test_state'] = TestInfo.TestState.__members__
-        context['cheatings'] = self.get_object().student.cheating.all()
+        context['cheatings'] = self.get_object().student.cheating.filter(test=self.object.test)
         context['selected_options'] = self.get_object().answers \
             .annotate(selected_option=F('selected_options__option')) \
             .values_list('selected_option', flat=True)
@@ -484,16 +501,17 @@ class StudentDetailView(BaseAdminView, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tests'] = self.object.tests.all() \
+        context['tests'] = self.object.tests.filter(author=self.request.user) \
             .annotate(point=F('results__grade')) \
             .annotate(result_id=F('results__id')) \
             .annotate(cheatings=Count(F('students__cheating'))) \
             .annotate(question_rate_denom=Count('results__answers__selected_options__option',
-                                          filter=Q(results__answers__selected_options__option__is_correct=True),
-                                          distinct=True)) \
+                                                filter=Q(results__answers__selected_options__option__is_correct=True),
+                                                distinct=True)) \
             .annotate(question_rate_num=Count('results__answers__question__options',
                                               filter=Q(results__answers__question__options__is_correct=True),
                                               distinct=True))
+        context['assigned_tests'] = context['tests'].count()
         context['test_state'] = TestInfo.TestState.__members__
         return context
 
