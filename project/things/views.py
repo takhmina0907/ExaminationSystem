@@ -53,7 +53,7 @@ def create_photo(id):
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         print(faces)
         for (x,y,w,h) in faces:
-            cv2.rectangle(img,(x+1000,y+1000),(x+w+1000,y+h+1000),(255,0,0),2)
+            cv2.rectangle(img,(x+5000,y+5000),(x+w+5000,y+h+5000),(255,0,0),2)
             roi_gray = gray[y:y+h, x:x+w]
             print(image_path + str(id))
             print(os.path.isfile(image_path + str(id)))
@@ -80,9 +80,16 @@ class StudentLoginView(TestLinkMixin,View):
             user = Student.objects.get(id = bound_form.cleaned_data['id'])
             if user in test.students.all():
                 if user.photo != "":
-                    if not facedect(user.photo.url):
-                        message = "Are you sure you are {}'s user?".format(user.id)
-                        return render(request,'reg1.html',{"form":bound_form,"message":message,"uidb64":uidb64})  
+                    try:
+                        if not facedect(user.photo.url):
+                            message = "Are you sure you are {}'s user?".format(user.id)
+                            return render(request,'reg1.html',{"form":bound_form,"message":message,"uidb64":uidb64})  
+                        else:
+                            uidb64_student=urlsafe_base64_encode(force_bytes(bound_form.cleaned_data['id']))
+                            return redirect('reg3',uidb64,uidb64_student)
+                    except:
+                        uidb64_student=urlsafe_base64_encode(force_bytes(bound_form.cleaned_data['id']))
+                        return redirect('uploadPhoto',uidb64,uidb64_student)
                 else:
                     try:
                         user.photo = create_photo(user.id)
@@ -136,8 +143,8 @@ class TestView(TestLinkMixin,TemplateView):
         end = datetime.datetime.combine(test.start_date,
                                         test.end_time)
         time_left = end - datetime.datetime.now()
-        # testResult.started_time =  datetime.datetime.now()
-        # testResult.save()
+        testResult.started_time =  datetime.datetime.now()
+        testResult.save()
         minuts =  test.duration if time_left.seconds < 360 else int(time_left.seconds / 60)
         seconds =  0 if time_left.seconds < 360 else time_left.seconds % 60
         duration =  test.duration if time_left.seconds < 360 else int(time_left.seconds)
